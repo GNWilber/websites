@@ -178,11 +178,18 @@ const MOVIES = [
     filmweb: "https://www.filmweb.pl/film/Dersu+Uza%C5%82a-1975-34074",
     date: "29.05.2026"
   },  
+  // {
+  //   name: "Az ember tragédiája",
+  //   altName: "Tragedia człowieka",
+  //   year: 2011,
+  //   filmweb: "https://www.filmweb.pl/film/Tragedia+cz%C5%82owieka-2011-643034",
+  //   date: "05.06.2026"
+  // },  
   {
-    name: "Az ember tragédiája",
-    altName: "Tragedia człowieka",
-    year: 2011,
-    filmweb: "https://www.filmweb.pl/film/Tragedia+cz%C5%82owieka-2011-643034",
+    name: "Stormy Night",
+    altName: "Arashi no Yoru ni",
+    year: 2005,
+    filmweb: "https://www.filmweb.pl/film/Arashi+no+Yoru+ni-2005-215371",
     date: "05.06.2026"
   },  
 ];
