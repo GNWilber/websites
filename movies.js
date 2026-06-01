@@ -218,4 +218,12 @@ const MOVIES = [
     date: "05.06.2026",
     flag: "🇯🇵"
   },
+  {
+    name: "Возвращение",
+    altName: "Powrót",
+    year: 2003,
+    filmweb: "https://www.filmweb.pl/film/Powr%C3%B3t-2003-107697",
+    date: ".2026",
+    flag: "🇷🇺"
+  },
 ];
