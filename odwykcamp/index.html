@@ -43,17 +43,12 @@
     position:relative;
     overflow:hidden;
   }
-  header.hero::after{
-    content:"🌲";
-    position:absolute;right:24px;bottom:-10px;
-    font-size:120px;opacity:.18;
-  }
   header.hero h1{
     margin:0;
     font-size:clamp(30px,6vw,52px);
     letter-spacing:.5px;
   }
-  header.hero p{margin:10px 0 0;font-size:18px;opacity:.95;max-width:640px;}
+  header.hero p{margin:10px 0 0;font-size:18px;opacity:.95;}
 
   section{
     background:#fdfff9;
@@ -74,6 +69,25 @@
     box-shadow:inset 0 0 0 2px var(--green-100);
   }
   .map-hint{font-size:14px;color:var(--green-700);margin-top:12px;opacity:.85;}
+
+  /* Legenda mapy */
+  .map-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+    font-size:13px;
+  }
+  .map-legend span{
+    background:var(--green-100);
+    border-radius:20px;
+    padding:4px 12px;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-weight:500;
+    color:var(--green-900);
+  }
 
   /* TABELA UCZESTNIKÓW */
   .table-scroll{overflow-x:auto;border-radius:var(--radius);}
@@ -124,9 +138,22 @@
   }
   ul.nice li .em{font-size:20px;}
 
+  /* Linki w listach info */
+  ul.nice a{
+    color:var(--green-900);
+    font-weight:700;
+    text-decoration:none;
+    border-bottom:2px solid var(--green-500);
+    transition:color .15s, border-color .15s;
+  }
+  ul.nice a:hover{
+    color:var(--green-500);
+    border-bottom-color:var(--green-300);
+  }
+
   /* DISCORD / CTA */
   .cta{
-    background:linear-gradient(135deg,#3a3f6b,#5865F2);
+    background:linear-gradient(135deg,#5865F2,#3a3f6b);
     color:#fff;border-radius:var(--radius);
     padding:24px 26px;margin-top:24px;
     display:flex;flex-wrap:wrap;align-items:center;gap:14px;
@@ -150,6 +177,15 @@
   }
   .btn-discord img{width:26px;height:26px;}
   footer{text-align:center;margin-top:34px;color:var(--green-700);opacity:.8;font-size:14px;}
+
+  /* Leaflet popup link */
+  .leaflet-popup-content a {
+    color: var(--green-700);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--green-500);
+  }
+  .leaflet-popup-content a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -158,19 +194,24 @@
   <!-- ===================== HERO ===================== -->
   <header class="hero">
     <h1>🏰 OdwyCamp w Pałacu!</h1>
-    <p>Od 31.07 do 02.08 2026 roku odbędzie się OdwyCamp w Żeliznie, przy białoruskiej granicy. Shark i jego klub motocyklowy udostępniają nam wspaniały Pałac w stanie niszczejącym.</p>
+    <p>Od <strong>31.07</strong> do <strong>02.08</strong> - 2026 roku odbędzie się OdwyCamp w Żeliznie, przy białoruskiej granicy. Shark i jego klub motocyklowy udostępniają nam wspaniały Pałac w stanie niszczejącym.</p>
   </header>
 
   <!-- ===================== MAPA ===================== -->
   <section>
     <h2><span class="ico">🗺️</span>Mapa & trasy</h2>
     <div id="map"></div>
-    <p class="map-hint"><br>💡 Najedź na zmotoryzowanego w tabelce.</p>
+    <div class="map-legend">
+      <span>🏰 Pałac (cel)</span>
+      <span>🚆 Stacja kolejowa</span>
+      <span>🍕 Pizzeria</span>
+      <span>🛒 Sklep</span>
+    </div>  
   </section>
 
   <!-- ===================== UCZESTNICY ===================== -->
   <section>
-    <h2><span class="ico">🚕</span>Podwózkownicy</h2>
+    <h2><span class="ico">🚕</span>Podwózkownicy (jeszcze nikt się nie zgłosił 😫)</h2>
     <div class="table-scroll">
       <table>
         <thead>
@@ -205,18 +246,21 @@
           <li><span class="em">🛏️</span> materace (po prostu materace)</li>
           <li><span class="em">⛺</span> miejsce na namiot</li>
           <li><span class="em">🅿️</span> parking</li>
-          <li><span class="em">🛒</span> Dino (7 km)</li>
+          <li><span class="em">🛒</span> <a href="https://maps.app.goo.gl/6mAW7htjC6mWu4SL7" target="_blank" rel="noopener">Dino (7 km)</a></li>
+          <li><span class="em">🍕</span> <a href="https://maps.app.goo.gl/5aAjFb2txWEn8C5t8" target="_blank" rel="noopener">Pizzeria (7 km)</a></li>
         </ul>
       </div>
       <div>
         <h2><span class="ico">🚉</span>Stacje kolejowe w okolicy</h2>
         <ul class="nice">
-          <li><span class="em">🚆</span> Międzyrzec Podlaski</li>
-          <li><span class="em">🚆</span> Bezwola</li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" target="_blank" rel="noopener">Międzyrzec Podlaski</a></li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/496LfwjnqaHwvWSC9" target="_blank" rel="noopener">Bezwola</a></li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/E1p2H18B54CupRU2A" target="_blank" rel="noopener">Radzyń Podlaski</a></li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/CpqnAceBuike689v8" target="_blank" rel="noopener">Parczew</a></li>
         </ul>
         <h2 style="margin-top:24px;"><span class="ico">📍</span>Miejsce spotkania</h2>
         <ul class="nice">
-          <li><span class="em">🏰</span> <a href="https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A">Żelizna 91, 21-311 Żelizna</a></li>
+          <li><span class="em">🏰</span> <a href="https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A" target="_blank" rel="noopener">Żelizna 91, 21-311 Żelizna</a></li>
         </ul>
       </div>
     </div>
@@ -224,20 +268,13 @@
 
   <!-- ===================== CTA DISCORD ===================== -->
   <div class="cta">
-    <span style="font-size:34px;">🚗</span>
-    <div style="flex:1;min-width:260px;">
-      <strong>Jeśli masz wolne miejsce i chcesz znaleźć się w tabelce,</strong> to napisz do mnie na Discordzie - @gnwilber
-    </div>
-  </div>
-
-  <div class="cta">
     <span style="font-size:34px;">💬</span>
     <div style="flex:1;min-width:260px;">
-      <strong>OdwykCampowa dyskusja jest na Discordzie</strong> - #odwykcamp
+      <strong>Jeśli masz wolne miejsce albo pytanie,</strong> to napisz na Discordzie - #odwykcamp
     </div>
     <a class="btn-discord" href="https://discord.gg/PBTQbRYrj6" target="_blank" rel="noopener">
       <img src="https://cdn3.emoji.gg/emojis/7561-discord-clyde.png" alt="discord">
-      Dołącz do Discorda
+      Dołącz
     </a>
   </div>
 </div>
@@ -245,55 +282,47 @@
 <script>
 /* =========================================================
    1) MIEJSCE SPOTKANIA
-   --------------------------------------------------------
-   ⚠️ WAŻNE: Leaflet potrzebuje WSPÓŁRZĘDNYCH [lat, lng],
-   sama nazwa miejscowości nie wystarczy.
-   Współrzędne poniżej to PRZYBLIŻENIE dla Żelizna 91.
-   Sprawdź dokładny punkt np. na openstreetmap.org
-   (klik prawym -> "Pokaż adres") i wklej tutaj.
 ========================================================= */
 const MEETING = {
   name: "Pałac – Żelizna 91",
-  coords: [51.864661, 22.939834]
+  coords: [51.864661, 22.939834],
+  url: "https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A"
 };
 
 /* =========================================================
-   2) LISTA UCZESTNIKÓW  (łatwa do rozbudowy)
-   --------------------------------------------------------
-   Aby dodać uczestnika, skopiuj jeden obiekt {...} i edytuj.
-
-   Pola:
-   - name      : Imię
-   - from      : skąd (tekst wyświetlany)
-   - coords    : [lat, lng] miejsca startu  (WYMAGANE dla mapy)
-   - stops     : tablica przystanków:
-                 { name:"Nazwa", coords:[lat,lng] }
-                 (jeśli nie ma przystanków -> pusta tablica [])
-   - car       : rodzaj samochodu (sam tekst)
-   - from_date : od kiedy
-   - to_date   : do kiedy
-   - contact   : { email, phone, discord, whatsapp }  (puste = pomijane)
-
-   👉 Kolor jest LOSOWANY DETERMINISTYCZNIE z imienia
-      (stały dla danej osoby), nic nie musisz wpisywać.
+   2) LISTA UCZESTNIKÓW
 ========================================================= */
 const participants = [
-  {
-    name: "Jan Kowalski",
-    from: "Wrocław",
-    coords: [51.108980, 17.032668],
-    stops: [],
-    car: "Motorek (1)",
-    from_date: "31.07",
-    to_date: "02.08",
-    contact: {
-      phone: "997"
-    }
-  }
+  // {
+  //   name: "Pan Nikt",
+  //   from: "Wrocław",
+  //   coords: [51.108980, 17.032668],
+  //   stops: [],
+  //   car: "Motorek (1)",
+  //   from_date: "31.07",
+  //   to_date: "02.08",
+  //   contact: {
+  //     phone: "997"
+  //   }
+  // }
 ];
 
 /* =========================================================
-   3) KOLORY – stałe dla uczestnika (seed z imienia)
+   3) PUNKTY POI (pizzeria, sklep, stacje itp.)
+========================================================= */
+const POI_TRAIN_STATIONS = [
+  { name:"Dworzec Międzyrzec Podlaski", coords:[51.976220, 22.785586], url:"https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" },
+  { name:"Stacja Bezwola",              coords:[51.771834, 22.804366], url:"https://maps.app.goo.gl/496LfwjnqaHwvWSC9" },
+  { name:"Stacja Radzyń Podlaski",      coords:[51.827132, 22.668824], url:"https://maps.app.goo.gl/E1p2H18B54CupRU2A" },
+  { name:"Stacja Parczew",              coords:[51.626594, 22.872181], url:"https://maps.app.goo.gl/CpqnAceBuike689v8" },
+];
+const POI_SHOPS = [
+  { name:"Pizzeria",  coords:[51.803248, 22.943766], url:"https://maps.app.goo.gl/5aAjFb2txWEn8C5t8", emoji:"🍕" },
+  { name:"Sklep Dino",coords:[51.805963, 22.942500], url:"https://maps.app.goo.gl/6mAW7htjC6mWu4SL7", emoji:"🛒" },
+];
+
+/* =========================================================
+   4) KOLORY – stałe dla uczestnika (seed z imienia)
 ========================================================= */
 function colorFromString(str){
   let h = 0;
@@ -302,12 +331,11 @@ function colorFromString(str){
     h = h & h;
   }
   const hue = Math.abs(h) % 360;
-  // nasycone, średnio-ciemne -> dobrze widoczne na mapie i jako kropka
   return `hsl(${hue}, 65%, 45%)`;
 }
 
 /* =========================================================
-   4) MAPA LEAFLET
+   5) MAPA LEAFLET
 ========================================================= */
 const map = L.map('map').setView([52.0, 22.4], 6);
 
@@ -316,70 +344,83 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap'
 }).addTo(map);
 
-// Marker miejsca spotkania (ikonka zamku)
-const meetingIcon = L.divIcon({
-  className: '',
-  html: '<div style="font-size:30px;line-height:30px;transform:translate(-50%,-100%);z-index:1000;"></div>',
-  iconSize: [30, 30]
-});
-L.marker(MEETING.coords, { icon: meetingIcon })
+/* --- helper: divIcon z emoji --- */
+function makeEmojiIcon(emoji, size = 30) {
+  return L.divIcon({
+    className: '',
+    html: `<div style="font-size:${size}px;line-height:1;transform:translate(-50%,-90%);filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));user-select:none;">${emoji}</div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size]
+  });
+}
+
+/* --- helper: dodaj marker POI z opcjonalnym linkiem --- */
+function addPoiMarker(coords, emoji, name, url, size) {
+  const marker = L.marker(coords, { icon: makeEmojiIcon(emoji, size || 28) }).addTo(map);
+  const linkHtml = url
+    ? `<br><a href="${url}" target="_blank" rel="noopener">📍 Google Maps</a>`
+    : '';
+  marker.bindPopup(`<b>${name}</b>${linkHtml}`);
+  return marker;
+}
+
+/* --- Marker miejsca spotkania (Pałac) --- */
+L.marker(MEETING.coords, { icon: makeEmojiIcon('🏰', 36) })
   .addTo(map)
-  .bindPopup(`<b>${MEETING.name}</b><br>Żelizna 91, 21-311 Żelizna`);
+  .bindPopup(`<b>${MEETING.name}</b><br>Żelizna 91, 21-311 Żelizna<br><a href="${MEETING.url}" target="_blank" rel="noopener">📍 Google Maps</a>`);
 
-// Rysowanie tras + markerów startu, mety i przystanków
-const routes = {}; 
-const allLatLngs = [MEETING.coords];
+/* --- Stacje kolejowe --- */
+POI_TRAIN_STATIONS.forEach(s => addPoiMarker(s.coords, '🚆', s.name, s.url, 26));
 
-participants.forEach((p, idx) => {
+/* --- Sklepy / pizzeria --- */
+POI_SHOPS.forEach(s => addPoiMarker(s.coords, s.emoji, s.name, s.url, 28));
+
+/* --- Rysowanie tras uczestników --- */
+const routes = {};
+const allLatLngs = [
+  MEETING.coords,
+  ...POI_TRAIN_STATIONS.map(s => s.coords),
+  ...POI_SHOPS.map(s => s.coords)
+];
+
+participants.forEach((p) => {
   const color = colorFromString(p.name);
   p._color = color;
 
-  // sekwencja punktów: start -> przystanki -> spotkanie
   const points = [p.coords, ...p.stops.map(s => s.coords), MEETING.coords]
     .filter(c => Array.isArray(c));
 
   points.forEach(c => allLatLngs.push(c));
 
-  // Główna polilinia
   const line = L.polyline(points, {
-    color: color,
-    weight: 4,
-    opacity: 0.75,
-    lineJoin: 'round'
+    color: color, weight: 4, opacity: 0.75, lineJoin: 'round'
   }).addTo(map);
   line.bindPopup(`<b>Trasa: ${p.name}</b><br>${p.from} → Pałac`);
 
-  // Marker startu
   const startMarker = L.circleMarker(p.coords, {
-    radius: 7, color: '#fff', weight: 2,
-    fillColor: color, fillOpacity: 1
+    radius: 7, color: '#fff', weight: 2, fillColor: color, fillOpacity: 1
   }).addTo(map).bindPopup(`<b>${p.name}</b><br>Start: ${p.from}`);
 
-  // NOWOŚĆ: Marker końca trasy (mety) na pozycji MEETING.coords
   const endMarker = L.circleMarker(MEETING.coords, {
-    radius: 7, color: '#fff', weight: 2,
-    fillColor: color, fillOpacity: 1
-  }).addTo(map).bindPopup(`<b>${p.name}</b><br>Meta: Koniec trasy`);
+    radius: 7, color: '#fff', weight: 2, fillColor: color, fillOpacity: 1
+  }).addTo(map).bindPopup(`<b>${p.name}</b><br>Meta: Pałac`);
 
-  // Markery przystanków
   const stopMarkers = p.stops.map(s =>
     L.circleMarker(s.coords, {
-      radius: 5, color: '#fff', weight: 2,
-      fillColor: color, fillOpacity: 0.9
+      radius: 5, color: '#fff', weight: 2, fillColor: color, fillOpacity: 0.9
     }).addTo(map).bindPopup(`Przystanek: ${s.name}`)
   );
 
-  // Dodajemy endMarker do obiektu trasy uczestnika
   routes[p.name] = { line, startMarker, endMarker, stopMarkers, color };
 });
 
-// dopasuj widok do wszystkich punktów
+/* dopasuj widok */
 if (allLatLngs.length > 1){
   map.fitBounds(L.latLngBounds(allLatLngs).pad(0.15));
 }
 
 /* =========================================================
-   5) PODŚWIETLANIE TRASY przy najechaniu na wiersz
+   6) PODŚWIETLANIE TRASY przy najechaniu na wiersz
 ========================================================= */
 function highlightRoute(name, on){
   const r = routes[name];
@@ -387,31 +428,22 @@ function highlightRoute(name, on){
   if (on){
     r.line.setStyle({ weight: 8, opacity: 1 });
     r.line.bringToFront();
-    
-    r.startMarker.setStyle({ radius: 10 });
-    r.startMarker.bringToFront();
-    
-    // Podświetlenie i wysunięcie na wierzch markera końcowego
-    r.endMarker.setStyle({ radius: 10 });
-    r.endMarker.bringToFront();
-    
-    r.stopMarkers.forEach(m => {
-      m.setStyle({ radius: 8 });
-      m.bringToFront();
-    });
+    r.startMarker.setStyle({ radius: 10 }); r.startMarker.bringToFront();
+    r.endMarker.setStyle({ radius: 10 });   r.endMarker.bringToFront();
+    r.stopMarkers.forEach(m => { m.setStyle({ radius: 8 }); m.bringToFront(); });
   } else {
     r.line.setStyle({ weight: 4, opacity: 0.75 });
     r.startMarker.setStyle({ radius: 7 });
-    r.endMarker.setStyle({ radius: 7 }); // Przywrócenie standardowego rozmiaru mety
+    r.endMarker.setStyle({ radius: 7 });
     r.stopMarkers.forEach(m => m.setStyle({ radius: 5 }));
   }
 }
 
 /* =========================================================
-   6) RENDER TABELI
+   7) RENDER TABELI
 ========================================================= */
 const EMOJI = { mail: "📧", phone: "📞" };
-const IMG_DISCORD = "https://cdn3.emoji.gg/emojis/2372-discord-clyde-dark.png";
+const IMG_DISCORD  = "https://cdn3.emoji.gg/emojis/2372-discord-clyde-dark.png";
 const IMG_WHATSAPP = "https://cdn3.emoji.gg/emojis/68016-whatsapp-icon.png";
 
 const tbody = document.getElementById('participants-body');
@@ -419,13 +451,11 @@ const tbody = document.getElementById('participants-body');
 participants.forEach(p => {
   const color = p._color;
   const tr = document.createElement('tr');
-  // delikatne tło wiersza w kolorze uczestnika
   tr.style.background = `linear-gradient(90deg, ${color}22, transparent)`;
 
-  // kontakt
   const c = p.contact || {};
   let contactHtml = '<div class="contact-cell">';
-  if (c.email)    contactHtml += `<a href="mailto:${c.email}">${EMOJI.mail} ${c.email}</a>`;
+  if (c.email)    contactHtml += `<a href="mailto:${c.email}" target="_blank" rel="noopener">${EMOJI.mail} ${c.email}</a>`;
   if (c.phone)    contactHtml += `<a href="tel:${c.phone.replace(/\s/g,'')}">${EMOJI.phone} ${c.phone}</a>`;
   if (c.discord)  contactHtml += `<span><img src="${IMG_DISCORD}" alt="discord"> ${c.discord}</span>`;
   if (c.whatsapp) contactHtml += `<a href="https://wa.me/${c.whatsapp.replace(/\D/g,'')}" target="_blank" rel="noopener"><img src="${IMG_WHATSAPP}" alt="whatsapp"> WhatsApp</a>`;
