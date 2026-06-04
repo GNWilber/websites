@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OdwyCamp w Pałacu</title>
 
-<!-- Leaflet.js -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -191,13 +190,11 @@
 <body>
 <div class="wrap">
 
-  <!-- ===================== HERO ===================== -->
   <header class="hero">
     <h1>🏰 OdwyCamp w Pałacu!</h1>
     <p>Od <strong>31.07</strong> do <strong>02.08</strong> - 2026 roku odbędzie się OdwyCamp w Żeliznie, przy białoruskiej granicy. Shark i jego klub motocyklowy udostępniają nam wspaniały Pałac w stanie niszczejącym.</p>
   </header>
 
-  <!-- ===================== MAPA ===================== -->
   <section>
     <h2><span class="ico">🗺️</span>Mapa & trasy</h2>
     <div id="map"></div>
@@ -209,7 +206,6 @@
     </div>  
   </section>
 
-  <!-- ===================== UCZESTNICY ===================== -->
   <section>
     <h2><span class="ico">🚕</span>Podwózkownicy (jeszcze nikt się nie zgłosił 😫)</h2>
     <div class="table-scroll">
@@ -225,12 +221,22 @@
             <th>Kontakt</th>
           </tr>
         </thead>
-        <tbody id="participants-body"><!-- generowane przez JS --></tbody>
+        <tbody id="participants-body"></tbody>
       </table>
     </div>
   </section>
 
-  <!-- ===================== INFO ===================== -->
+  <div class="cta">
+    <span style="font-size:34px;">💬</span>
+    <div style="flex:1;min-width:260px;">
+      <strong>Jeśli masz wolne miejsce albo pytanie,</strong> to napisz na Discordzie - #odwykcamp
+    </div>
+    <a class="btn-discord" href="https://discord.gg/PBTQbRYrj6" target="_blank" rel="noopener">
+      <img src="https://cdn3.emoji.gg/emojis/7561-discord-clyde.png" alt="discord">
+      Dołącz
+    </a>
+  </div>
+
   <section>
     <div class="grid2">
       <div>
@@ -266,17 +272,6 @@
     </div>
   </section>
 
-  <!-- ===================== CTA DISCORD ===================== -->
-  <div class="cta">
-    <span style="font-size:34px;">💬</span>
-    <div style="flex:1;min-width:260px;">
-      <strong>Jeśli masz wolne miejsce albo pytanie,</strong> to napisz na Discordzie - #odwykcamp
-    </div>
-    <a class="btn-discord" href="https://discord.gg/PBTQbRYrj6" target="_blank" rel="noopener">
-      <img src="https://cdn3.emoji.gg/emojis/7561-discord-clyde.png" alt="discord">
-      Dołącz
-    </a>
-  </div>
 </div>
 
 <script>
