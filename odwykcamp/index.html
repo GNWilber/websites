@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OdwyCamp w Pałacu!</title>
+<title>OdwyCamp w Pałacu</title>
 
 <!-- Leaflet.js -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -56,7 +56,7 @@
   header.hero p{margin:10px 0 0;font-size:18px;opacity:.95;max-width:640px;}
 
   section{
-    background:#e3ffdc;
+    background:#fdfff9;
     border-radius:var(--radius);
     padding:26px 28px;
     margin-top:24px;
@@ -158,19 +158,19 @@
   <!-- ===================== HERO ===================== -->
   <header class="hero">
     <h1>🏰 OdwyCamp w Pałacu!</h1>
-    <p>Od 31.07 do 02.08 2026 roku będzie OdwyCamp w Pałacu w Żeliznie przy Białoruskiej granicy.</p>
+    <p>Od 31.07 do 02.08 2026 roku będzie OdwyCamp w Żeliznie, przy białoruskiej granicy. Shark i jego klub motocyklowy udostępniają nam wspaniały Pałac w stanie niszczejącym.</p>
   </header>
 
   <!-- ===================== MAPA ===================== -->
   <section>
-    <h2><span class="ico">🗺️</span>Mapa & trasy uczestników</h2>
+    <h2><span class="ico">🗺️</span>Mapa & trasy</h2>
     <div id="map"></div>
-    <p class="map-hint">💡 Najedź kursorem na uczestnika w tabeli poniżej, aby podświetlić jego trasę na mapie.</p>
+    <p class="map-hint"><br>💡 Najedź na zmotoryzowanego w tabelce.</p>
   </section>
 
   <!-- ===================== UCZESTNICY ===================== -->
   <section>
-    <h2><span class="ico">🧑‍🤝‍🧑</span>Uczestnicy</h2>
+    <h2><span class="ico">🚕</span>Podwózkownicy</h2>
     <div class="table-scroll">
       <table>
         <thead>
@@ -178,7 +178,7 @@
             <th>Imię</th>
             <th>Skąd</th>
             <th>Przystanki</th>
-            <th>Automobil</th>
+            <th>Automobil (miejsca)</th>
             <th>Od kiedy</th>
             <th>Do kiedy</th>
             <th>Kontakt</th>
@@ -193,7 +193,7 @@
   <section>
     <div class="grid2">
       <div>
-        <h2><span class="ico">🎒</span>Co będzie na miejscu</h2>
+        <h2><span class="ico">🎒</span>Co będzie?</h2>
         <ul class="nice">
           <li><span class="em">🏠</span> dach nad głową</li>
           <li><span class="em">💧</span> woda</li>
@@ -226,22 +226,20 @@
   <div class="cta">
     <span style="font-size:34px;">🚗</span>
     <div style="flex:1;min-width:260px;">
-      <strong>Jeśli masz wolne miejsce i chcesz kogoś podwieźć,</strong> to napisz do mnie na Discord @gnwilber
+      <strong>Jeśli masz wolne miejsce i chcesz znaleźć się w tabelce,</strong> to napisz do mnie na Discordzie - @gnwilber
     </div>
   </div>
 
   <div class="cta">
     <span style="font-size:34px;">💬</span>
     <div style="flex:1;min-width:260px;">
-      <strong>OdwykCampowa dyskusja jest na Discordzie</strong>
+      <strong>OdwykCampowa dyskusja jest na Discordzie</strong> - #odwykcamp
     </div>
     <a class="btn-discord" href="https://discord.gg/PBTQbRYrj6" target="_blank" rel="noopener">
       <img src="https://cdn3.emoji.gg/emojis/7561-discord-clyde.png" alt="discord">
-      Dołącz na Discord
+      Dołącz do Discorda
     </a>
   </div>
-
-  <footer>🌿 OdwyCamp w Pałacu! • do zobaczenia w Żeliznej 🌿</footer>
 </div>
 
 <script>
@@ -256,7 +254,7 @@
 ========================================================= */
 const MEETING = {
   name: "Pałac – Żelizna 91",
-  coords: [51.7975, 22.9560]
+  coords: [51.864661, 22.939834]
 };
 
 /* =========================================================
@@ -285,7 +283,7 @@ const participants = [
     from: "Wrocław",
     coords: [51.108980, 17.032668],
     stops: [],
-    car: "Motorek",
+    car: "Motorek (1)",
     from_date: "31.07",
     to_date: "02.08",
     contact: {
@@ -321,7 +319,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Marker miejsca spotkania (ikonka zamku)
 const meetingIcon = L.divIcon({
   className: '',
-  html: '<div style="font-size:30px;line-height:30px;transform:translate(-50%,-100%);z-index:1000;">🏰</div>',
+  html: '<div style="font-size:30px;line-height:30px;transform:translate(-50%,-100%);z-index:1000;"></div>',
   iconSize: [30, 30]
 });
 L.marker(MEETING.coords, { icon: meetingIcon })
