@@ -192,7 +192,7 @@
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  justify-content: center; /* Tuta j działo się całe zło – teraz wszystko ładnie wyśrodkuje w poziomie */
+  justify-content: center;
   gap: 10px;
   box-shadow: 0 6px 18px rgba(88,101,242,.4);
   min-width: 130px;
@@ -206,7 +206,7 @@
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  justify-content: center; /* Tuta j działo się całe zło – teraz wszystko ładnie wyśrodkuje w poziomie */
+  justify-content: center;
   gap: 10px;
   box-shadow: 0 6px 18px rgba(88,101,242,.4);
   min-width: 130px;
@@ -224,9 +224,9 @@
   .leaflet-popup-content a:hover { text-decoration: underline; }
 
   .favicon-img {
-  height: 2em; /* Dopasuje rozmiar ikony do wysokości tekstu nagłówka */
-  vertical-align: middle; /* Wyrówna ikonę w pionie z tekstem */
-  margin-right: 4px; /* Doda trochę luzu między obrazkiem a tekstem */
+  height: 2em;
+  vertical-align: middle;
+  margin-right: 4px;
   }
 </style>
 </head>
@@ -312,14 +312,15 @@
       <div>
         <h2><span class="ico">🚉</span>Stacje kolejowe w okolicy</h2>
         <ul class="nice">
-          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" target="_blank" rel="noopener">Międzyrzec Podlaski</a></li>
-          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/496LfwjnqaHwvWSC9" target="_blank" rel="noopener">Bezwola</a></li>
-          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/E1p2H18B54CupRU2A" target="_blank" rel="noopener">Radzyń Podlaski</a></li>
-          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/CpqnAceBuike689v8" target="_blank" rel="noopener">Parczew</a></li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/496LfwjnqaHwvWSC9" target="_blank" rel="noopener">Bezwola (15 km)</a></li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" target="_blank" rel="noopener">Międzyrzec Podlaski (20 km)</a></li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/pYLyiXETDD2NJoEu6" target="_blank" rel="noopener">Milanów (24 km)</a></li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/E1p2H18B54CupRU2A" target="_blank" rel="noopener">Radzyń Podlaski (29 km)</a></li>
+          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/CpqnAceBuike689v8" target="_blank" rel="noopener">Parczew (31 km)</a></li>
         </ul>
         <h2 style="margin-top:24px;"><span class="ico">📍</span>Miejscówka</h2>
         <ul class="nice">
-          <li><span class="em">🏰</span> <a href="https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A" target="_blank" rel="noopener">Żelizna 91, 21-311 Żelizna</a></li>
+          <li><span class="em">🏰</span> <a href="https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A" target="_blank" rel="noopener">Żelizna 91, 21-311</a></li>
         </ul>
       </div>
     </div>
@@ -359,8 +360,9 @@ const participants = [
    3) PUNKTY POI (pizzeria, sklep, stacje itp.)
 ========================================================= */
 const POI_TRAIN_STATIONS = [
+  { name:"Stacja Bezwola",            coords:[51.771834, 22.804366], url:"https://maps.app.goo.gl/496LfwjnqaHwvWSC9" },
   { name:"Dworzec Międzyrzec Podlaski", coords:[51.976220, 22.785586], url:"https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" },
-  { name:"Stacja Bezwola",              coords:[51.771834, 22.804366], url:"https://maps.app.goo.gl/496LfwjnqaHwvWSC9" },
+  { name:"Stacja Milanów",            coords:[51.702001, 22.875203], url:"https://maps.app.goo.gl/pYLyiXETDD2NJoEu6" },
   { name:"Stacja Radzyń Podlaski",      coords:[51.827132, 22.668824], url:"https://maps.app.goo.gl/E1p2H18B54CupRU2A" },
   { name:"Stacja Parczew",              coords:[51.626594, 22.872181], url:"https://maps.app.goo.gl/CpqnAceBuike689v8" },
 ];
@@ -398,7 +400,6 @@ function makeEmojiIcon(emoji, size = 30) {
     className: '',
     html: `<div style="font-size:${size}px; line-height:${size}px; text-align:center; width:${size}px; height:${size}px; filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); user-select:none;">${emoji}</div>`,
     iconSize: [size, size],
-    // Dodałem +2 do szerokości (X), co delikatnie przesunie emotkę w lewo na mapie
     iconAnchor: [(size / 2) + 7, size] 
   });
 }
@@ -416,7 +417,7 @@ function addPoiMarker(coords, emoji, name, url, size) {
 /* --- Marker miejsca spotkania (Pałac) --- */
 L.marker(MEETING.coords, { icon: makeEmojiIcon('🏰', 36) })
   .addTo(map)
-  .bindPopup(`<b>${MEETING.name}</b><br>Żelizna 91, 21-311 Żelizna<br><a href="${MEETING.url}" target="_blank" rel="noopener">📍 Google Maps</a>`);
+  .bindPopup(`<b>${MEETING.name}</b><br>Żelizna 91, 21-311<br><a href="${MEETING.url}" target="_blank" rel="noopener">📍 Google Maps</a>`);
 
 /* --- Stacje kolejowe --- */
 POI_TRAIN_STATIONS.forEach(s => addPoiMarker(s.coords, '🚆', s.name, s.url, 26));
@@ -463,7 +464,6 @@ participants.forEach((p) => {
   routes[p.name] = { line, startMarker, endMarker, stopMarkers, color };
 });
 
-/* dopasuj widok */
 if (allLatLngs.length > 1){
   map.fitBounds(L.latLngBounds(allLatLngs).pad(0.15));
 }
