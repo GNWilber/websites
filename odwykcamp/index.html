@@ -17,6 +17,7 @@
     --green-100:#e6f5ec;
     --cream:#f5f8f3;
     --discord:#5865F2;
+    --formularz:#b542b9;
     --radius:22px;
     --shadow:0 10px 30px rgba(27,58,43,.12);
   }
@@ -166,14 +167,50 @@
     font-weight:800;text-decoration:none;
     display:inline-flex;align-items:center;gap:6px;
   }
+    .cta2{
+    background:linear-gradient(135deg,#b165e8,#75547d);
+    color:#fff;border-radius:var(--radius);
+    padding:24px 26px;margin-top:24px;
+    display:flex;flex-wrap:wrap;align-items:center;gap:14px;
+    box-shadow:var(--shadow);
+  }
+  .cta2 a{color:#fff;font-weight:700;}
+  .discord-handle{
+    color:var(--discord);
+    background:#fff;
+    padding:2px 10px;border-radius:10px;
+    font-weight:800;text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;
+  }
   .discord-handle img{width:22px;height:22px;}
   .btn-discord{
-    background:var(--discord);color:#fff;
-    padding:12px 20px;border-radius:14px;
-    text-decoration:none;font-weight:700;
-    display:inline-flex;align-items:center;gap:10px;
-    box-shadow:0 6px 18px rgba(88,101,242,.4);
-  }
+  background: var(--discord);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Tuta j działo się całe zło – teraz wszystko ładnie wyśrodkuje w poziomie */
+  gap: 10px;
+  box-shadow: 0 6px 18px rgba(88,101,242,.4);
+  min-width: 130px;
+}
+.btn-discord2 {
+  background: var(--formularz);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Tuta j działo się całe zło – teraz wszystko ładnie wyśrodkuje w poziomie */
+  gap: 10px;
+  box-shadow: 0 6px 18px rgba(88,101,242,.4);
+  min-width: 130px;
+}
   .btn-discord img{width:26px;height:26px;}
   footer{text-align:center;margin-top:34px;color:var(--green-700);opacity:.8;font-size:14px;}
 
@@ -232,10 +269,20 @@
     </div>
   </section>
 
+    <div class="cta2">
+    <span style="font-size:34px;">💬</span>
+    <div style="flex:1;min-width:260px;">
+      <strong>Zgłoś się do listy Podwoźników!</strong>
+    </div>
+    <a class="btn-discord2" href="https://docs.google.com/forms/d/e/1FAIpQLSdl7jQdi_itysU0FcvnWE2fHqa6FwbadWJZR1GOmOeEIRRBCg/viewform?usp=publish-editor" target="_blank" rel="noopener">
+      Formularz
+    </a>
+  </div>
+
   <div class="cta">
     <span style="font-size:34px;">💬</span>
     <div style="flex:1;min-width:260px;">
-      <strong>Jeśli masz wolne miejsce albo pytanie,</strong> to napisz na Discordzie - #odwykcamp
+      <strong>Jeśli masz pytanie albo nie chcesz wypełniać formularza,</strong> to napisz na Discordzie - #odwykcamp
     </div>
     <a class="btn-discord" href="https://discord.gg/PBTQbRYrj6" target="_blank" rel="noopener">
       <img src="https://cdn3.emoji.gg/emojis/7561-discord-clyde.png" alt="discord">
@@ -349,9 +396,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 function makeEmojiIcon(emoji, size = 30) {
   return L.divIcon({
     className: '',
-    html: `<div style="font-size:${size}px;line-height:1;transform:translate(-50%,-90%);filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));user-select:none;">${emoji}</div>`,
+    html: `<div style="font-size:${size}px; line-height:${size}px; text-align:center; width:${size}px; height:${size}px; filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); user-select:none;">${emoji}</div>`,
     iconSize: [size, size],
-    iconAnchor: [size / 2, size]
+    // Dodałem +2 do szerokości (X), co delikatnie przesunie emotkę w lewo na mapie
+    iconAnchor: [(size / 2) + 7, size] 
   });
 }
 
