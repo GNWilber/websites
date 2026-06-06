@@ -122,7 +122,7 @@
   .who{display:flex;align-items:center;gap:10px;font-weight:700;}
   .dot{width:16px;height:16px;border-radius:50%;flex:0 0 auto;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.1);}
   .contact-cell{display:flex;flex-direction:column;gap:4px;font-size:14px;}
-  .contact-cell a{color:var(--green-700);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .contact-cell a, .contact-cell span{color:var(--green-700);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
   .contact-cell a:hover{text-decoration:underline;}
   .contact-cell img{width:22px;height:22px;vertical-align:middle;}
   .stops{color:var(--green-700);font-size:14px;}
@@ -354,12 +354,36 @@ const participants = [
     coords: [50.102141, 18.545987],
     stops: [],
     car: "Samochód (4)",
-    from_date: "🤷",
-    to_date: "🤷",
+    from_date: "Nie wie",
+    to_date: "Nie wie",
     contact: {
-      phone: "997"
+      discord: ["igor.hanys", "https://discord.com/users/789486349471842364"],
+      facebook: ["Igor Hanys", "https://www.facebook.com/igor.hanys"]
     }
   }
+  /* =============================================================================
+  !!! DO NOT DELETE THIS TEMPLATE !!!
+  =============================================================================
+  ,{
+    name: "Imię Nazwisko / Nick",
+    from: "Miasto startowe",
+    coords: [52.2297, 21.0122],
+    stops: [
+      { name: "Przystanek 1", coords: [51.505, -0.09] }
+    ],
+    car: "Automobil (Miejsca)",
+    from_date: "Piątek rano",
+    to_date: "Niedziela",
+    contact: {
+      phone: ["+48 123 456 789", "tel:+48123456789"],
+      email: ["twoj@email.com", "mailto:twoj@email.com"],
+      discord: ["TwójNick#0000", "https://discord.com"],
+      whatsapp: ["Napisz na WA", "https://wa.me/48123456789"],
+      facebook: ["Profil FB", "https://www.facebook.com/zuck"]
+    }
+  }
+  =============================================================================
+  */
 ];
 
 /* =========================================================
@@ -511,10 +535,24 @@ participants.forEach(p => {
 
   const c = p.contact || {};
   let contactHtml = '<div class="contact-cell">';
-  if (c.email)    contactHtml += `<a href="mailto:${c.email}" target="_blank" rel="noopener">${EMOJI.mail} ${c.email}</a>`;
-  if (c.phone)    contactHtml += `<a href="tel:${c.phone.replace(/\s/g,'')}">${EMOJI.phone} ${c.phone}</a>`;
-  if (c.discord)  contactHtml += `<span><img src="${IMG_DISCORD}" alt="discord"> ${c.discord}</span>`;
-  if (c.whatsapp) contactHtml += `<a href="https://wa.me/${c.whatsapp.replace(/\D/g,'')}" target="_blank" rel="noopener"><img src="${IMG_WHATSAPP}" alt="whatsapp"> WhatsApp</a>`;
+  
+  // Format handling for all fields rewritten to ["name", "link"]
+  if (c.email && Array.isArray(c.email)) {
+    contactHtml += `<a href="${c.email[1]}" target="_blank" rel="noopener">${EMOJI.mail} ${c.email[0]}</a>`;
+  }
+  if (c.phone && Array.isArray(c.phone)) {
+    contactHtml += `<a href="${c.phone[1]}">${EMOJI.phone} ${c.phone[0]}</a>`;
+  }
+  if (c.discord && Array.isArray(c.discord)) {
+    contactHtml += `<a href="${c.discord[1]}" target="_blank" rel="noopener"><img src="${IMG_DISCORD}" alt="discord"> ${c.discord[0]}</a>`;
+  }
+  if (c.whatsapp && Array.isArray(c.whatsapp)) {
+    contactHtml += `<a href="${c.whatsapp[1]}" target="_blank" rel="noopener"><img src="${IMG_WHATSAPP}" alt="whatsapp"> ${c.whatsapp[0]}</a>`;
+  }
+  if (c.facebook && Array.isArray(c.facebook)) {
+    contactHtml += `<a href="${c.facebook[1]}" target="_blank" rel="noopener"><img src="${IMG_FACEBOOK}" alt="facebook"> ${c.facebook[0]}</a>`;
+  }
+  
   contactHtml += '</div>';
 
   const stopsTxt = p.stops.length ? p.stops.map(s => s.name).join(', ') : '—';
