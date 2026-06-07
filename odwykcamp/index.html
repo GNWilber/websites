@@ -7,250 +7,629 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  :root{
-    --green-900:#1b3a2b;
-    --green-700:#2e6b4a;
-    --green-500:#3f9d6a;
-    --green-300:#8fd6ac;
-    --green-100:#e6f5ec;
-    --cream:#f5f8f3;
-    --discord:#5865F2;
-    --formularz:#b542b9;
-    --radius:22px;
-    --shadow:0 10px 30px rgba(27,58,43,.12);
+  :root {
+    --green-950: #0f2318;
+    --green-900: #1b3a2b;
+    --green-800: #234d38;
+    --green-700: #2e6b4a;
+    --green-600: #368057;
+    --green-500: #3f9d6a;
+    --green-400: #5cb882;
+    --green-300: #8fd6ac;
+    --green-200: #c2ecd3;
+    --green-100: #e6f5ec;
+    --green-50:  #f0faf4;
+    --cream: #f5f8f3;
+    --discord: #5865F2;
+    --formularz: #9333ea;
+    --gold: #f0c040;
+    --radius: 24px;
+    --radius-sm: 14px;
+    --shadow-sm: 0 2px 8px rgba(27,58,43,.08);
+    --shadow: 0 8px 28px rgba(27,58,43,.13);
+    --shadow-lg: 0 16px 48px rgba(27,58,43,.18);
   }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--green-900);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Background texture ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
     background:
-      radial-gradient(1200px 500px at 80% -10%, var(--green-100), transparent),
-      var(--cream);
-    color:var(--green-900);
-    line-height:1.55;
-  }
-  .wrap{max-width:1080px;margin:0 auto;padding:24px 18px 60px;}
-
-  /* HERO */
-  header.hero{
-    background:linear-gradient(135deg,var(--green-700),var(--green-500));
-    color:#fff;
-    border-radius:var(--radius);
-    padding:46px 34px;
-    box-shadow:var(--shadow);
-    position:relative;
-    overflow:hidden;
-  }
-  header.hero h1{
-    margin:0;
-    font-size:clamp(30px,6vw,52px);
-    letter-spacing:.5px;
-  }
-  header.hero p{margin:10px 0 0;font-size:18px;opacity:.95;}
-
-  section{
-    background:#fdfff9;
-    border-radius:var(--radius);
-    padding:26px 28px;
-    margin-top:24px;
-    box-shadow:var(--shadow);
-  }
-  h2{margin:0 0 16px;color:var(--green-700);font-size:24px;}
-  h2 .ico{margin-right:8px;}
-
-  /* MAPA */
-  #map{
-    height:480px;
-    width:100%;
-    border-radius:var(--radius);
-    z-index:0;
-    box-shadow:inset 0 0 0 2px var(--green-100);
-  }
-  .map-hint{font-size:14px;color:var(--green-700);margin-top:12px;opacity:.85;}
-
-  /* Legenda mapy */
-  .map-legend{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:12px;
-    font-size:13px;
-  }
-  .map-legend span{
-    background:var(--green-100);
-    border-radius:20px;
-    padding:4px 12px;
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    font-weight:500;
-    color:var(--green-900);
+      radial-gradient(ellipse 900px 600px at 90% -5%, rgba(63,157,106,.12), transparent),
+      radial-gradient(ellipse 700px 500px at -10% 80%, rgba(27,58,43,.08), transparent);
+    pointer-events: none;
+    z-index: 0;
   }
 
-  /* TABELA UCZESTNIKÓW */
-  .table-scroll{overflow-x:auto;border-radius:var(--radius);}
-  table{
-    border-collapse:separate;
-    border-spacing:0;
-    width:100%;
-    min-width:840px;
-    font-size:15px;
-  }
-  thead th{
-    background:var(--green-700);
-    color:#fff;
-    text-align:left;
-    padding:14px 14px;
-    font-weight:600;
-    white-space:nowrap;
-  }
-  thead th:first-child{border-top-left-radius:16px;}
-  thead th:last-child{border-top-right-radius:16px;}
-  tbody td{
-    padding:12px 14px;
-    border-bottom:1px solid var(--green-100);
-    vertical-align:top;
-  }
-  tbody tr{transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;cursor:pointer;}
-  tbody tr:hover{
-    filter:brightness(1.02);
-    box-shadow:0 6px 18px rgba(27,58,43,.18);
-    transform:translateY(-1px);
-  }
-  .who{display:flex;align-items:center;gap:10px;font-weight:700;}
-  .dot{width:16px;height:16px;border-radius:50%;flex:0 0 auto;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.1);}
-  .contact-cell{display:flex;flex-direction:column;gap:4px;font-size:14px;}
-  .contact-cell a, .contact-cell span{color:var(--green-700);text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
-  .contact-cell a:hover{text-decoration:underline;}
-  .contact-cell img{width:22px;height:22px;vertical-align:middle;}
-  .stops{color:var(--green-700);font-size:14px;}
-
-  /* LISTY INFO */
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-  @media(max-width:720px){.grid2{grid-template-columns:1fr;}}
-  ul.nice{list-style:none;padding:0;margin:0;}
-  ul.nice li{
-    padding:10px 14px;margin-bottom:8px;
-    background:var(--green-100);border-radius:14px;
-    display:flex;align-items:center;gap:10px;font-weight:500;
-  }
-  ul.nice li .em{font-size:20px;}
-
-  /* Linki w listach info */
-  ul.nice a{
-    color:var(--green-900);
-    font-weight:700;
-    text-decoration:none;
-    border-bottom:2px solid var(--green-500);
-    transition:color .15s, border-color .15s;
-  }
-  ul.nice a:hover{
-    color:var(--green-500);
-    border-bottom-color:var(--green-300);
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 20px 72px;
+    position: relative;
+    z-index: 1;
   }
 
-  /* DISCORD / CTA */
-  .cta{
-    background:linear-gradient(135deg,#5865F2,#3a3f6b);
-    color:#fff;border-radius:var(--radius);
-    padding:24px 26px;margin-top:24px;
-    display:flex;flex-wrap:wrap;align-items:center;gap:14px;
-    box-shadow:var(--shadow);
+  /* ══════════════════════════════
+     HERO
+  ══════════════════════════════ */
+  header.hero {
+    background: linear-gradient(135deg, var(--green-950) 0%, var(--green-800) 50%, var(--green-600) 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 54px 42px 48px;
+    box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.08);
+    position: relative;
+    overflow: hidden;
   }
-  .cta a{color:#fff;font-weight:700;}
-  .discord-handle{
-    color:var(--discord);
-    background:#fff;
-    padding:2px 10px;border-radius:10px;
-    font-weight:800;text-decoration:none;
-    display:inline-flex;align-items:center;gap:6px;
-  }
-    .cta2{
-    background:linear-gradient(135deg,#b165e8,#75547d);
-    color:#fff;border-radius:var(--radius);
-    padding:24px 26px;margin-top:24px;
-    display:flex;flex-wrap:wrap;align-items:center;gap:14px;
-    box-shadow:var(--shadow);
-  }
-  .cta2 a{color:#fff;font-weight:700;}
-  .discord-handle{
-    color:var(--discord);
-    background:#fff;
-    padding:2px 10px;border-radius:10px;
-    font-weight:800;text-decoration:none;
-    display:inline-flex;align-items:center;gap:6px;
-  }
-  .discord-handle img{width:22px;height:22px;}
-  .btn-discord{
-  background: var(--discord);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 14px;
-  text-decoration: none;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: 0 6px 18px rgba(88,101,242,.4);
-  min-width: 130px;
-}
-.btn-discord2 {
-  background: var(--formularz);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 14px;
-  text-decoration: none;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  box-shadow: 0 6px 18px rgba(216, 88, 242, 0.258);
-  min-width: 130px;
-}
-  .btn-discord img{width:26px;height:26px;}
-  footer{text-align:center;margin-top:34px;color:var(--green-700);opacity:.8;font-size:14px;}
 
-  /* Leaflet popup link */
+  header.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 300px at 100% 0%, rgba(143,214,172,.15), transparent),
+      radial-gradient(ellipse 400px 400px at -5% 100%, rgba(63,157,106,.1), transparent);
+    pointer-events: none;
+  }
+
+  /* Decorative grid lines */
+  header.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .hero-inner { position: relative; z-index: 1; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .4px;
+    color: var(--green-200);
+    margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+
+  .hero-badge .dot-live {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 0 2px rgba(74,222,128,.3);
+    animation: pulse-live 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-live {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(74,222,128,.3); }
+    50%       { box-shadow: 0 0 0 5px rgba(74,222,128,.15); }
+  }
+
+  header.hero h1 {
+    margin: 0 0 16px;
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+
+  header.hero h1 .favicon-img {
+    height: 2em;
+    vertical-align: middle;
+    margin-right: 8px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.3));
+  }
+
+  header.hero p {
+    margin: 0;
+    font-size: 16px;
+    opacity: .88;
+    max-width: 720px;
+    line-height: 1.7;
+  }
+
+  .hero-dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
+  }
+
+  .hero-date-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 15px;
+    backdrop-filter: blur(4px);
+    color: #fff;
+  }
+
+  /* ══════════════════════════════
+     SECTIONS
+  ══════════════════════════════ */
+  section {
+    background: rgba(253,255,249,.96);
+    border: 1px solid rgba(143,214,172,.25);
+    border-radius: var(--radius);
+    padding: 30px 32px;
+    margin-top: 22px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(2px);
+  }
+
+  h2 {
+    margin: 0 0 18px;
+    color: var(--green-800);
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -.3px;
+  }
+
+  h2 .ico {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  /* ══════════════════════════════
+     MAP
+  ══════════════════════════════ */
+  #map {
+    height: 500px;
+    width: 100%;
+    border-radius: var(--radius-sm);
+    z-index: 0;
+    border: 1px solid var(--green-200);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .map-legend span {
+    background: var(--green-50);
+    border: 1px solid var(--green-200);
+    border-radius: 100px;
+    padding: 5px 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-800);
+  }
+
+  /* ══════════════════════════════
+     TABLE
+  ══════════════════════════════ */
+  .table-scroll {
+    overflow-x: auto;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--green-200);
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    min-width: 860px;
+    font-size: 14.5px;
+  }
+
+  thead th {
+    background: var(--green-800);
+    color: #fff;
+    text-align: left;
+    padding: 14px 16px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  thead th:first-child { border-top-left-radius: 13px; }
+  thead th:last-child  { border-top-right-radius: 13px; }
+
+  tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--green-100);
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr {
+    transition: background .15s ease, transform .12s ease, box-shadow .12s ease;
+    cursor: pointer;
+  }
+
+  tbody tr:hover {
+    background: var(--green-50) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(27,58,43,.12);
+  }
+
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    border: 2.5px solid #fff;
+    box-shadow: 0 0 0 1.5px rgba(0,0,0,.12);
+  }
+
+  .from-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green-100);
+    border-radius: 8px;
+    padding: 3px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-800);
+  }
+
+  .car-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green-50);
+    border: 1px solid var(--green-200);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green-900);
+  }
+
+  .date-badge {
+    display: inline-block;
+    background: var(--green-50);
+    border: 1px solid var(--green-200);
+    border-radius: 8px;
+    padding: 3px 9px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--green-800);
+  }
+
+  .contact-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 13.5px;
+  }
+
+  .contact-cell a {
+    color: var(--green-700);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    padding: 2px 0;
+    transition: color .15s;
+  }
+
+  .contact-cell a:hover { color: var(--green-500); }
+  .contact-cell img { width: 20px; height: 20px; vertical-align: middle; }
+
+  .stops-list {
+    color: var(--green-700);
+    font-size: 13.5px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .stop-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--green-100);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 12.5px;
+    font-weight: 500;
+    width: fit-content;
+  }
+
+  /* ══════════════════════════════
+     CTA BLOCKS
+  ══════════════════════════════ */
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 22px;
+  }
+
+  .cta {
+    flex: 1;
+    min-width: 280px;
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+  }
+
+  .cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 300px 200px at 110% -20%, rgba(255,255,255,.12), transparent);
+    pointer-events: none;
+  }
+
+  .cta-discord { background: linear-gradient(135deg, #3b4bc2, #5865F2 60%, #7c85f5); }
+  .cta-form    { background: linear-gradient(135deg, #6b21a8, #9333ea 60%, #c084fc); }
+
+  .cta-icon {
+    font-size: 36px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.2));
+    flex: 0 0 auto;
+  }
+
+  .cta-text {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .cta-text strong {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .cta-text p {
+    margin: 0;
+    font-size: 14px;
+    opacity: .85;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 11px 22px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14.5px;
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .btn:hover { transform: translateY(-2px); opacity: .92; }
+  .btn:active { transform: translateY(0); }
+
+  .btn-discord {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,.35);
+    box-shadow: 0 4px 14px rgba(0,0,0,.15);
+  }
+
+  .btn-form {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1.5px solid rgba(255,255,255,.35);
+    box-shadow: 0 4px 14px rgba(0,0,0,.15);
+  }
+
+  .btn img { width: 24px; height: 24px; }
+
+  /* ══════════════════════════════
+     INFO GRID
+  ══════════════════════════════ */
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+
+  ul.nice {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  ul.nice li {
+    padding: 10px 14px;
+    background: var(--green-50);
+    border: 1px solid var(--green-200);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    font-weight: 500;
+    font-size: 14.5px;
+    transition: background .15s, border-color .15s, transform .15s;
+  }
+
+  ul.nice li:hover {
+    background: var(--green-100);
+    border-color: var(--green-300);
+    transform: translateX(3px);
+  }
+
+  ul.nice li .em { font-size: 19px; flex: 0 0 auto; line-height: 1.4; }
+
+  ul.nice a {
+    color: var(--green-800);
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 2px solid var(--green-300);
+    transition: color .15s, border-color .15s;
+  }
+
+  ul.nice a:hover {
+    color: var(--green-500);
+    border-bottom-color: var(--green-500);
+  }
+
+  /* Section header divider */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .section-header-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--green-200), transparent);
+  }
+
+  /* ══════════════════════════════
+     EMPTY STATE
+  ══════════════════════════════ */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--green-700);
+    opacity: .7;
+    font-style: italic;
+    font-size: 15px;
+  }
+
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
+  footer {
+    text-align: center;
+    margin-top: 38px;
+    color: var(--green-700);
+    font-size: 13px;
+    opacity: .7;
+  }
+
+  /* ══════════════════════════════
+     LEAFLET POPUP
+  ══════════════════════════════ */
+  .leaflet-popup-content-wrapper {
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(27,58,43,.18) !important;
+  }
+
   .leaflet-popup-content a {
     color: var(--green-700);
     font-weight: 600;
     text-decoration: none;
-    border-bottom: 1px solid var(--green-500);
+    border-bottom: 1px solid var(--green-400);
   }
-  .leaflet-popup-content a:hover { text-decoration: underline; }
 
-  .favicon-img {
-  height: 2em;
-  vertical-align: middle;
-  margin-right: 4px;
+  .leaflet-popup-content a:hover { color: var(--green-500); }
+
+  /* ══════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════ */
+  @media (max-width: 640px) {
+    header.hero { padding: 36px 24px; }
+    section { padding: 22px 20px; }
+    .cta { padding: 20px 22px; }
+    .cta-row { flex-direction: column; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
+  <!-- ════════════════ HERO ════════════════ -->
   <header class="hero">
-    <h1><img src="favicon.png" alt="Favicon" class="favicon-img"> OdwyCamp w Pałacu!</h1>
-    <p>Od <strong>31.07</strong> do <strong>02.08</strong> - 2026 roku odbędzie się OdwyCamp w Żeliznie, przy białoruskiej granicy.<br>Shark i jego klub motocyklowy oraz Gmina Komarówka Podlaska udostępniają nam wspaniały Pałac w stanie niszczejącym.<br>Zaletą jest to, że za bardzo uczciwą cenę (czyli gratis) otrzymujemy wyśmienite warunki (o których poniżej), jednak haczykiem jest lokalizacja.<br>Z powodu tegoż haczyku poszukiwani są zmotoryzowani, którzy mają wolne miejsca i nie boją się zabrać zbłąkanych duszyczek po drodze.</p>
+    <div class="hero-inner">
+      <h1>
+        <img src="favicon.png" alt="OdwyCamp" class="favicon-img">
+        OdwyCamp w Pałacu
+      </h1>
+      <p>
+        Shark i jego klub motocyklowy oraz Gmina Komarówka Podlaska udostępniają nam wspaniały Pałac w stanie niszczejącym przy białoruskiej granicy.
+        <br>Zaletą jest to, że za bardzo uczciwą cenę (czyli gratis) otrzymujemy wyśmienite warunki (o których poniżej), jednak haczykiem jest lokalizacja.
+        <br>Z powodu owego haczyka poszukiwani są zmotoryzowani, którzy mają wolne miejsca i nie boją się zabrać zbłąkanych duszyczek po drodze.
+      </p>
+      <div class="hero-dates">
+        <div class="hero-date-chip">📅 31.07 — 02.08 (2026)</div>
+        <div class="hero-date-chip">📍 Żelizna 91, 21-311</div>
+      </div>
+    </div>
   </header>
 
+  <!-- ════════════════ MAPA ════════════════ -->
   <section>
-    <h2><span class="ico">🗺️</span>Mapa & trasy</h2>
+    <h2><span class="ico">🗺️</span> Mapa &amp; trasy</h2>
     <div id="map"></div>
     <div class="map-legend">
       <span>🏰 Pałac (cel)</span>
       <span>🚆 Stacja kolejowa</span>
       <span>🍕 Pizzeria</span>
-      <span>🛒 Sklep</span>
-    </div>  
+      <span>🛒 Sklep Dino</span>
+    </div>
   </section>
 
+  <!-- ════════════════ TABELA ════════════════ -->
   <section>
-    <h2><span class="ico">🚕</span>Podwózkownicy</h2>
+    <h2><span class="ico">🚕</span> Podwózkownicy</h2>
     <div class="table-scroll">
       <table>
         <thead>
@@ -258,7 +637,7 @@
             <th>Imię</th>
             <th>Skąd</th>
             <th>Przystanki</th>
-            <th>Automobil (miejsca)</th>
+            <th>Automobil</th>
             <th>Od kiedy</th>
             <th>Do kiedy</th>
             <th>Kontakt</th>
@@ -269,84 +648,114 @@
     </div>
   </section>
 
-    <div class="cta2">
-    <span style="font-size:34px;">🛞</span>
-    <div style="flex:1;min-width:260px;">
-      <strong>Zgłoś się do Podwózkowników!</strong>
+  <!-- ════════════════ CTA ROW ════════════════ -->
+  <div class="cta-row">
+    <div class="cta cta-form">
+      <div class="cta-icon">🛞</div>
+      <div class="cta-text">
+        <strong>Zgłoś się do Podwózkowników!</strong>
+        <p>Wypełnij króciutki formularz.</p>
+      </div>
+      <a class="btn btn-form"
+         href="https://docs.google.com/forms/d/e/1FAIpQLSdl7jQdi_itysU0FcvnWE2fHqa6FwbadWJZR1GOmOeEIRRBCg/viewform?usp=publish-editor"
+         target="_blank" rel="noopener">
+        📋 Formularz
+      </a>
     </div>
-    <a class="btn-discord2" href="https://docs.google.com/forms/d/e/1FAIpQLSdl7jQdi_itysU0FcvnWE2fHqa6FwbadWJZR1GOmOeEIRRBCg/viewform?usp=publish-editor" target="_blank" rel="noopener">
-      Formularz
-    </a>
+
+    <div class="cta cta-discord">
+      <div class="cta-icon">💬</div>
+      <div class="cta-text">
+        <strong>Jeśli masz pytanie albo nie chcesz wypełniać formularza🫩</strong>
+        <p>Napisz na Discordzie <strong>#odwykcamp</strong></p>
+      </div>
+      <a class="btn btn-discord"
+         href="https://discord.gg/PBTQbRYrj6"
+         target="_blank" rel="noopener">
+        <img src="https://cdn3.emoji.gg/emojis/7561-discord-clyde.png" alt="discord">
+        Dołącz
+      </a>
+    </div>
   </div>
 
-  <div class="cta">
-    <span style="font-size:34px;">💬</span>
-    <div style="flex:1;min-width:260px;">
-      <strong>Jeśli masz pytanie albo nie chcesz wypełniać formularza🫩,</strong> to napisz na Discordzie - #odwykcamp
-    </div>
-    <a class="btn-discord" href="https://discord.gg/PBTQbRYrj6" target="_blank" rel="noopener">
-      <img src="https://cdn3.emoji.gg/emojis/7561-discord-clyde.png" alt="discord">
-      Dołącz
-    </a>
-  </div>
-
+  <!-- ════════════════ INFO ════════════════ -->
   <section>
     <div class="grid2">
+      <!-- CO BĘDZIE -->
       <div>
-        <h2><span class="ico">🎒</span>Co będzie</h2>
+        <h2><span class="ico">🎒</span> Co będzie na miejscu</h2>
         <ul class="nice">
-          <li><span class="em">🏠</span> Daszek nad głową</li>
-          <li><span class="em">💧</span> Wodiczka</li>
-          <li><span class="em">⚡</span> Prądzik</li>
-          <li><span class="em">🚽</span> Kibelek</li>
-          <li><span class="em">🚿</span> Prysznicek</li>
-          <li><span class="em">🍳</span> Kucheneczka</li>
-          <li><span class="em">🔥</span> Ogniseczko</li>
-          <li><span class="em">🛏️</span> Materacyk (bez pierzynki)</li>
-          <li><span class="em">⛺</span> Miejsce na namiocik</li>
-          <li><span class="em">🅿️</span> Zatoczka</li>
-          <li><span class="em">🛒</span> <a href="https://maps.app.goo.gl/6mAW7htjC6mWu4SL7" target="_blank" rel="noopener">Sklepik Dino (7 km)</a></li>
-          <li><span class="em">🍕</span> <a href="https://maps.app.goo.gl/5aAjFb2txWEn8C5t8" target="_blank" rel="noopener">Pizzunia (7 km)</a></li>
+          <li><span class="em">🏠</span> Dach nad głową</li>
+          <li><span class="em">💧</span> Woda</li>
+          <li><span class="em">⚡</span> Prąd</li>
+          <li><span class="em">🚽</span> Klozet</li>
+          <li><span class="em">🚿</span> Prysznic</li>
+          <li><span class="em">🍳</span> Kuchenka</li>
+          <li><span class="em">🔥</span> Ognisko</li>
+          <li><span class="em">🛏️</span> Materce</li>
+          <li><span class="em">⛺</span> Miejsce na namiot</li>
+          <li><span class="em">🅿️</span> Parking</li>
+          <li><span class="em">🛒</span>
+            <a href="https://maps.app.goo.gl/6mAW7htjC6mWu4SL7" target="_blank" rel="noopener">Sklep Dino (7 km)</a>
+          </li>
+          <li><span class="em">🍕</span>
+            <a href="https://maps.app.goo.gl/5aAjFb2txWEn8C5t8" target="_blank" rel="noopener">Pizzunia (7 km)</a>
+          </li>
         </ul>
       </div>
+
+      <!-- STACJE + MIEJSCÓWKA -->
       <div>
-        <h2><span class="ico">🚉</span>Stacje kolejowe w <i>okolicy</i></h2>
+        <h2><span class="ico">🚉</span> Stacje kolejowe w okolicy</h2>
         <ul class="nice">
           <li>
-            <span class="em">🚆</span>
+            <span class="em">⭐</span>
             <div>
               <a href="https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" target="_blank" rel="noopener">Międzyrzec Podlaski (20 km)</a>
-              <br><span style="font-size: 0.85em; opacity: 0.7;">⭐Największa stacja + PKS 2x/dzień do Żelizny</span>
+              <br><span style="font-size:.82em;opacity:.65;font-weight:400;">Największa stacja + PKS 2×/dzień do Żelizny</span>
             </div>
           </li>
-          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/496LfwjnqaHwvWSC9" target="_blank" rel="noopener">Bezwola (15 km)</a></li>
-          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/pYLyiXETDD2NJoEu6" target="_blank" rel="noopener">Milanów (24 km)</a></li>
-          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/E1p2H18B54CupRU2A" target="_blank" rel="noopener">Radzyń Podlaski (29 km)</a></li>
-          <li><span class="em">🚆</span> <a href="https://maps.app.goo.gl/CpqnAceBuike689v8" target="_blank" rel="noopener">Parczew (31 km)</a></li>
+          <li><span class="em">🚆</span>
+            <a href="https://maps.app.goo.gl/496LfwjnqaHwvWSC9" target="_blank" rel="noopener">Bezwola (15 km)</a>
+          </li>
+          <li><span class="em">🚆</span>
+            <a href="https://maps.app.goo.gl/pYLyiXETDD2NJoEu6" target="_blank" rel="noopener">Milanów (24 km)</a>
+          </li>
+          <li><span class="em">🚆</span>
+            <a href="https://maps.app.goo.gl/E1p2H18B54CupRU2A" target="_blank" rel="noopener">Radzyń Podlaski (29 km)</a>
+          </li>
+          <li><span class="em">🚆</span>
+            <a href="https://maps.app.goo.gl/CpqnAceBuike689v8" target="_blank" rel="noopener">Parczew (31 km)</a>
+          </li>
         </ul>
-        <h2 style="margin-top:24px;"><span class="ico">📍</span>Miejscówka</h2>
+
+        <h2 style="margin-top:26px;"><span class="ico">📍</span> Miejscówka</h2>
         <ul class="nice">
-          <li><span class="em">🏰</span> <a href="https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A" target="_blank" rel="noopener">Żelizna 91, 21-311</a></li>
+          <li>
+            <span class="em">🏰</span>
+            <a href="https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A" target="_blank" rel="noopener">
+              Żelizna 91, 21-311 Komarówka Podlaska
+            </a>
+          </li>
         </ul>
       </div>
     </div>
   </section>
-
 </div>
 
 <script>
-/* =========================================================
+/* ══════════════════════════════════════════
    1) MIEJSCE SPOTKANIA
-========================================================= */
+══════════════════════════════════════════ */
 const MEETING = {
   name: "Pałac",
   coords: [51.864661, 22.939834],
   url: "https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A"
 };
 
-/* =========================================================
-   2) LISTA UCZESTNIKÓW
-========================================================= */
+/* ══════════════════════════════════════════
+   2) UCZESTNICY
+══════════════════════════════════════════ */
 const participants = [
   {
     name: "Igor Brzęczek",
@@ -357,105 +766,89 @@ const participants = [
     from_date: "Nie wie",
     to_date: "Nie wie",
     contact: {
-      discord: ["igor.hanys", "https://discord.com/users/789486349471842364"],
-      facebook: ["Igor Hanys", "https://www.facebook.com/igor.hanys"]
+      discord:  ["igor.hanys",  "https://discord.com/users/789486349471842364"],
+      facebook: ["Igor Hanys",  "https://www.facebook.com/igor.hanys"]
     }
   }
-  /* =============================================================================
-  !!! DO NOT DELETE THIS TEMPLATE !!!
-  =============================================================================
+  /* ==========================================================
+  TEMPLATE – nie usuwać
   ,{
     name: "Imię Nazwisko / Nick",
-    from: "Miasto startowe",
+    from: "Miasto",
     coords: [52.2297, 21.0122],
-    stops: [
-      { name: "Przystanek 1", coords: [51.505, -0.09] }
-    ],
-    car: "Automobil (Miejsca)",
+    stops: [{ name:"Przystanek", coords:[51.5, 21.0] }],
+    car: "🚙 Automobil (x)",
     from_date: "Piątek rano",
     to_date: "Niedziela",
     contact: {
-      phone: ["+48 123 456 789", "tel:+48123456789"],
-      email: ["twoj@email.com", "mailto:twoj@email.com"],
-      discord: ["TwójNick#0000", "https://discord.com"],
-      whatsapp: ["Napisz na WA", "https://wa.me/48123456789"],
-      facebook: ["Profil FB", "https://www.facebook.com/zuck"]
+      phone:    ["+48 123 456 789", "tel:+48123456789"],
+      email:    ["twoj@email.com",  "mailto:twoj@email.com"],
+      discord:  ["Nick#0000",       "https://discord.com"],
+      whatsapp: ["Napisz na WA",    "https://wa.me/48123456789"],
+      facebook: ["Profil FB",       "https://facebook.com/"]
     }
   }
-  =============================================================================
-  */
+  ========================================================== */
 ];
 
-/* =========================================================
-   3) PUNKTY POI (pizzeria, sklep, stacje itp.)
-========================================================= */
+/* ══════════════════════════════════════════
+   3) POI
+══════════════════════════════════════════ */
 const POI_TRAIN_STATIONS = [
-  { name:"Stacja Bezwola",            coords:[51.771834, 22.804366], url:"https://maps.app.goo.gl/496LfwjnqaHwvWSC9" },
+  { name:"Stacja Bezwola",              coords:[51.771834, 22.804366], url:"https://maps.app.goo.gl/496LfwjnqaHwvWSC9" },
   { name:"Dworzec Międzyrzec Podlaski", coords:[51.976220, 22.785586], url:"https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" },
-  { name:"Stacja Milanów",            coords:[51.702001, 22.875203], url:"https://maps.app.goo.gl/pYLyiXETDD2NJoEu6" },
+  { name:"Stacja Milanów",              coords:[51.702001, 22.875203], url:"https://maps.app.goo.gl/pYLyiXETDD2NJoEu6" },
   { name:"Stacja Radzyń Podlaski",      coords:[51.827132, 22.668824], url:"https://maps.app.goo.gl/E1p2H18B54CupRU2A" },
   { name:"Stacja Parczew",              coords:[51.626594, 22.872181], url:"https://maps.app.goo.gl/CpqnAceBuike689v8" },
 ];
 const POI_SHOPS = [
-  { name:"Pizzeria",  coords:[51.803248, 22.943766], url:"https://maps.app.goo.gl/5aAjFb2txWEn8C5t8", emoji:"🍕" },
-  { name:"Sklep Dino",coords:[51.805963, 22.942500], url:"https://maps.app.goo.gl/6mAW7htjC6mWu4SL7", emoji:"🛒" },
+  { name:"Pizzeria",   coords:[51.803248, 22.943766], url:"https://maps.app.goo.gl/5aAjFb2txWEn8C5t8", emoji:"🍕" },
+  { name:"Sklep Dino", coords:[51.805963, 22.942500], url:"https://maps.app.goo.gl/6mAW7htjC6mWu4SL7", emoji:"🛒" },
 ];
 
-/* =========================================================
-   4) KOLORY – stałe dla uczestnika (seed z imienia)
-========================================================= */
-function colorFromString(str){
+/* ══════════════════════════════════════════
+   4) KOLOR Z IMIENIA
+══════════════════════════════════════════ */
+function colorFromString(str) {
   let h = 0;
-  for (let i = 0; i < str.length; i++){
-    h = str.charCodeAt(i) + ((h << 5) - h);
-    h = h & h;
-  }
-  const hue = Math.abs(h) % 360;
-  return `hsl(${hue}, 65%, 45%)`;
+  for (let i = 0; i < str.length; i++) { h = str.charCodeAt(i) + ((h << 5) - h); h = h & h; }
+  return `hsl(${Math.abs(h) % 360}, 65%, 45%)`;
 }
 
-/* =========================================================
-   5) MAPA LEAFLET
-========================================================= */
+/* ══════════════════════════════════════════
+   5) MAPA
+══════════════════════════════════════════ */
 const map = L.map('map').setView([52.0, 22.4], 6);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
-  attribution: '© OpenStreetMap'
+  attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>'
 }).addTo(map);
 
-/* --- helper: divIcon z emoji --- */
 function makeEmojiIcon(emoji, size = 30) {
   return L.divIcon({
     className: '',
-    html: `<div style="font-size:${size}px; line-height:${size}px; text-align:center; width:${size}px; height:${size}px; filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); user-select:none;">${emoji}</div>`,
-    iconSize: [size, size],
-    iconAnchor: [(size / 2) + 7, size] 
+    html: `<div style="font-size:${size}px;line-height:1;text-align:center;width:${size}px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.4));user-select:none;">${emoji}</div>`,
+    iconSize:   [size, size],
+    iconAnchor: [size / 2 + 7, size]
   });
 }
 
-/* --- helper: dodaj marker POI z opcjonalnym linkiem --- */
 function addPoiMarker(coords, emoji, name, url, size) {
-  const marker = L.marker(coords, { icon: makeEmojiIcon(emoji, size || 28) }).addTo(map);
-  const linkHtml = url
-    ? `<br><a href="${url}" target="_blank" rel="noopener">📍 Google Maps</a>`
-    : '';
-  marker.bindPopup(`<b>${name}</b>${linkHtml}`);
-  return marker;
+  const m = L.marker(coords, { icon: makeEmojiIcon(emoji, size || 28) }).addTo(map);
+  m.bindPopup(`<b>${name}</b>${url ? `<br><a href="${url}" target="_blank" rel="noopener">📍 Google Maps</a>` : ''}`);
+  return m;
 }
 
-/* --- Marker miejsca spotkania (Pałac) --- */
-L.marker(MEETING.coords, { icon: makeEmojiIcon('🏰', 36) })
+/* Pałac */
+L.marker(MEETING.coords, { icon: makeEmojiIcon('🏰', 38) })
   .addTo(map)
   .bindPopup(`<b>${MEETING.name}</b><br>Żelizna 91, 21-311<br><a href="${MEETING.url}" target="_blank" rel="noopener">📍 Google Maps</a>`);
 
-/* --- Stacje kolejowe --- */
 POI_TRAIN_STATIONS.forEach(s => addPoiMarker(s.coords, '🚆', s.name, s.url, 26));
-
-/* --- Sklepy / pizzeria --- */
 POI_SHOPS.forEach(s => addPoiMarker(s.coords, s.emoji, s.name, s.url, 28));
 
-/* --- Rysowanie tras uczestników --- */
+/* Trasy */
 const routes = {};
 const allLatLngs = [
   MEETING.coords,
@@ -463,113 +856,97 @@ const allLatLngs = [
   ...POI_SHOPS.map(s => s.coords)
 ];
 
-participants.forEach((p) => {
+participants.forEach(p => {
   const color = colorFromString(p.name);
   p._color = color;
-
-  const points = [p.coords, ...p.stops.map(s => s.coords), MEETING.coords]
-    .filter(c => Array.isArray(c));
-
+  const points = [p.coords, ...p.stops.map(s => s.coords), MEETING.coords].filter(c => Array.isArray(c));
   points.forEach(c => allLatLngs.push(c));
 
-  const line = L.polyline(points, {
-    color: color, weight: 4, opacity: 0.75, lineJoin: 'round'
-  }).addTo(map);
+  const line = L.polyline(points, { color, weight: 4, opacity: .75, lineJoin: 'round' }).addTo(map);
   line.bindPopup(`<b>Trasa: ${p.name}</b><br>${p.from} → Pałac`);
 
   const startMarker = L.circleMarker(p.coords, {
-    radius: 7, color: '#fff', weight: 2, fillColor: color, fillOpacity: 1
+    radius: 7, color: '#fff', weight: 2.5, fillColor: color, fillOpacity: 1
   }).addTo(map).bindPopup(`<b>${p.name}</b><br>Start: ${p.from}`);
 
   const endMarker = L.circleMarker(MEETING.coords, {
-    radius: 7, color: '#fff', weight: 2, fillColor: color, fillOpacity: 1
+    radius: 7, color: '#fff', weight: 2.5, fillColor: color, fillOpacity: 1
   }).addTo(map).bindPopup(`<b>${p.name}</b><br>Meta: Pałac`);
 
   const stopMarkers = p.stops.map(s =>
-    L.circleMarker(s.coords, {
-      radius: 5, color: '#fff', weight: 2, fillColor: color, fillOpacity: 0.9
-    }).addTo(map).bindPopup(`Przystanek: ${s.name}`)
+    L.circleMarker(s.coords, { radius: 5, color: '#fff', weight: 2, fillColor: color, fillOpacity: .9 })
+      .addTo(map).bindPopup(`Przystanek: ${s.name}`)
   );
 
   routes[p.name] = { line, startMarker, endMarker, stopMarkers, color };
 });
 
-if (allLatLngs.length > 1){
-  map.fitBounds(L.latLngBounds(allLatLngs).pad(0.15));
-}
+if (allLatLngs.length > 1) map.fitBounds(L.latLngBounds(allLatLngs).pad(0.15));
 
-/* =========================================================
-   6) PODŚWIETLANIE TRASY przy najechaniu na wiersz
-========================================================= */
-function highlightRoute(name, on){
+/* ══════════════════════════════════════════
+   6) HIGHLIGHT
+══════════════════════════════════════════ */
+function highlightRoute(name, on) {
   const r = routes[name];
   if (!r) return;
-  if (on){
-    r.line.setStyle({ weight: 8, opacity: 1 });
-    r.line.bringToFront();
-    r.startMarker.setStyle({ radius: 10 }); r.startMarker.bringToFront();
-    r.endMarker.setStyle({ radius: 10 });   r.endMarker.bringToFront();
+  if (on) {
+    r.line.setStyle({ weight: 8, opacity: 1 }); r.line.bringToFront();
+    r.startMarker.setStyle({ radius: 11 }); r.startMarker.bringToFront();
+    r.endMarker.setStyle({ radius: 11 });   r.endMarker.bringToFront();
     r.stopMarkers.forEach(m => { m.setStyle({ radius: 8 }); m.bringToFront(); });
   } else {
-    r.line.setStyle({ weight: 4, opacity: 0.75 });
+    r.line.setStyle({ weight: 4, opacity: .75 });
     r.startMarker.setStyle({ radius: 7 });
     r.endMarker.setStyle({ radius: 7 });
     r.stopMarkers.forEach(m => m.setStyle({ radius: 5 }));
   }
 }
 
-/* =========================================================
-   7) RENDER TABELI
-========================================================= */
-const EMOJI = { mail: "📧", phone: "📞" };
+/* ══════════════════════════════════════════
+   7) TABELA
+══════════════════════════════════════════ */
 const IMG_DISCORD  = "https://cdn3.emoji.gg/emojis/2372-discord-clyde-dark.png";
 const IMG_WHATSAPP = "https://cdn3.emoji.gg/emojis/68016-whatsapp-icon.png";
 const IMG_FACEBOOK = "https://cdn3.emoji.gg/emojis/2116-facebook.png";
 
 const tbody = document.getElementById('participants-body');
 
+if (participants.length === 0) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td colspan="7"><div class="empty-state">Brak zgłoszeń — bądź pierwszy! 🚗</div></td>`;
+  tbody.appendChild(tr);
+}
+
 participants.forEach(p => {
   const color = p._color;
   const tr = document.createElement('tr');
-  tr.style.background = `linear-gradient(90deg, ${color}22, transparent)`;
+  tr.style.background = `linear-gradient(90deg, ${color}18 0%, transparent 40%)`;
 
   const c = p.contact || {};
   let contactHtml = '<div class="contact-cell">';
-  
-  // Format handling for all fields rewritten to ["name", "link"]
-  if (c.email && Array.isArray(c.email)) {
-    contactHtml += `<a href="${c.email[1]}" target="_blank" rel="noopener">${EMOJI.mail} ${c.email[0]}</a>`;
-  }
-  if (c.phone && Array.isArray(c.phone)) {
-    contactHtml += `<a href="${c.phone[1]}">${EMOJI.phone} ${c.phone[0]}</a>`;
-  }
-  if (c.discord && Array.isArray(c.discord)) {
-    contactHtml += `<a href="${c.discord[1]}" target="_blank" rel="noopener"><img src="${IMG_DISCORD}" alt="discord"> ${c.discord[0]}</a>`;
-  }
-  if (c.whatsapp && Array.isArray(c.whatsapp)) {
-    contactHtml += `<a href="${c.whatsapp[1]}" target="_blank" rel="noopener"><img src="${IMG_WHATSAPP}" alt="whatsapp"> ${c.whatsapp[0]}</a>`;
-  }
-  if (c.facebook && Array.isArray(c.facebook)) {
-    contactHtml += `<a href="${c.facebook[1]}" target="_blank" rel="noopener"><img src="${IMG_FACEBOOK}" alt="facebook"> ${c.facebook[0]}</a>`;
-  }
-  
+  if (c.email    && Array.isArray(c.email))    contactHtml += `<a href="${c.email[1]}"    target="_blank" rel="noopener">📧 ${c.email[0]}</a>`;
+  if (c.phone    && Array.isArray(c.phone))    contactHtml += `<a href="${c.phone[1]}">📞 ${c.phone[0]}</a>`;
+  if (c.discord  && Array.isArray(c.discord))  contactHtml += `<a href="${c.discord[1]}"  target="_blank" rel="noopener"><img src="${IMG_DISCORD}"  alt="discord">  ${c.discord[0]}</a>`;
+  if (c.whatsapp && Array.isArray(c.whatsapp)) contactHtml += `<a href="${c.whatsapp[1]}" target="_blank" rel="noopener"><img src="${IMG_WHATSAPP}" alt="whatsapp"> ${c.whatsapp[0]}</a>`;
+  if (c.facebook && Array.isArray(c.facebook)) contactHtml += `<a href="${c.facebook[1]}" target="_blank" rel="noopener"><img src="${IMG_FACEBOOK}" alt="facebook">  ${c.facebook[0]}</a>`;
   contactHtml += '</div>';
 
-  const stopsTxt = p.stops.length ? p.stops.map(s => s.name).join(', ') : '—';
+  const stopsTxt = p.stops.length
+    ? `<div class="stops-list">${p.stops.map(s => `<span class="stop-chip">📍 ${s.name}</span>`).join('')}</div>`
+    : '<span style="opacity:.45;">—</span>';
 
   tr.innerHTML = `
     <td><div class="who"><span class="dot" style="background:${color}"></span>${p.name}</div></td>
-    <td>${p.from}</td>
-    <td class="stops">${stopsTxt}</td>
-    <td>${p.car}</td>
-    <td>${p.from_date}</td>
-    <td>${p.to_date}</td>
+    <td><span class="from-badge">${p.from}</span></td>
+    <td>${stopsTxt}</td>
+    <td><span class="car-badge">${p.car}</span></td>
+    <td><span class="date-badge">${p.from_date}</span></td>
+    <td><span class="date-badge">${p.to_date}</span></td>
     <td>${contactHtml}</td>
   `;
 
   tr.addEventListener('mouseenter', () => highlightRoute(p.name, true));
   tr.addEventListener('mouseleave', () => highlightRoute(p.name, false));
-
   tbody.appendChild(tr);
 });
 </script>
