@@ -506,24 +506,26 @@ main {
   appearance: none;
   border: 1px solid var(--border);
   background: var(--bg);
-  border-radius: 999px;
-  padding: 0.3rem 0.65rem 0.25rem;
+  border-radius: 3px; /* Changed from 999px to match country-chip */
+  padding: 0.3rem 0.45rem 0.25rem; /* Updated padding to match country-chip proportions */
   cursor: pointer;
   line-height: 1;
-  opacity: 0.65;
+  filter: grayscale(0.6); /* Added to match country-chip */
+  opacity: 0.6; /* Balanced with country-chip */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
-  transition: opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  gap: 0.2rem; /* Updated to match country-chip */
+  transition: opacity 0.2s ease, border-color 0.2s ease, filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .author-chip:hover { opacity: 0.9; border-color: var(--border-h); transform: translateY(-1px); }
 
 .author-chip.is-active {
   opacity: 1;
+  filter: grayscale(0); /* Added to match country-chip */
   border-color: var(--gold-dim);
-  background: rgba(138, 110, 56, 0.18);
+  background: rgba(138, 110, 56, 0.18); /* Kept unique background tint for authors */
   box-shadow: 0 0 14px var(--gold-glow);
 }
 
