@@ -825,8 +825,8 @@ main {
 .card-icon { padding: 0; }
 
 .drive-icon-large {
-  width: 3.4rem;
-  height: 3.4rem;
+  width: 5rem;
+  height: auto;
   transition: filter 0.25s ease, transform 0.25s ease;
 }
 
