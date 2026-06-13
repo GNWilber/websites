@@ -275,7 +275,7 @@ main {
   background-image: linear-gradient(180deg, rgba(19, 18, 16, 0.4) 0%, rgba(19, 18, 16, 0.85) 100%), var(--poster-url, none);
   background-size: cover;       /* Automatically zooms/crops non-standard images to fill perfectly */
   background-position: center;   /* Keeps the zoom focused on the center of the poster */
-  opacity: 0.2;                /* Highly transparent by default */
+  opacity: 0.15;                /* Highly transparent by default */
   filter: grayscale(0.2);        /* Keeps it moody and blended into the theme initially */
   transition: opacity 0.4s ease, filter 0.4s ease;
   z-index: 0;
@@ -305,8 +305,22 @@ main {
 
 /* Hover effect for the poster: makes it non-transparent */
 .movie-card:hover::before {
-  opacity: 1;                 /* High opacity on hover (tweak to 1.0 if you want completely solid) */
-  filter: grayscale(0);          /* Brings back full vibrant color */
+  /* Toned down the gradient alpha from 0.4/0.85 to 0.1/0.45 for maximum image clarity */
+  background-image: linear-gradient(180deg, rgba(19, 18, 16, 0.1) 0%, rgba(19, 18, 16, 0.45) 100%), var(--poster-url, none);
+  opacity: 1; 
+  filter: grayscale(0); 
+}
+
+/* Replaced the harsh 1px stroke outline with a layered, ambient soft shadow */
+.movie-card:hover .date-day,
+.movie-card:hover .date-month-year,
+.movie-card:hover .card-title,
+.movie-card:hover .card-alt,
+.movie-card:hover .card-year {
+  text-shadow: 
+    0 2px 4px rgba(19, 18, 16, 0.6),
+    0 4px 12px rgba(19, 18, 16, 0.8);
+  transition: text-shadow 0.3s ease;
 }
 
 .movie-card:hover::after { opacity: 1; }
