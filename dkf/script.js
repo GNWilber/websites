@@ -148,6 +148,9 @@ function buildCard(movie) {
   card.addEventListener("click", () => {
     copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
+  if (movie.poster) {
+    card.style.setProperty('--poster-url', `url('${movie.poster}')`);
+  }
   return card;
 }
 

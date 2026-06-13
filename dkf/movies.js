@@ -279,7 +279,8 @@ const MOVIES = [
     filmweb: "https://www.filmweb.pl/film/Magnolia-1999-873",
     date: "19.06.2026",
     flag: "🇺🇸",
-    author: "@Hiszpan"
+    author: "@Hiszpan",
+    poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/tpfC325Jk6S38VTe5dDWjWtoyxr.jpg"
   },
   {
     name: "Az ember tragédiája",
@@ -288,6 +289,7 @@ const MOVIES = [
     filmweb: "https://www.filmweb.pl/film/Tragedia+cz%C5%82owieka-2011-643034",
     date: "03.07.2026",
     flag: "🇭🇺",
-    author: "@Damian"
+    author: "@Damian",
+    poster: "https://www.themoviedb.org/t/p/w1280/mAVOj2Lr7BwuGPVrqRxAJI558EJ.jpg"
   },
 ];

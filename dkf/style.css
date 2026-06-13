@@ -248,12 +248,13 @@ main {
   justify-content: center;
 }
 
-/* MOVIE CARD */
+/* MOVIE CARD — Updated with 2:3 aspect ratio and background poster layer */
 .movie-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 3px;
   width: 100%;
+  aspect-ratio: 2 / 3; /* Enforces industrial standard movie poster proportions */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -265,6 +266,22 @@ main {
   animation: fadeInUp 0.5s ease both;
 }
 
+/* POSTER BACKGROUND LAYER: Uses the JS variable, handles opacity and zoom */
+.movie-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* A subtle dark gradient overlay is included underneath to ensure text stays readable even with bright posters */
+  background-image: linear-gradient(180deg, rgba(19, 18, 16, 0.4) 0%, rgba(19, 18, 16, 0.85) 100%), var(--poster-url, none);
+  background-size: cover;       /* Automatically zooms/crops non-standard images to fill perfectly */
+  background-position: center;   /* Keeps the zoom focused on the center of the poster */
+  opacity: 0.2;                /* Highly transparent by default */
+  filter: grayscale(0.2);        /* Keeps it moody and blended into the theme initially */
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  z-index: 0;
+}
+
+/* Top decorative gold line — elevated to z-index 2 so it stays visible */
 .movie-card::after {
   content: '';
   position: absolute;
@@ -275,13 +292,21 @@ main {
   background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: 2;
 }
 
+/* HOVER STATES */
 .movie-card:hover {
   border-color: var(--border-h);
   transform: translateY(-6px);
   box-shadow: 0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px var(--border-h);
   background: var(--bg-card-h);
+}
+
+/* Hover effect for the poster: makes it non-transparent */
+.movie-card:hover::before {
+  opacity: 1;                 /* High opacity on hover (tweak to 1.0 if you want completely solid) */
+  filter: grayscale(0);          /* Brings back full vibrant color */
 }
 
 .movie-card:hover::after { opacity: 1; }
@@ -297,6 +322,12 @@ main {
 }
 
 .movie-card.is-past { opacity: 0.72; }
+
+/* LAYER MANAGEMENT: Forces all child text containers safely on top of the poster background */
+.movie-card > * {
+  position: relative;
+  z-index: 1;
+}
 
 .card-date {
   width: 100%;
