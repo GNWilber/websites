@@ -334,7 +334,7 @@ function render() {
     }));
     countriesEl.innerHTML = "";
     if (present.size === 0) return;
-    [...present].forEach(flag => {
+    [...present].sort((a, b) => (flagCount.get(b) || 0) - (flagCount.get(a) || 0)).forEach(flag => {
       const count = flagCount.get(flag) || 0;
       const btn = document.createElement("button");
       btn.type = "button";
@@ -437,6 +437,7 @@ function render() {
   const rankingEmpty = document.getElementById("ranking-empty");
   const rankingActions = document.getElementById("ranking-actions");
   const rankingCopyBtn = document.getElementById("ranking-copy-btn");
+  const rankingCodeBtn = document.getElementById("ranking-code-btn");
   const rankingRestoreBtn = document.getElementById("ranking-restore-btn");
   const meetingsBtn = document.getElementById("toggle-meetings");
   const rankingBtn = document.getElementById("toggle-ranking");
@@ -456,6 +457,11 @@ function render() {
     if (rankingMovies.length === 0) return;
     const code = currentRankingCode();
     copyToClipboard(buildRankingCopyText(rankingMovies, code), `Ranking skopiowany\nkod: ${code}`);
+  }
+  function copyRankingCode() {
+    if (rankingMovies.length === 0) return;
+    const code = currentRankingCode();
+    copyToClipboard(code, `Kod skopiowany\n${code}`);
   }
   function restoreRanking() {
     const raw = window.prompt("Wklej kod rankingu lub całą pierwszą linię (Ranking DKF {kod}:)");
@@ -551,6 +557,7 @@ function render() {
     else setArchiveView("ranking");
   });
   rankingCopyBtn.addEventListener("click", copyRanking);
+  rankingCodeBtn.addEventListener("click", copyRankingCode);
   rankingRestoreBtn.addEventListener("click", restoreRanking);
 
   document.getElementById("label-upcoming").addEventListener("click", () => {
