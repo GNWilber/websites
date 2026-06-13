@@ -383,6 +383,19 @@ main {
   margin-top: 0.3rem;
 }
 
+/* CARD AUTHOR — shown below year in upcoming cards */
+.card-author {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  background: rgba(48, 42, 34, 0.9);
+  padding: 0.25em 0.75em;
+  border-radius: 999px;
+  margin-top: 0.2rem;
+  line-height: 1.4;
+}
+
 .card-link {
   width: 100%;
   display: flex;
@@ -480,6 +493,62 @@ main {
   letter-spacing: 0.05em;
   color: var(--muted);
   line-height: 1;
+}
+
+/* AUTHOR FILTER CHIPS */
+.filter-authors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.author-chip {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem 0.25rem;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.65;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  transition: opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.author-chip:hover { opacity: 0.9; border-color: var(--border-h); transform: translateY(-1px); }
+
+.author-chip.is-active {
+  opacity: 1;
+  border-color: var(--gold-dim);
+  background: rgba(138, 110, 56, 0.18);
+  box-shadow: 0 0 14px var(--gold-glow);
+}
+
+.author-chip-name {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+/* AUTHOR BUBBLE — in archive/ranking rows, left of filmweb logo */
+.author-bubble {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  background: rgba(48, 42, 34, 0.9);
+  border: 1px solid var(--border);
+  padding: 0.22em 0.65em;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.4;
+  align-self: center;
 }
 
 /* YEAR DUAL-SLIDER */
@@ -620,7 +689,7 @@ main {
 
 .archive-item {
   display: grid;
-  grid-template-columns: 2.5rem 165px auto 1fr auto;
+  grid-template-columns: 2.5rem 165px auto 1fr auto auto;
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.5rem;
@@ -714,7 +783,7 @@ main {
 .ranking-list { margin-top: 0; }
 
 .ranking-item {
-  grid-template-columns: 2.5rem 1.35rem minmax(0, 1fr) auto;
+  grid-template-columns: 2.5rem 1.35rem minmax(0, 1fr) auto auto;
   cursor: grab;
   user-select: none;
 }
@@ -1119,7 +1188,7 @@ footer.footer--announcement::before {
   .filter-checkbox { align-self: flex-start; }
 
   .archive-item {
-    grid-template-columns: 2rem 1fr auto;
+    grid-template-columns: 2rem 1fr auto auto;
     grid-template-rows: auto auto;
     gap: 0.15rem 0.75rem;
     padding: 0.85rem 1rem;
@@ -1129,18 +1198,20 @@ footer.footer--announcement::before {
   .archive-date  { grid-column: 2; grid-row: 2; font-size: 0.7rem; }
   .archive-dot   { display: none; }
   .archive-title { grid-column: 2; grid-row: 1; }
-  .archive-link  { grid-column: 3; grid-row: 1 / 3; align-self: center; }
+  .author-bubble { grid-column: 3; grid-row: 1 / 3; align-self: center; }
+  .archive-link  { grid-column: 4; grid-row: 1 / 3; align-self: center; }
 
   .ranking-item {
-    grid-template-columns: 2rem 1.25rem minmax(0, 1fr) auto;
+    grid-template-columns: 2rem 1.25rem minmax(0, 1fr) auto auto;
     grid-template-rows: auto;
     gap: 0.5rem;
   }
 
-  .ranking-item .archive-num { grid-column: 1; grid-row: 1; align-self: center; }
-  .ranking-handle { grid-column: 2; grid-row: 1; }
-  .ranking-item .archive-title { grid-column: 3; grid-row: 1; }
-  .ranking-item .archive-link { grid-column: 4; grid-row: 1; align-self: center; }
+  .ranking-item .archive-num   { grid-column: 1; grid-row: 1; align-self: center; }
+  .ranking-handle               { grid-column: 2; grid-row: 1; }
+  .ranking-item .archive-title  { grid-column: 3; grid-row: 1; }
+  .ranking-item .author-bubble  { grid-column: 4; grid-row: 1; align-self: center; }
+  .ranking-item .archive-link   { grid-column: 5; grid-row: 1; align-self: center; }
 
   .footer-label,
   .footer-alt,

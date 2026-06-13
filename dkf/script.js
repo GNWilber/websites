@@ -138,6 +138,7 @@ function buildCard(movie) {
       <h2 class="card-title">${movie.name}</h2>
       ${movie.altName ? `<p class="card-alt">${movie.altName}</p>` : ""}
       <p class="card-year">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</p>
+      ${movie.author ? `<p class="card-author">${movie.author}</p>` : ""}
     </div>
     <a class="card-link" href="${movie.filmweb}" target="_blank" rel="noopener" title="Otwórz na Filmweb">
       <img src="filmwebfull.svg" alt="Filmweb" class="filmweb-logo-full" />
@@ -167,6 +168,7 @@ function buildArchiveItem(movie, globalNum, dimmed) {
       ${movie.altName ? `<span class="archive-alt">– ${movie.altName}</span>` : ""}
       <span class="archive-year">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</span>
     </span>
+    ${movie.author ? `<span class="author-bubble">${movie.author}</span>` : '<span></span>'}
     <a href="${movie.filmweb}" target="_blank" rel="noopener" class="archive-link" title="Otwórz na Filmweb">
       <img src="filmweb.svg" alt="Filmweb" class="filmweb-logo-sq" />
     </a>
@@ -192,6 +194,7 @@ function buildRankingItem(movie, rank, movieKey, shouldSuppressClick) {
       ${movie.altName ? `<span class="archive-alt">– ${movie.altName}</span>` : ""}
       <span class="archive-year">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</span>
     </span>
+    ${movie.author ? `<span class="author-bubble">${movie.author}</span>` : '<span></span>'}
     <a href="${movie.filmweb}" target="_blank" rel="noopener" class="archive-link" title="Otwórz na Filmweb" draggable="false">
       <img src="filmweb.svg" alt="Filmweb" class="filmweb-logo-sq" draggable="false" />
     </a>
@@ -311,6 +314,8 @@ function render() {
   const archiveEmpty = document.getElementById("archive-empty");
   const filtersEl = document.getElementById("filters");
   const countriesEl = document.getElementById("filter-countries");
+  const authorsEl = document.getElementById("filter-authors");
+  const filterGroupAuthors = document.getElementById("filter-group-authors");
   const showAllToggle = document.getElementById("show-all-toggle");
   const yearSlider = document.getElementById("year-slider");
   const yearMinInput = document.getElementById("year-min");
@@ -320,6 +325,7 @@ function render() {
   const yearMaxVal = document.getElementById("year-max-val");
 
   const selectedCountries = new Set();
+  const selectedAuthors = new Set();
   let yearLo, yearHi, yearBoundLo, yearBoundHi;
 
   // Collect countries present in archive that exist in COUNTRIES list
@@ -353,6 +359,43 @@ function render() {
       });
       countriesEl.appendChild(btn);
     });
+  }
+
+  // Collect authors present in archive movies
+  function buildAuthorFilter() {
+    const authorCount = new Map();
+    archiveMovies.forEach(m => {
+      if (m.author && m.author.trim()) {
+        const a = m.author.trim();
+        authorCount.set(a, (authorCount.get(a) || 0) + 1);
+      }
+    });
+    authorsEl.innerHTML = "";
+    if (authorCount.size === 0) {
+      filterGroupAuthors.classList.add("hidden");
+      return;
+    }
+    filterGroupAuthors.classList.remove("hidden");
+    [...authorCount.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([author, count]) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "author-chip";
+        btn.title = author;
+        btn.innerHTML = `<span class="author-chip-name">${author}</span><span class="country-count">${count}</span>`;
+        btn.addEventListener("click", () => {
+          if (selectedAuthors.has(author)) {
+            selectedAuthors.delete(author);
+            btn.classList.remove("is-active");
+          } else {
+            selectedAuthors.add(author);
+            btn.classList.add("is-active");
+          }
+          renderArchiveList();
+        });
+        authorsEl.appendChild(btn);
+      });
   }
 
   function buildYearSlider() {
@@ -401,6 +444,10 @@ function render() {
       const flags = extractFlags(m);
       if (!flags.some(f => selectedCountries.has(f))) return false;
     }
+    if (selectedAuthors.size > 0) {
+      const author = m.author ? m.author.trim() : "";
+      if (!selectedAuthors.has(author)) return false;
+    }
     if (typeof yearLo === "number" && (m.year < yearLo || m.year > yearHi)) return false;
     return true;
   }
@@ -426,6 +473,7 @@ function render() {
     archiveEmpty.classList.remove("hidden");
   } else {
     buildCountryFilter();
+    buildAuthorFilter();
     buildYearSlider();
     renderArchiveList();
   }

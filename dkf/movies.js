@@ -54,7 +54,8 @@ const MOVIES = [
     year: 2025,
     filmweb: "https://www.filmweb.pl/film/Anio%C5%82+str%C3%B3%C5%BC-2025-10065014",
     date: "28.11.2025",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Adam"
   },
   {
     name: "Straume",
@@ -62,7 +63,8 @@ const MOVIES = [
     year: 2024,
     filmweb: "https://www.filmweb.pl/film/Flow-2024-10052360",
     date: "19.12.2025",
-    flag: "🇱🇻 🇫🇷 🇧🇪"
+    flag: "🇱🇻 🇫🇷 🇧🇪",
+    author: "@Damian"
   },
   {
     name: "Hacksaw Ridge",
@@ -70,7 +72,8 @@ const MOVIES = [
     year: 2016,
     filmweb: "https://www.filmweb.pl/film/Prze%C5%82%C4%99cz+ocalonych-2016-658802",
     date: "02.01.2026",
-    flag: "🇺🇸 🇦🇺"
+    flag: "🇺🇸 🇦🇺",
+    author: "@Artur"
   },
   {
     name: "Lucky",
@@ -78,7 +81,8 @@ const MOVIES = [
     year: 2017,
     filmweb: "https://www.filmweb.pl/film/Szcz%C4%99%C5%9Bciarz-2017-790376",
     date: "09.01.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Adam"
   },
   {
     name: "It's a Wonderful Life",
@@ -86,7 +90,8 @@ const MOVIES = [
     year: 1946,
     filmweb: "https://www.filmweb.pl/film/To+wspania%C5%82e+%C5%BCycie-1946-31793",
     date: "16.01.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Artur"
   },
   {
     name: "Ginga Tetsudō no Yoru",
@@ -94,7 +99,8 @@ const MOVIES = [
     year: 1985,
     filmweb: "https://www.filmweb.pl/film/Kenji+Miyazawa%27s+Night+on+the+Galactic+Railroad-1985-169073",
     date: "23.01.2026",
-    flag: "🇯🇵"
+    flag: "🇯🇵",
+    author: "@Damian"
   },
   {
     name: "Inside Out",
@@ -102,7 +108,8 @@ const MOVIES = [
     year: 2015,
     filmweb: "https://www.filmweb.pl/film/W+g%C5%82owie+si%C4%99+nie+mie%C5%9Bci-2015-682170",
     date: "30.01.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Artur"
   },
   {
     name: "Kanashimi no Beradonna",
@@ -110,7 +117,8 @@ const MOVIES = [
     year: 1973,
     filmweb: "https://www.filmweb.pl/film/Belladonna+smutku-1973-128976",
     date: "13.02.2026",
-    flag: "🇯🇵"
+    flag: "🇯🇵",
+    author: "@Damian"
   },
   {
     name: "The Last Samurai",
@@ -118,7 +126,8 @@ const MOVIES = [
     year: 2003,
     filmweb: "https://www.filmweb.pl/film/Ostatni+samuraj-2003-36447",
     date: "20.02.2026",
-    flag: "🇯🇵 🇳🇿 🇺🇸"
+    flag: "🇯🇵 🇳🇿 🇺🇸",
+    author: "@Artur"
   },
   {
     name: "Relatos salvajes",
@@ -134,7 +143,8 @@ const MOVIES = [
     year: 2024,
     filmweb: "https://www.filmweb.pl/film/W+g%C5%82owie+si%C4%99+nie+mie%C5%9Bci+2-2024-10019716",
     date: "06.03.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Artur"
   },
   {
     name: "Fantastic Mr. Fox",
@@ -142,7 +152,8 @@ const MOVIES = [
     year: 2009,
     filmweb: "https://www.filmweb.pl/film/Fantastyczny+Pan+Lis-2009-156466",
     date: "13.03.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Adam"
   },
   {
     name: "Dream Productions",
@@ -150,7 +161,8 @@ const MOVIES = [
     year: 2024,
     filmweb: "https://www.filmweb.pl/serial/Wytw%C3%B3rnia+filmowa+%C5%9Apioch-2024-10058711",
     date: "20.03.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Artur"
   },
   {
     name: "Sennen Joyū",
@@ -158,7 +170,8 @@ const MOVIES = [
     year: 2001,
     filmweb: "https://www.filmweb.pl/film/Millennium+Actress-2001-104796",
     date: "27.03.2026",
-    flag: "🇯🇵"
+    flag: "🇯🇵",
+    author: "@Damian"
   },
   {
     name: "Le Locataire",
@@ -166,7 +179,8 @@ const MOVIES = [
     year: 1976,
     filmweb: "https://www.filmweb.pl/film/Lokator-1976-7194",
     date: "03.04.2026",
-    flag: "🇫🇷"
+    flag: "🇫🇷",
+    author: "@Adam"
   },
   {
     name: "Druk",
@@ -182,7 +196,8 @@ const MOVIES = [
     year: 1994,
     filmweb: "https://www.filmweb.pl/film/Forrest+Gump-1994-998",
     date: "17.04.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Artur"
   },
   {
     name: "Penguin's Memory: Shiawase monogatari",
@@ -190,7 +205,8 @@ const MOVIES = [
     year: 1985,
     filmweb: "https://www.filmweb.pl/film/Penguin's+Memory+Shiawase+monogatari-1985-557033",
     date: "24.04.2026",
-    flag: "🇯🇵"
+    flag: "🇯🇵",
+    author: "@Damian"
   },
   {
     name: "The Big Lebowski",
@@ -198,7 +214,8 @@ const MOVIES = [
     year: 1998,
     filmweb: "https://www.filmweb.pl/film/Big+Lebowski-1998-13",
     date: "01.05.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Adam"
   },
   {
     name: "Czeka na nas świat",
@@ -206,7 +223,8 @@ const MOVIES = [
     year: 2006,
     filmweb: "https://www.filmweb.pl/film/Czeka+na+nas+%C5%9Bwiat-2006-113155",
     date: "08.05.2026",
-    flag: "🇵🇱"
+    flag: "🇵🇱",
+    author: "@Hiszpan"
   },
   {
     name: "Samā Wōzu",
@@ -214,7 +232,8 @@ const MOVIES = [
     year: 2009,
     filmweb: "https://www.filmweb.pl/film/Summer+Wars-2009-507454",
     date: "15.05.2026",
-    flag: "🇯🇵"
+    flag: "🇯🇵",
+    author: "@Damian"
   },
   {
     name: "Beau Is Afraid",
@@ -222,7 +241,8 @@ const MOVIES = [
     year: 2023,
     filmweb: "https://www.filmweb.pl/film/Bo+si%C4%99+boi-2023-10003754",
     date: "22.05.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Adam"
   },
   {
     name: "Дерсу Узала",
@@ -230,7 +250,8 @@ const MOVIES = [
     year: 1975,
     filmweb: "https://www.filmweb.pl/film/Dersu+Uza%C5%82a-1975-34074",
     date: "29.05.2026",
-    flag: "🇷🇺 🇯🇵"
+    flag: "🇷🇺 🇯🇵",
+    author: "@Hiszpan"
   },
   
   {
@@ -239,7 +260,8 @@ const MOVIES = [
     year: 2005,
     filmweb: "https://www.filmweb.pl/film/Arashi+no+Yoru+ni-2005-215371",
     date: "05.06.2026",
-    flag: "🇯🇵"
+    flag: "🇯🇵",
+    author: "@Damian"
   },
   {
     name: "Возвращение",
@@ -247,7 +269,8 @@ const MOVIES = [
     year: 2003,
     filmweb: "https://www.filmweb.pl/film/Powr%C3%B3t-2003-107697",
     date: "12.06.2026",
-    flag: "🇷🇺"
+    flag: "🇷🇺",
+    author: "@Martin"
   },
   {
     name: "Magnolia",
@@ -255,7 +278,8 @@ const MOVIES = [
     year: 1999,
     filmweb: "https://www.filmweb.pl/film/Magnolia-1999-873",
     date: "19.06.2026",
-    flag: "🇺🇸"
+    flag: "🇺🇸",
+    author: "@Hiszpan"
   },
   {
     name: "Az ember tragédiája",
@@ -263,6 +287,7 @@ const MOVIES = [
     year: 2011,
     filmweb: "https://www.filmweb.pl/film/Tragedia+cz%C5%82owieka-2011-643034",
     date: "03.07.2026",
-    flag: "🇭🇺"
+    flag: "🇭🇺",
+    author: "@Damian"
   },
 ];
