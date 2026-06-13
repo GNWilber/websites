@@ -1,982 +1,125 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OdwyCamp w Pałacu</title>
-
-<meta property="og:title" content="OdwyCamp w Pałacu" />
-<meta property="og:description" content="OdwyCamp | 31.07 — 02.08 (2026) | Żelizna 91, 21-311" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://gnwilber.github.io/websites/odwykcamp/" />
-<meta property="og:image" content="https://gnwilber.github.io/websites/odwykcamp/favicon.png" />
-<meta name="theme-color" content="#79eb57" />
-
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    --green-950: #0f2318;
-    --green-900: #1b3a2b;
-    --green-800: #234d38;
-    --green-700: #2e6b4a;
-    --green-600: #368057;
-    --green-500: #3f9d6a;
-    --green-400: #5cb882;
-    --green-300: #8fd6ac;
-    --green-200: #c2ecd3;
-    --green-100: #e6f5ec;
-    --green-50:  #f0faf4;
-    --cream: #f5f8f3;
-    --discord: #5865F2;
-    --formularz: #9333ea;
-    --gold: #f0c040;
-    --radius: 24px;
-    --radius-sm: 14px;
-    --shadow-sm: 0 2px 8px rgba(27,58,43,.08);
-    --shadow: 0 8px 28px rgba(27,58,43,.13);
-    --shadow-lg: 0 16px 48px rgba(27,58,43,.18);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    font-family: 'Inter', "Segoe UI", system-ui, -apple-system, sans-serif;
-    background: var(--cream);
-    color: var(--green-900);
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  /* ── Background texture ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 900px 600px at 90% -5%, rgba(63,157,106,.12), transparent),
-      radial-gradient(ellipse 700px 500px at -10% 80%, rgba(27,58,43,.08), transparent);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 28px 20px 72px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* ══════════════════════════════
-     HERO
-  ══════════════════════════════ */
-  header.hero {
-    background: linear-gradient(135deg, var(--green-950) 0%, var(--green-800) 50%, var(--green-600) 100%);
-    color: #fff;
-    border-radius: var(--radius);
-    padding: 54px 42px 64px; /* Zwiększony dolny padding z 54px */
-    box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.08);
-    position: relative;
-    overflow: hidden;
-  }
-
-  header.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 600px 300px at 100% 0%, rgba(143,214,172,.15), transparent),
-      radial-gradient(ellipse 400px 400px at -5% 100%, rgba(63,157,106,.1), transparent);
-    pointer-events: none;
-  }
-
-  .hero-inner { 
-    position: relative; 
-    z-index: 1; 
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.2);
-    border-radius: 100px;
-    padding: 5px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: .4px;
-    color: var(--green-200);
-    margin-bottom: 18px;
-    backdrop-filter: blur(4px);
-  }
-
-  .hero-badge .dot-live {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: #4ade80;
-    box-shadow: 0 0 0 2px rgba(74,222,128,.3);
-    animation: pulse-live 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-live {
-    0%, 100% { box-shadow: 0 0 0 2px rgba(74,222,128,.3); }
-    50%       { box-shadow: 0 0 0 5px rgba(74,222,128,.15); }
-  }
-
-  header.hero h1 {
-    margin: 0 0 16px;
-    font-size: clamp(32px, 6vw, 56px);
-    font-weight: 800;
-    letter-spacing: -1px;
-    line-height: 1.1;
-  }
-
-  header.hero h1 .favicon-img {
-    height: 2em;
-    vertical-align: middle;
-    margin-right: 8px;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,.3));
-  }
-
-  header.hero p {
-    margin: 0 0 14px 0; /* 14px to odstęp na dole każdego akapitu */
-    font-size: 16px;
-    color: #fff;
-    opacity: 1;
-    max-width: 720px;
-    line-height: 1.7;
-  }
-
-  header.hero p:last-of-type {
-    margin-bottom: 0; /* Usuwa zbędny odstęp pod ostatnim akapitem */
-  }
-  
-  .hero-dates {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 26px;
-  }
-
-  .hero-date-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,.14);
-    border: 1px solid rgba(255,255,255,.22);
-    border-radius: 12px;
-    padding: 8px 16px;
-    font-weight: 700;
-    font-size: 15px;
-    backdrop-filter: blur(4px);
-    color: #fff;
-  }
-
-  /* ══════════════════════════════
-     SECTIONS
-  ══════════════════════════════ */
-  section {
-    background: rgba(253,255,249,.96);
-    border: 1px solid rgba(143,214,172,.25);
-    border-radius: var(--radius);
-    padding: 30px 32px;
-    margin-top: 22px;
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(2px);
-  }
-
-  h2 {
-    margin: 0 0 18px;
-    color: var(--green-800);
-    font-size: 20px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    letter-spacing: -.3px;
-  }
-
-  h2 .ico {
-    font-size: 22px;
-    line-height: 1;
-  }
-
-  /* ══════════════════════════════
-     MAP
-  ══════════════════════════════ */
-  #map {
-    height: 500px;
-    width: 100%;
-    border-radius: var(--radius-sm);
-    z-index: 0;
-    border: 1px solid var(--green-200);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .map-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 14px;
-  }
-
-  .map-legend span {
-    background: var(--green-50);
-    border: 1px solid var(--green-200);
-    border-radius: 100px;
-    padding: 5px 13px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--green-800);
-  }
-
-  /* ══════════════════════════════
-     TABLE
-  ══════════════════════════════ */
-  .table-scroll {
-    overflow-x: auto;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--green-200);
-  }
-
-  table {
-    border-collapse: separate;
-    border-spacing: 0;
-    width: 100%;
-    min-width: 860px;
-    font-size: 14.5px;
-  }
-
-  thead th {
-    background: var(--green-800);
-    color: #fff;
-    text-align: left;
-    padding: 14px 16px;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .4px;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  thead th:first-child { border-top-left-radius: 13px; }
-  thead th:last-child  { border-top-right-radius: 13px; }
-
-  tbody td {
-    padding: 13px 16px;
-    border-bottom: 1px solid var(--green-100);
-    vertical-align: middle;
-  }
-
-  tbody tr:last-child td { border-bottom: none; }
-
-  tbody tr {
-    transition: background .15s ease, transform .12s ease, box-shadow .12s ease;
-    cursor: pointer;
-  }
-
-  tbody tr:hover {
-    background: var(--green-50) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(27,58,43,.12);
-  }
-
-  .who {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 15px;
-  }
-
-  .dot {
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    flex: 0 0 auto;
-    border: 2.5px solid #fff;
-    box-shadow: 0 0 0 1.5px rgba(0,0,0,.12);
-  }
-
-  .from-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--green-100);
-    border-radius: 8px;
-    padding: 3px 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--green-800);
-  }
-
-  .car-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: var(--green-50);
-    border: 1px solid var(--green-200);
-    border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--green-900);
-  }
-
-  .date-badge {
-    display: inline-block;
-    background: var(--green-50);
-    border: 1px solid var(--green-200);
-    border-radius: 8px;
-    padding: 3px 9px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--green-800);
-  }
-
-  .contact-cell {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    font-size: 13.5px;
-  }
-
-  .contact-cell a {
-    color: var(--green-700);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 600;
-    padding: 2px 0;
-    border-bottom: 2px solid var(--green-300); /* Zmiana z dashed na solid i ujednolicenie koloru */
-    width: fit-content;
-    transition: color .15s, border-color .15s;
-  }
-
-  .contact-cell a:hover { 
-    color: var(--green-500); 
-    border-bottom-style: solid;
-    border-bottom-color: var(--green-500);
-  }
-  .contact-cell img { width: 20px; height: 20px; vertical-align: middle; }
-
-  .stops-list {
-    color: var(--green-700);
-    font-size: 13.5px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .stop-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: var(--green-100);
-    border-radius: 6px;
-    padding: 2px 8px;
-    font-size: 12.5px;
-    font-weight: 500;
-    width: fit-content;
-  }
-
-  /* ══════════════════════════════
-     CTA BLOCKS
-  ══════════════════════════════ */
-  .cta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 18px;
-    margin-top: 22px;
-  }
-
-  .cta {
-    flex: 1;
-    min-width: 280px;
-    border-radius: var(--radius);
-    padding: 26px 28px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
-    color: #fff;
-  }
-
-  .cta::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 300px 200px at 110% -20%, rgba(255,255,255,.12), transparent);
-    pointer-events: none;
-  }
-
-  .cta-discord { background: linear-gradient(135deg, #3b4bc2, #5865F2 60%, #7c85f5); }
-  .cta-form    { background: linear-gradient(135deg, #6b21a8, #9333ea 60%, #c084fc); }
-
-  .cta-icon {
-    font-size: 36px;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,.2));
-    flex: 0 0 auto;
-  }
-
-  .cta-text {
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .cta-text strong {
-    display: block;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .cta-text p {
-    margin: 0;
-    font-size: 14px;
-    opacity: .85;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    padding: 11px 22px;
-    border-radius: 14px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 14.5px;
-    transition: transform .15s ease, box-shadow .15s ease, opacity .15s;
-    white-space: nowrap;
-    flex: 0 0 auto;
-  }
-
-  .btn:hover { transform: translateY(-2px); opacity: .92; }
-  .btn:active { transform: translateY(0); }
-
-  .btn-discord {
-    background: rgba(255,255,255,.15);
-    color: #fff;
-    border: 1.5px solid rgba(255,255,255,.35);
-    box-shadow: 0 4px 14px rgba(0,0,0,.15);
-  }
-
-  .btn-form {
-    background: rgba(255,255,255,.15);
-    color: #fff;
-    border: 1.5px solid rgba(255,255,255,.35);
-    box-shadow: 0 4px 14px rgba(0,0,0,.15);
-  }
-
-  .btn img { width: 24px; height: 24px; }
-
-  /* ══════════════════════════════
-     INFO GRID
-  ══════════════════════════════ */
-  .grid2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-  }
-
-  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
-
-  ul.nice {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
-
-  ul.nice li {
-    padding: 10px 14px;
-    background: var(--green-50);
-    border: 1px solid var(--green-200);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: flex-start;
-    gap: 11px;
-    font-weight: 500;
-    font-size: 14.5px;
-    transition: background .15s, border-color .15s, transform .15s;
-  }
-
-  ul.nice li:hover {
-    background: var(--green-100);
-    border-color: var(--green-300);
-    transform: translateX(3px);
-  }
-
-  ul.nice li .em { font-size: 19px; flex: 0 0 auto; line-height: 1.4; }
-
-  ul.nice a {
-    color: var(--green-800);
-    font-weight: 700;
-    text-decoration: none;
-    border-bottom: 2px solid var(--green-300);
-    transition: color .15s, border-color .15s;
-  }
-
-  ul.nice a:hover {
-    color: var(--green-500);
-    border-bottom-color: var(--green-500);
-  }
-
-  /* Section header divider */
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .section-header-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--green-200), transparent);
-  }
-
-  /* ══════════════════════════════
-     EMPTY STATE
-  ══════════════════════════════ */
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--green-700);
-    opacity: .7;
-    font-style: italic;
-    font-size: 15px;
-  }
-
-  /* ══════════════════════════════
-     FOOTER
-  ══════════════════════════════ */
-  footer {
-    text-align: center;
-    margin-top: 38px;
-    color: var(--green-700);
-    font-size: 13px;
-    opacity: .7;
-  }
-
-  /* ══════════════════════════════
-     LEAFLET POPUP
-  ══════════════════════════════ */
-  .leaflet-popup-content-wrapper {
-    border-radius: 12px !important;
-    box-shadow: 0 8px 24px rgba(27,58,43,.18) !important;
-  }
-
-  .leaflet-popup-content a {
-    color: var(--green-700);
-    font-weight: 600;
-    text-decoration: none;
-    border-bottom: 1px solid var(--green-400);
-  }
-
-  .leaflet-popup-content a:hover { color: var(--green-500); }
-
-    /* ══════════════════════════════
-      RESPONSIVE
-    ══════════════════════════════ */
-  @media (max-width: 640px) {
-    header.hero { padding: 36px 24px; }
-    section { padding: 22px 20px; }
-    
-    /* Nowe reguły dla bloków z przyciskami na telefonie */
-    .cta { 
-      padding: 24px 22px; 
-      flex-direction: column;   /* Układa ikonę, tekst i przycisk w kolumnie */
-      text-align: center;       /* Środkuje tekst wewnątrz bloku */
-      justify-content: center;  /* Środkuje elementy w pionie/poziomie */
-    }
-    
-    .cta-text {
-      min-width: unset;         /* Resetuje minimalną szerokość */
-      margin-bottom: 4px;       /* Daje lekki odstęp między tekstem a przyciskiem */
-    }
-
-    .cta-row { flex-direction: column; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dyskusyjny Klub Filmowy</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Barlow:wght@300;400;500&family=Google+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-<div class="wrap">
 
-  <!-- ════════════════ HERO ════════════════ -->
-  <header class="hero">
-    <div class="hero-inner">
-      <h1>
-        <img src="favicon.png" alt="OdwyCamp" class="favicon-img">
-        OdwyCamp w Pałacu
-      </h1>
-      <p>
-        <p>Shark i jego klub motocyklowy oraz Gmina Komarówka Podlaska udostępniają nam wspaniały Pałac w stanie niszczejącym przy białoruskiej granicy.</p>
-        <p>Zaletą jest to, że za bardzo uczciwą cenę (czyli gratis) otrzymujemy wyśmienite warunki (o których poniżej), jednak haczykiem jest lokalizacja.</p>
-        <p>Z powodu owego haczyka poszukiwani są zmotoryzowani, którzy mają wolne miejsca i nie boją się zabrać zbłąkanych duszyczek po drodze.</p>
-      </p>
-      <div class="hero-dates">
-        <div class="hero-date-chip">📅 31.07 — 02.08 (2026)</div>
-        <div class="hero-date-chip">📍 Żelizna 91, 21-311</div>
+<body>
+  <div class="grain-overlay"></div>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-logo">
+        <span class="logo-dkf">DKF</span>
+        <div class="logo-divider"></div>
+        <div class="logo-text"><span class="logo-full">Dyskusyjny Klub Filmowy</span></div>
+        <div class="logo-divider"></div>
+        <div class="logo-text"><span class="logo-full">Piątek 19:00</span></div>
       </div>
     </div>
   </header>
 
-  <!-- ════════════════ MAPA ════════════════ -->
-  <section>
-    <h2><span class="ico">🗺️</span> Mapa &amp; trasy</h2>
-    <div id="map"></div>
-    <div class="map-legend">
-      <span>🏰 Pałac (cel)</span>
-      <span>🚆 Stacja kolejowa</span>
-      <span>🍕 Pizzeria</span>
-      <span>🛒 Sklep Dino</span>
-    </div>
-  </section>
-
-  <!-- ════════════════ TABELA ════════════════ -->
-  <section>
-    <h2><span class="ico">🚕</span> Podwózkownicy</h2>
-    <div class="table-scroll">
-      <table>
-        <thead>
-          <tr>
-            <th>Imię</th>
-            <th>Skąd</th>
-            <th>Przystanki</th>
-            <th>Pojazd (miejsca)</th>
-            <th>Od kiedy</th>
-            <th>Do kiedy</th>
-            <th>Kontakt</th>
-          </tr>
-        </thead>
-        <tbody id="participants-body"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ════════════════ CTA ROW ════════════════ -->
-  <div class="cta-row">
-    <div class="cta cta-form">
-      <div class="cta-icon">🛞</div>
-      <div class="cta-text">
-        <strong>Zgłoś się do Podwózkowników!</strong>
-        <p>Wypełnij króciutki formularz.</p>
-      </div>
-      <a class="btn btn-form"
-         href="https://docs.google.com/forms/d/e/1FAIpQLSdl7jQdi_itysU0FcvnWE2fHqa6FwbadWJZR1GOmOeEIRRBCg/viewform?usp=publish-editor"
-         target="_blank" rel="noopener">
-        📋 Formularz
-      </a>
-    </div>
-
-    <div class="cta cta-discord">
-      <div class="cta-icon">💬</div>
-      <div class="cta-text">
-        <strong>Jeśli masz pytanie albo nie chcesz wypełniać formularza🫩</strong>
-        <p>Napisz na Discordzie <strong>#odwykcamp</strong></p>
-      </div>
-      <a class="btn btn-discord"
-         href="https://discord.gg/PBTQbRYrj6"
-         target="_blank" rel="noopener">
-        <img src="https://cdn3.emoji.gg/emojis/7561-discord-clyde.png" alt="discord">
-        Dołącz
-      </a>
-    </div>
-  </div>
-
-  <!-- ════════════════ INFO ════════════════ -->
-  <section>
-    <div class="grid2">
-      <!-- CO BĘDZIE -->
-      <div>
-        <h2><span class="ico">🎒</span> Co będzie na miejscu</h2>
-        <ul class="nice">
-          <li><span class="em">🏠</span> Dach nad głową</li>
-          <li><span class="em">💧</span> Woda</li>
-          <li><span class="em">⚡</span> Prąd</li>
-          <li><span class="em">🚽</span> Klozet</li>
-          <li><span class="em">🚿</span> Prysznic</li>
-          <li><span class="em">🍳</span> Kuchenka</li>
-          <li><span class="em">🔥</span> Ognisko</li>
-          <li><span class="em">🛏️</span> Materce</li>
-          <li><span class="em">⛺</span> Miejsce na namiot</li>
-          <li><span class="em">🅿️</span> Parking</li>
-          <li><span class="em">🛒</span>
-            <a href="https://maps.app.goo.gl/6mAW7htjC6mWu4SL7" target="_blank" rel="noopener">Sklep Dino (7 km)</a>
-          </li>
-          <li><span class="em">🍕</span>
-            <a href="https://maps.app.goo.gl/5aAjFb2txWEn8C5t8" target="_blank" rel="noopener">Pizzunia (7 km)</a>
-          </li>
-        </ul>
+  <main>
+    <section class="upcoming-section">
+      <div class="section-label">
+        <span class="label-line"></span>
+        <span class="label-text" id="label-upcoming" title="Kliknij, aby skopiować do schowka">Nadchodzące spotkania</span>
+        <span class="label-line"></span>
       </div>
 
-      <!-- STACJE + MIEJSCÓWKA -->
-      <div>
-        <h2><span class="ico">🚉</span> Stacje kolejowe w okolicy</h2>
-        <ul class="nice">
-          <li>
-            <span class="em">⭐</span>
-            <div>
-              <a href="https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" target="_blank" rel="noopener">Międzyrzec Podlaski (20 km)</a>
-              <br><span style="font-size:.82em;opacity:.65;font-weight:400;">Największa stacja + PKS 2×/dzień do Żelizny</span>
+      <div class="cards-grid" id="upcoming-cards"></div>
+
+      <div class="empty-state hidden" id="upcoming-empty">
+        <p>Brak zaplanowanych seansów. Wróć wkrótce.</p>
+      </div>
+    </section>
+
+    <section class="download-section">
+      <div class="section-label">
+        <span class="label-line"></span>
+        <a class="label-text label-link" href="https://drive.google.com/drive/folders/1pQmbtr6OxSjRZ9QuECT4Y2iY_wdzlDYW?usp=sharing" target="_blank" rel="noopener" title="Otwórz dysk Google">Pobieranie filmów</a>
+        <span class="label-line"></span>
+      </div>
+
+      <div class="cards-grid">
+        <a class="drive-card" href="https://drive.google.com/drive/folders/1pQmbtr6OxSjRZ9QuECT4Y2iY_wdzlDYW?usp=sharing" target="_blank" rel="noopener">
+          <div class="card-icon"><img src="gdrive.svg" alt="Google Drive" class="drive-icon-large" /></div>
+          <h3 class="drive-title">Dysk Google</h3>
+          <p class="drive-desc">Folder z omawianymi filmami</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="archive-section">
+      <div class="section-label section-label--archive-toggle">
+        <span class="label-line"></span>
+        <div class="archive-toggle" role="tablist" aria-label="Widok poprzednich spotkań">
+          <button type="button" class="archive-toggle-option is-selected" id="toggle-meetings" role="tab" aria-selected="true" aria-controls="meetings-view" title="Kliknij ponownie, aby skopiować listę spotkań">Spotkania</button>
+          <span class="archive-toggle-divider" aria-hidden="true">|</span>
+          <button type="button" class="archive-toggle-option" id="toggle-ranking" role="tab" aria-selected="false" aria-controls="ranking-view" title="Przełącz na ranking">&nbsp;Ranking</button>
+        </div>
+        <span class="label-line"></span>
+      </div>
+
+      <div class="archive-view archive-view--meetings" id="meetings-view" role="tabpanel" aria-labelledby="toggle-meetings">
+        <div class="filters" id="filters">
+          <div class="filter-group">
+            <span class="filter-label">Kraje</span>
+            <div class="filter-countries" id="filter-countries"></div>
+          </div>
+
+          <div class="filter-group filter-group--year">
+            <span class="filter-label">Rok produkcji</span>
+            <div class="year-slider" id="year-slider">
+              <div class="year-track">
+                <div class="year-range" id="year-range"></div>
+                <input type="range" id="year-min" class="year-input" />
+                <input type="range" id="year-max" class="year-input" />
+              </div>
+              <div class="year-values">
+                <span id="year-min-val">—</span>
+                <span id="year-max-val">—</span>
+              </div>
             </div>
-          </li>
-          <li><span class="em">🚆</span>
-            <a href="https://maps.app.goo.gl/496LfwjnqaHwvWSC9" target="_blank" rel="noopener">Bezwola (15 km)</a>
-          </li>
-          <li><span class="em">🚆</span>
-            <a href="https://maps.app.goo.gl/pYLyiXETDD2NJoEu6" target="_blank" rel="noopener">Milanów (24 km)</a>
-          </li>
-          <li><span class="em">🚆</span>
-            <a href="https://maps.app.goo.gl/E1p2H18B54CupRU2A" target="_blank" rel="noopener">Radzyń Podlaski (29 km)</a>
-          </li>
-          <li><span class="em">🚆</span>
-            <a href="https://maps.app.goo.gl/CpqnAceBuike689v8" target="_blank" rel="noopener">Parczew (31 km)</a>
-          </li>
-        </ul>
+          </div>
 
-        <h2 style="margin-top:26px;"><span class="ico">📍</span> Miejscówka</h2>
-        <ul class="nice">
-          <li>
-            <span class="em">🏰</span>
-            <a href="https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A" target="_blank" rel="noopener">
-              Żelizna 91, 21-311 Komarówka Podlaska
-            </a>
-          </li>
-        </ul>
+          <label class="filter-checkbox">
+            <input type="checkbox" id="show-all-toggle" />
+            <span class="filter-checkbox-box"></span>
+            <span class="filter-checkbox-text">Pokaż niepasujące (wyróżnione)</span>
+          </label>
+        </div>
+
+        <ul class="archive-list" id="archive-list"></ul>
+
+        <div class="empty-state hidden" id="archive-empty">
+          <p>Brak omówionych filmów.</p>
+        </div>
       </div>
-    </div>
-  </section>
-</div>
 
-<script>
-/* ══════════════════════════════════════════
-   1) MIEJSCE SPOTKANIA
-══════════════════════════════════════════ */
-const MEETING = {
-  name: "Pałac",
-  coords: [51.864661, 22.939834],
-  url: "https://maps.app.goo.gl/8V5CT5RX4oVcgXr1A"
-};
+      <div class="archive-view archive-view--ranking hidden" id="ranking-view" role="tabpanel" aria-labelledby="toggle-ranking">
+        <div class="ranking-actions ranking-actions--top" id="ranking-actions">
+          <button type="button" class="ranking-copy-btn" id="ranking-copy-btn">Skopiuj ranking</button>
+          <button type="button" class="ranking-copy-btn ranking-restore-btn" id="ranking-restore-btn">Wczytaj z kodu</button>
+        </div>
 
-/* ══════════════════════════════════════════
-   2) UCZESTNICY
-══════════════════════════════════════════ */
-const participants = [
-  {
-    name: "Igor Brzęczek",
-    from: "Rybnik",
-    coords: [50.102141, 18.545987],
-    stops: [],
-    car: "Samochód (4)",
-    from_date: "Nie wie",
-    to_date: "Nie wie",
-    contact: {
-      discord:  ["igor.hanys",  "https://discord.com/users/789486349471842364"],
-      facebook: ["Igor Hanys",  "https://www.facebook.com/igor.hanys"]
-    }
-  }
-  /* ==========================================================
-  TEMPLATE – nie usuwać
-  ,{
-    name: "Imię Nazwisko / Nick",
-    from: "Miasto",
-    coords: [52.2297, 21.0122],
-    stops: [{ name:"Przystanek", coords:[51.5, 21.0] }],
-    car: "🚙 Automobil (x)",
-    from_date: "Piątek rano",
-    to_date: "Niedziela",
-    contact: {
-      phone:    ["+48 123 456 789", "tel:+48123456789"],
-      email:    ["twoj@email.com",  "mailto:twoj@email.com"],
-      discord:  ["Nick#0000",       "https://discord.com"],
-      whatsapp: ["Napisz na WA",    "https://wa.me/48123456789"],
-      facebook: ["Profil FB",       "https://facebook.com/"]
-    }
-  }
-  ========================================================== */
-];
+        <ul class="archive-list ranking-list" id="ranking-list"></ul>
 
-/* ══════════════════════════════════════════
-   3) POI
-══════════════════════════════════════════ */
-const POI_TRAIN_STATIONS = [
-  { name:"Stacja Bezwola",              coords:[51.771834, 22.804366], url:"https://maps.app.goo.gl/496LfwjnqaHwvWSC9" },
-  { name:"Dworzec Międzyrzec Podlaski", coords:[51.976220, 22.785586], url:"https://maps.app.goo.gl/GKngW9dcqdbmPYXx8" },
-  { name:"Stacja Milanów",              coords:[51.702001, 22.875203], url:"https://maps.app.goo.gl/pYLyiXETDD2NJoEu6" },
-  { name:"Stacja Radzyń Podlaski",      coords:[51.827132, 22.668824], url:"https://maps.app.goo.gl/E1p2H18B54CupRU2A" },
-  { name:"Stacja Parczew",              coords:[51.626594, 22.872181], url:"https://maps.app.goo.gl/CpqnAceBuike689v8" },
-];
-const POI_SHOPS = [
-  { name:"Pizzeria",   coords:[51.803248, 22.943766], url:"https://maps.app.goo.gl/5aAjFb2txWEn8C5t8", emoji:"🍕" },
-  { name:"Sklep Dino", coords:[51.805963, 22.942500], url:"https://maps.app.goo.gl/6mAW7htjC6mWu4SL7", emoji:"🛒" },
-];
+        <div class="empty-state hidden" id="ranking-empty">
+          <p>Brak filmów do ułożenia rankingu.</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-/* ══════════════════════════════════════════
-   4) KOLOR Z IMIENIA
-══════════════════════════════════════════ */
-function colorFromString(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) { h = str.charCodeAt(i) + ((h << 5) - h); h = h & h; }
-  return `hsl(${Math.abs(h) % 360}, 65%, 45%)`;
-}
-
-/* ══════════════════════════════════════════
-   5) MAPA
-══════════════════════════════════════════ */
-const map = L.map('map').setView([52.0, 22.4], 6);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>'
-}).addTo(map);
-
-function makeEmojiIcon(emoji, size = 30) {
-  return L.divIcon({
-    className: '',
-    html: `<div style="font-size:${size}px;line-height:1;text-align:center;width:${size}px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.4));user-select:none;">${emoji}</div>`,
-    iconSize:   [size, size],
-    iconAnchor: [size / 2 + 7, size]
-  });
-}
-
-function addPoiMarker(coords, emoji, name, url, size) {
-  const m = L.marker(coords, { icon: makeEmojiIcon(emoji, size || 28) }).addTo(map);
-  m.bindPopup(`<b>${name}</b>${url ? `<br><a href="${url}" target="_blank" rel="noopener">📍 Google Maps</a>` : ''}`);
-  return m;
-}
-
-/* Pałac */
-L.marker(MEETING.coords, { icon: makeEmojiIcon('🏰', 38) })
-  .addTo(map)
-  .bindPopup(`<b>${MEETING.name}</b><br>Żelizna 91, 21-311<br><a href="${MEETING.url}" target="_blank" rel="noopener">📍 Google Maps</a>`);
-
-POI_TRAIN_STATIONS.forEach(s => addPoiMarker(s.coords, '🚆', s.name, s.url, 26));
-POI_SHOPS.forEach(s => addPoiMarker(s.coords, s.emoji, s.name, s.url, 28));
-
-/* Trasy */
-const routes = {};
-const allLatLngs = [
-  MEETING.coords,
-  ...POI_TRAIN_STATIONS.map(s => s.coords),
-  ...POI_SHOPS.map(s => s.coords)
-];
-
-participants.forEach(p => {
-  const color = colorFromString(p.name);
-  p._color = color;
-  const points = [p.coords, ...p.stops.map(s => s.coords), MEETING.coords].filter(c => Array.isArray(c));
-  points.forEach(c => allLatLngs.push(c));
-
-  const line = L.polyline(points, { color, weight: 4, opacity: .75, lineJoin: 'round' }).addTo(map);
-  line.bindPopup(`<b>Trasa: ${p.name}</b><br>${p.from} → Pałac`);
-
-  const startMarker = L.circleMarker(p.coords, {
-    radius: 7, color: '#fff', weight: 2.5, fillColor: color, fillOpacity: 1
-  }).addTo(map).bindPopup(`<b>${p.name}</b><br>Start: ${p.from}`);
-
-  const endMarker = L.circleMarker(MEETING.coords, {
-    radius: 7, color: '#fff', weight: 2.5, fillColor: color, fillOpacity: 1
-  }).addTo(map).bindPopup(`<b>${p.name}</b><br>Meta: Pałac`);
-
-  const stopMarkers = p.stops.map(s =>
-    L.circleMarker(s.coords, { radius: 5, color: '#fff', weight: 2, fillColor: color, fillOpacity: .9 })
-      .addTo(map).bindPopup(`Przystanek: ${s.name}`)
-  );
-
-  routes[p.name] = { line, startMarker, endMarker, stopMarkers, color };
-});
-
-if (allLatLngs.length > 1) map.fitBounds(L.latLngBounds(allLatLngs).pad(0.15));
-
-/* ══════════════════════════════════════════
-   6) HIGHLIGHT
-══════════════════════════════════════════ */
-function highlightRoute(name, on) {
-  const r = routes[name];
-  if (!r) return;
-  if (on) {
-    r.line.setStyle({ weight: 8, opacity: 1 }); r.line.bringToFront();
-    r.startMarker.setStyle({ radius: 11 }); r.startMarker.bringToFront();
-    r.endMarker.setStyle({ radius: 11 });   r.endMarker.bringToFront();
-    r.stopMarkers.forEach(m => { m.setStyle({ radius: 8 }); m.bringToFront(); });
-  } else {
-    r.line.setStyle({ weight: 4, opacity: .75 });
-    r.startMarker.setStyle({ radius: 7 });
-    r.endMarker.setStyle({ radius: 7 });
-    r.stopMarkers.forEach(m => m.setStyle({ radius: 5 }));
-  }
-}
-
-/* ══════════════════════════════════════════
-   7) TABELA
-══════════════════════════════════════════ */
-const IMG_DISCORD  = "https://cdn3.emoji.gg/emojis/2372-discord-clyde-dark.png";
-const IMG_WHATSAPP = "https://cdn3.emoji.gg/emojis/68016-whatsapp-icon.png";
-const IMG_FACEBOOK = "https://cdn3.emoji.gg/emojis/2116-facebook.png";
-
-const tbody = document.getElementById('participants-body');
-
-if (participants.length === 0) {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td colspan="7"><div class="empty-state">Brak zgłoszeń — bądź pierwszy! 🚗</div></td>`;
-  tbody.appendChild(tr);
-}
-
-participants.forEach(p => {
-  const color = p._color;
-  const tr = document.createElement('tr');
-  tr.style.background = `linear-gradient(90deg, ${color}18 0%, transparent 40%)`;
-
-  const c = p.contact || {};
-  let contactHtml = '<div class="contact-cell">';
-  if (c.email    && Array.isArray(c.email))    contactHtml += `<a href="${c.email[1]}"    target="_blank" rel="noopener">📧 ${c.email[0]}</a>`;
-  if (c.phone    && Array.isArray(c.phone))    contactHtml += `<a href="${c.phone[1]}">📞 ${c.phone[0]}</a>`;
-  if (c.discord  && Array.isArray(c.discord))  contactHtml += `<a href="${c.discord[1]}"  target="_blank" rel="noopener"><img src="${IMG_DISCORD}"  alt="discord">  ${c.discord[0]}</a>`;
-  if (c.whatsapp && Array.isArray(c.whatsapp)) contactHtml += `<a href="${c.whatsapp[1]}" target="_blank" rel="noopener"><img src="${IMG_WHATSAPP}" alt="whatsapp"> ${c.whatsapp[0]}</a>`;
-  if (c.facebook && Array.isArray(c.facebook)) contactHtml += `<a href="${c.facebook[1]}" target="_blank" rel="noopener"><img src="${IMG_FACEBOOK}" alt="facebook">  ${c.facebook[0]}</a>`;
-  contactHtml += '</div>';
-
-  const stopsTxt = p.stops.length
-    ? `<div class="stops-list">${p.stops.map(s => `<span class="stop-chip">📍 ${s.name}</span>`).join('')}</div>`
-    : '<span style="opacity:.45;">—</span>';
-
-  tr.innerHTML = `
-    <td><div class="who"><span class="dot" style="background:${color}"></span>${p.name}</div></td>
-    <td><span class="from-badge">${p.from}</span></td>
-    <td>${stopsTxt}</td>
-    <td><span class="car-badge">${p.car}</span></td>
-    <td><span class="date-badge">${p.from_date}</span></td>
-    <td><span class="date-badge">${p.to_date}</span></td>
-    <td>${contactHtml}</td>
-  `;
-
-  tr.addEventListener('mouseenter', () => highlightRoute(p.name, true));
-  tr.addEventListener('mouseleave', () => highlightRoute(p.name, false));
-  tbody.appendChild(tr);
-});
-</script>
+  <script src="movies.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

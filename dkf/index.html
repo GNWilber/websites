@@ -1,244 +1,125 @@
 <!DOCTYPE html>
-
 <html lang="pl">
-
 <head>
-
   <meta charset="UTF-8" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Dyskusyjny Klub Filmowy</title>
-
   <link rel="icon" type="image/png" href="favicon.png">
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&family=Barlow:wght@300;400;500&family=Google+Sans:wght@400;500&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="style.css" />
-
 </head>
 
-
 <body>
-
   <div class="grain-overlay"></div>
 
-
   <header>
-
     <div class="header-inner">
-
       <div class="header-logo">
-
         <span class="logo-dkf">DKF</span>
-
         <div class="logo-divider"></div>
-
-        <div class="logo-text">
-
-          <span class="logo-full">Dyskusyjny Klub Filmowy</span>
-
-        </div>
-
+        <div class="logo-text"><span class="logo-full">Dyskusyjny Klub Filmowy</span></div>
         <div class="logo-divider"></div>
-
-        <div class="logo-text">
-
-          <span class="logo-full">Piątek 19:00</span>
-
-        </div>
-
+        <div class="logo-text"><span class="logo-full">Piątek 19:00</span></div>
       </div>
-
     </div>
-
   </header>
 
-
   <main>
-
     <section class="upcoming-section">
-
       <div class="section-label">
-
         <span class="label-line"></span>
-
         <span class="label-text" id="label-upcoming" title="Kliknij, aby skopiować do schowka">Nadchodzące spotkania</span>
-
         <span class="label-line"></span>
-
       </div>
 
-
-      <div class="cards-grid" id="upcoming-cards">
-
-        <!-- Dynamically populated -->
-
-      </div>
-
+      <div class="cards-grid" id="upcoming-cards"></div>
 
       <div class="empty-state hidden" id="upcoming-empty">
-
         <p>Brak zaplanowanych seansów. Wróć wkrótce.</p>
-
       </div>
-
     </section>
-
 
     <section class="download-section">
-
       <div class="section-label">
-
         <span class="label-line"></span>
-
         <a class="label-text label-link" href="https://drive.google.com/drive/folders/1pQmbtr6OxSjRZ9QuECT4Y2iY_wdzlDYW?usp=sharing" target="_blank" rel="noopener" title="Otwórz dysk Google">Pobieranie filmów</a>
-
         <span class="label-line"></span>
-
       </div>
-
 
       <div class="cards-grid">
-
         <a class="drive-card" href="https://drive.google.com/drive/folders/1pQmbtr6OxSjRZ9QuECT4Y2iY_wdzlDYW?usp=sharing" target="_blank" rel="noopener">
-
-          <div class="card-icon">
-
-            <img src="gdrive.svg" alt="Google Drive" class="drive-icon-large" />
-
-          </div>
-
+          <div class="card-icon"><img src="gdrive.svg" alt="Google Drive" class="drive-icon-large" /></div>
           <h3 class="drive-title">Dysk Google</h3>
-
           <p class="drive-desc">Folder z omawianymi filmami</p>
-
         </a>
-
       </div>
-
     </section>
 
-
     <section class="archive-section">
-
       <div class="section-label section-label--archive-toggle">
-
         <span class="label-line"></span>
-
-
         <div class="archive-toggle" role="tablist" aria-label="Widok poprzednich spotkań">
-
-          <button
-
-            type="button"
-
-            class="archive-toggle-option is-selected"
-
-            id="toggle-meetings"
-
-            role="tab"
-
-            aria-selected="true"
-
-            aria-controls="meetings-view"
-
-            title="Kliknij ponownie, aby skopiować listę spotkań"
-
-          >
-
-            Spotkania
-
-          </button>
-
-
+          <button type="button" class="archive-toggle-option is-selected" id="toggle-meetings" role="tab" aria-selected="true" aria-controls="meetings-view" title="Kliknij ponownie, aby skopiować listę spotkań">Spotkania</button>
           <span class="archive-toggle-divider" aria-hidden="true">|</span>
-
-
-          <button
-
-            type="button"
-
-            class="archive-toggle-option"
-
-            id="toggle-ranking"
-
-            role="tab"
-
-            aria-selected="false"
-
-            aria-controls="ranking-view"
-
-            title="Przełącz na ranking"
-
-          >
-
-            &nbsp;Ranking
-
-          </button>
-
+          <button type="button" class="archive-toggle-option" id="toggle-ranking" role="tab" aria-selected="false" aria-controls="ranking-view" title="Przełącz na ranking">&nbsp;Ranking</button>
         </div>
-
-
         <span class="label-line"></span>
-
       </div>
 
-
       <div class="archive-view archive-view--meetings" id="meetings-view" role="tabpanel" aria-labelledby="toggle-meetings">
+        <div class="filters" id="filters">
+          <div class="filter-group">
+            <span class="filter-label">Kraje</span>
+            <div class="filter-countries" id="filter-countries"></div>
+          </div>
+
+          <div class="filter-group filter-group--year">
+            <span class="filter-label">Rok produkcji</span>
+            <div class="year-slider" id="year-slider">
+              <div class="year-track">
+                <div class="year-range" id="year-range"></div>
+                <input type="range" id="year-min" class="year-input" />
+                <input type="range" id="year-max" class="year-input" />
+              </div>
+              <div class="year-values">
+                <span id="year-min-val">—</span>
+                <span id="year-max-val">—</span>
+              </div>
+            </div>
+          </div>
+
+          <label class="filter-checkbox">
+            <input type="checkbox" id="show-all-toggle" />
+            <span class="filter-checkbox-box"></span>
+            <span class="filter-checkbox-text">Pokaż niepasujące (wyróżnione)</span>
+          </label>
+        </div>
 
         <ul class="archive-list" id="archive-list"></ul>
 
-
         <div class="empty-state hidden" id="archive-empty">
-
           <p>Brak omówionych filmów.</p>
-
         </div>
-
       </div>
 
-
       <div class="archive-view archive-view--ranking hidden" id="ranking-view" role="tabpanel" aria-labelledby="toggle-ranking">
+        <div class="ranking-actions ranking-actions--top" id="ranking-actions">
+          <button type="button" class="ranking-copy-btn" id="ranking-copy-btn">Skopiuj ranking</button>
+          <button type="button" class="ranking-copy-btn ranking-restore-btn" id="ranking-restore-btn">Wczytaj z kodu</button>
+        </div>
 
         <ul class="archive-list ranking-list" id="ranking-list"></ul>
 
-
         <div class="empty-state hidden" id="ranking-empty">
-
           <p>Brak filmów do ułożenia rankingu.</p>
-
         </div>
-
-
-        <div class="ranking-actions" id="ranking-actions">
-
-          <button type="button" class="ranking-copy-btn" id="ranking-copy-btn">
-
-            Skopiuj ranking
-
-          </button>
-
-        </div>
-
       </div>
-
     </section>
-
   </main>
 
-
-  <!-- footer is injected by script.js only when there is an upcoming movie -->
-
-
   <script src="movies.js"></script>
-
   <script src="script.js"></script>
-
 </body>
-
 </html>

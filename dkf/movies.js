@@ -1,21 +1,51 @@
-// ============================================================
-//  DANE FILMÓW — edytuj tutaj, aby dodać lub usunąć filmy
-//  FORMAT DATY: DD.MM.YYYY
-// ============================================================
-
-  // {
-  //   name: "",
-  //   altName: "",
-  //   year: ,
-  //   filmweb: "",
-  //   date: ".2026",
-  //   flag: ""
-  // },
-
+// DANE FILMÓW — edytuj tutaj, aby dodać lub usunąć filmy. FORMAT DATY: DD.MM.YYYY
+// {
+//   name: "",
+//   altName: "",
+//   year: ,
+//   filmweb: "",
+//   date: ".2026",
+//   flag: ""
+// },
 
 const ANNOUNCEMENT = "";
-
 const ANNOUNCEMENT_EXPIRY = "15.05.2026";
+
+// Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
+const COUNTRIES = {
+  "🇵🇱": "Polska",
+  "🇺🇸": "USA",
+  "🇬🇧": "Wielka Brytania",
+  "🇫🇷": "Francja",
+  "🇩🇪": "Niemcy",
+  "🇮🇹": "Włochy",
+  "🇪🇸": "Hiszpania",
+  "🇯🇵": "Japonia",
+  "🇰🇷": "Korea Płd.",
+  "🇷🇺": "Rosja",
+  "🇨🇿": "Czechy",
+  "🇸🇪": "Szwecja",
+  "🇩🇰": "Dania",
+  "🇧🇪": "Belgia",
+  "🇱🇻": "Łotwa",
+  "🇦🇺": "Australia",
+  "🇨🇦": "Kanada",
+  "🇮🇳": "Indie",
+  "🇨🇳": "Chiny",
+  "🇧🇷": "Brazylia",
+  "🇲🇽": "Meksyk",
+  "🇦🇷": "Argentyna",
+  "🇮🇷": "Iran",
+  "🇳🇴": "Norwegia",
+  "🇫🇮": "Finlandia",
+  "🇳🇱": "Holandia",
+  "🇦🇹": "Austria",
+  "🇨🇭": "Szwajcaria",
+  "🇵🇹": "Portugalia",
+  "🇬🇷": "Grecja",
+  "🇭🇺": "Węgry",
+  "🇮🇪": "Irlandia"
+};
 
 const MOVIES = [
   {

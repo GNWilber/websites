@@ -1,66 +1,78 @@
-// ============================================================
-//  DYSKUSYJNY KLUB FILMOWY — logika strony v6
-// ============================================================
+// DYSKUSYJNY KLUB FILMOWY — logika strony v7
 const POLISH_MONTHS = [
   "stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca",
   "lipca", "sierpnia", "września", "października", "listopada", "grudnia"
 ];
-// ---- DATE HELPERS ----
+const RANKING_PREFIX = "Ranking DKF";
+
+// DATE HELPERS
 function parseDate(str) {
   const [d, m, y] = str.split(".").map(Number);
   return new Date(y, m - 1, d);
 }
-/** Upcoming = today or later. */
 function isUpcoming(movieDate) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const cutoff = new Date(today);
-  cutoff.setDate(cutoff.getDate());
-  return movieDate >= cutoff;
+  return movieDate >= today;
 }
-/** Returns the first movie that is today or in the future, strictly. */
 function getNextMovie(sortedMovies) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return sortedMovies.find(m => parseDate(m.date) >= today) || null;
 }
-// ---- DISPLAY HELPERS ----
-/** "Incepcja" or "Incepcja (Inception)" */
+
+// DISPLAY HELPERS
 function displayName(movie) {
   return movie.altName ? `${movie.name} (${movie.altName})` : movie.name;
 }
-// ---- COPY FORMAT BUILDERS ----
+function extractFlags(movie) {
+  if (!movie.flag) return [];
+  return [...movie.flag.matchAll(/\p{Regional_Indicator}\p{Regional_Indicator}/gu)].map(m => m[0]);
+}
+
+// COPY FORMAT BUILDERS
 function buildUpcomingCopyText(upcomingMovies) {
   return upcomingMovies
-    .map(m => {
-      const name = displayName(m);
-      return `### ${m.date}: [*${name} [${m.year}]*](${m.filmweb})`;
-    })
+    .map(m => `### ${m.date}: [*${displayName(m)} [${m.year}]*](${m.filmweb})`)
     .join("  \n") + "  \n";
 }
 function buildArchiveCopyText(archiveMovies, globalIndexMap) {
   return [...archiveMovies]
     .reverse()
-    .map(m => {
-      const num = globalIndexMap.get(m);
-      const name = displayName(m);
-      return `${num}. ${m.date}: ${name} [${m.year}]`;
-    })
+    .map(m => `${globalIndexMap.get(m)}. ${m.date}: ${displayName(m)} [${m.year}]`)
     .join("\n");
 }
-function buildRankingCopyText(rankingMovies) {
-  return rankingMovies
-    .map((m, i) => {
-      const name = displayName(m);
-      return `${i + 1}. ${name} [${m.year}]`;
-    })
+function buildRankingCopyText(rankingMovies, code) {
+  const header = `${RANKING_PREFIX} {${code}}:`;
+  const body = rankingMovies
+    .map((m, i) => `${i + 1}. ${displayName(m)} [${m.year}]`)
     .join("\n");
+  return `${header}\n${body}`;
 }
-// ============================================================
-//  TOAST SYSTEM
-//  — when footer is present: slides over footer content
-//  — when no footer: classic floating toast from bottom
-// ============================================================
+
+// RANKING SEED CODE — encode order of movie indices into a short base36 string
+function encodeRanking(orderIndices) {
+  // Each index encoded as 2-char base36 (supports up to 1295 movies)
+  return orderIndices.map(i => i.toString(36).padStart(2, "0")).join("");
+}
+function decodeRanking(code) {
+  const clean = code.trim().replace(/[^0-9a-z]/gi, "").toLowerCase();
+  if (clean.length === 0 || clean.length % 2 !== 0) return null;
+  const out = [];
+  for (let i = 0; i < clean.length; i += 2) {
+    const n = parseInt(clean.slice(i, i + 2), 36);
+    if (Number.isNaN(n)) return null;
+    out.push(n);
+  }
+  return out;
+}
+function extractCodeFromInput(raw) {
+  // Accept either the bare code or the full first line "Ranking DKF {code}:"
+  const m = raw.match(/\{([^}]+)\}/);
+  return m ? m[1] : raw;
+}
+
+// TOAST SYSTEM
 let _toastTimer = null;
 function showToast(message) {
   const footer = document.querySelector("footer");
@@ -69,12 +81,9 @@ function showToast(message) {
     toastMsg.textContent = message;
     footer.classList.add("toast-active");
     clearTimeout(_toastTimer);
-    _toastTimer = setTimeout(() => {
-      footer.classList.remove("toast-active");
-    }, 2400);
+    _toastTimer = setTimeout(() => footer.classList.remove("toast-active"), 2400);
     return;
   }
-  // ---- Floating fallback, no footer ----
   const existing = document.getElementById("copy-toast");
   if (existing) existing.remove();
   const toast = document.createElement("div");
@@ -82,7 +91,6 @@ function showToast(message) {
   toast.className = "copy-toast";
   toast.textContent = message;
   document.body.appendChild(toast);
-  // Force reflow to trigger transition
   toast.getBoundingClientRect();
   toast.classList.add("visible");
   clearTimeout(_toastTimer);
@@ -95,7 +103,6 @@ async function copyToClipboard(text, toastMessage) {
   try {
     await navigator.clipboard.writeText(text);
   } catch {
-    // Fallback for older browsers / non-HTTPS
     const ta = document.createElement("textarea");
     ta.value = text;
     ta.style.cssText = "position:fixed;opacity:0;pointer-events:none";
@@ -106,9 +113,8 @@ async function copyToClipboard(text, toastMessage) {
   }
   showToast(toastMessage);
 }
-// ============================================================
-//  CARD BUILDER
-// ============================================================
+
+// CARD BUILDER
 function buildCard(movie) {
   const date = parseDate(movie.date);
   const day = date.getDate();
@@ -117,12 +123,9 @@ function buildCard(movie) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const isToday = date.getTime() === today.getTime();
-  const isPast  = date < today;
+  const isPast = date < today;
   const card = document.createElement("article");
-  card.className =
-    "movie-card" +
-    (isToday ? " is-today" : "") +
-    (isPast  ? " is-past"  : "");
+  card.className = "movie-card" + (isToday ? " is-today" : "") + (isPast ? " is-past" : "");
   card.innerHTML = `
     <div class="card-date">
       <span class="date-day">${day}</span>
@@ -140,25 +143,21 @@ function buildCard(movie) {
       <img src="filmwebfull.svg" alt="Filmweb" class="filmweb-logo-full" />
     </a>
   `;
-  // Filmweb link — open in new tab, don't trigger card copy
   card.querySelector(".card-link").addEventListener("click", e => e.stopPropagation());
-  // Clicking anywhere else copies the title
   card.addEventListener("click", () => {
-    const text = `${displayName(movie)} [${movie.year}]`;
-    copyToClipboard(text, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
+    copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
   return card;
 }
-// ============================================================
-//  ARCHIVE ITEM BUILDER
-// ============================================================
-function buildArchiveItem(movie, globalNum) {
+
+// ARCHIVE ITEM BUILDER
+function buildArchiveItem(movie, globalNum, dimmed) {
   const date = parseDate(movie.date);
   const day = date.getDate();
   const month = POLISH_MONTHS[date.getMonth()];
   const year = date.getFullYear();
   const li = document.createElement("li");
-  li.className = "archive-item";
+  li.className = "archive-item" + (dimmed ? " is-filtered-out" : "");
   li.innerHTML = `
     <span class="archive-num">${globalNum}.</span>
     <span class="archive-date">${day} ${month} ${year}</span>
@@ -172,18 +171,14 @@ function buildArchiveItem(movie, globalNum) {
       <img src="filmweb.svg" alt="Filmweb" class="filmweb-logo-sq" />
     </a>
   `;
-  // Filmweb link — open in new tab, don't trigger copy
   li.querySelector(".archive-link").addEventListener("click", e => e.stopPropagation());
-  // Clicking the row copies the title
   li.addEventListener("click", () => {
-    const text = `${displayName(movie)} [${movie.year}]`;
-    copyToClipboard(text, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
+    copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
   return li;
 }
-// ============================================================
-//  RANKING ITEM BUILDER
-// ============================================================
+
+// RANKING ITEM BUILDER
 function buildRankingItem(movie, rank, movieKey, shouldSuppressClick) {
   const li = document.createElement("li");
   li.className = "archive-item ranking-item";
@@ -206,49 +201,38 @@ function buildRankingItem(movie, rank, movieKey, shouldSuppressClick) {
   link.addEventListener("dragstart", e => e.preventDefault());
   li.addEventListener("click", () => {
     if (shouldSuppressClick && shouldSuppressClick()) return;
-    const text = `${displayName(movie)} [${movie.year}]`;
-    copyToClipboard(text, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
+    copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
   return li;
 }
 function getDragAfterElement(container, y) {
-  const draggableElements = [
-    ...container.querySelectorAll(".ranking-item:not(.is-dragging)")
-  ];
+  const draggableElements = [...container.querySelectorAll(".ranking-item:not(.is-dragging)")];
   return draggableElements.reduce((closest, child) => {
     const box = child.getBoundingClientRect();
     const offset = y - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset, element: child };
-    }
+    if (offset < 0 && offset > closest.offset) return { offset, element: child };
     return closest;
   }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
 }
-// ============================================================
-//  STICKY FOOTER — announcement OR next upcoming movie
-// ============================================================
-/** Returns true when ANNOUNCEMENT is set and has not yet expired. */
+
+// STICKY FOOTER — announcement OR next upcoming movie
 function isAnnouncementActive() {
   if (typeof ANNOUNCEMENT === "undefined" || !ANNOUNCEMENT || !ANNOUNCEMENT.trim()) return false;
   if (typeof ANNOUNCEMENT_EXPIRY === "undefined" || !ANNOUNCEMENT_EXPIRY) return true;
   const expiry = parseDate(ANNOUNCEMENT_EXPIRY);
-  expiry.setHours(23, 59, 59, 999); // expires at end of that day
+  expiry.setHours(23, 59, 59, 999);
   return new Date() <= expiry;
 }
 function renderFooter(nextMovie) {
   const showAnnouncement = isAnnouncementActive();
-  // No footer at all when there's nothing to show
   if (!showAnnouncement && !nextMovie) return;
   const footer = document.createElement("footer");
   if (showAnnouncement) {
-    // ---- Announcement mode ----
     footer.classList.add("footer--announcement");
     footer.innerHTML = `
       <div class="footer-inner">
         <div class="footer-content">
-          <span class="footer-label footer-announce-label">
-            <span class="footer-announce-dot"></span>Ogłoszenie
-          </span>
+          <span class="footer-label footer-announce-label"><span class="footer-announce-dot"></span>Ogłoszenie</span>
           <div class="footer-divider"></div>
           <span class="footer-announce-text">${ANNOUNCEMENT}</span>
         </div>
@@ -256,7 +240,6 @@ function renderFooter(nextMovie) {
       </div>
     `;
   } else {
-    // ---- Normal next-movie mode ----
     const date = parseDate(nextMovie.date);
     const day = date.getDate();
     const monthFull = POLISH_MONTHS[date.getMonth()];
@@ -288,30 +271,30 @@ function renderFooter(nextMovie) {
   document.body.appendChild(footer);
   document.body.classList.add("has-footer");
 }
-// ============================================================
-//  MAIN RENDER
-// ============================================================
+
+// MAIN RENDER
 function render() {
   const sorted = [...MOVIES].sort((a, b) => parseDate(a.date) - parseDate(b.date));
-  // Global index map: each movie → its position, 1-indexed, in chronological order
   const globalIndexMap = new Map();
-  // Stable DOM keys for drag & drop
   const movieKeyMap = new Map();
   const movieByKey = new Map();
+  const movieByGlobalIndex = new Map();
   sorted.forEach((m, i) => {
     globalIndexMap.set(m, i + 1);
     const key = String(i);
     movieKeyMap.set(m, key);
     movieByKey.set(key, m);
+    movieByGlobalIndex.set(i, m);
   });
-  const upcomingMovies = sorted.filter(m =>  isUpcoming(parseDate(m.date)));
-  const archiveMovies  = sorted.filter(m => !isUpcoming(parseDate(m.date))).reverse(); // newest first
-  // Default ranking order = visible meetings order, newest to oldest
+
+  const upcomingMovies = sorted.filter(m => isUpcoming(parseDate(m.date)));
+  const archiveMovies = sorted.filter(m => !isUpcoming(parseDate(m.date))).reverse();
   let rankingMovies = [...archiveMovies];
-  // ---- Sticky footer, next film, strictly today or future ----
+
   renderFooter(getNextMovie(sorted));
-  // ---- Upcoming cards ----
-  const upcomingEl    = document.getElementById("upcoming-cards");
+
+  // UPCOMING CARDS
+  const upcomingEl = document.getElementById("upcoming-cards");
   const upcomingEmpty = document.getElementById("upcoming-empty");
   if (upcomingMovies.length === 0) {
     upcomingEmpty.classList.remove("hidden");
@@ -322,44 +305,170 @@ function render() {
       upcomingEl.appendChild(card);
     });
   }
-  // ---- Meetings / archive list ----
-  const archiveEl    = document.getElementById("archive-list");
+
+  // MEETINGS / ARCHIVE LIST + FILTERS
+  const archiveEl = document.getElementById("archive-list");
   const archiveEmpty = document.getElementById("archive-empty");
-  if (archiveMovies.length === 0) {
-    archiveEmpty.classList.remove("hidden");
-  } else {
-    archiveMovies.forEach(m => {
-      archiveEl.appendChild(buildArchiveItem(m, globalIndexMap.get(m)));
+  const filtersEl = document.getElementById("filters");
+  const countriesEl = document.getElementById("filter-countries");
+  const showAllToggle = document.getElementById("show-all-toggle");
+  const yearSlider = document.getElementById("year-slider");
+  const yearMinInput = document.getElementById("year-min");
+  const yearMaxInput = document.getElementById("year-max");
+  const yearRangeEl = document.getElementById("year-range");
+  const yearMinVal = document.getElementById("year-min-val");
+  const yearMaxVal = document.getElementById("year-max-val");
+
+  const selectedCountries = new Set();
+  let yearLo, yearHi, yearBoundLo, yearBoundHi;
+
+  // Collect countries present in archive that exist in COUNTRIES list
+  function buildCountryFilter() {
+    const present = new Set();
+    archiveMovies.forEach(m => extractFlags(m).forEach(f => {
+      if (COUNTRIES[f]) present.add(f);
+    }));
+    countriesEl.innerHTML = "";
+    if (present.size === 0) return;
+    [...present].forEach(flag => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "country-chip";
+      btn.title = COUNTRIES[flag];
+      btn.innerHTML = `<span class="country-flag">${flag}</span>`;
+      btn.addEventListener("click", () => {
+        if (selectedCountries.has(flag)) {
+          selectedCountries.delete(flag);
+          btn.classList.remove("is-active");
+        } else {
+          selectedCountries.add(flag);
+          btn.classList.add("is-active");
+        }
+        renderArchiveList();
+      });
+      countriesEl.appendChild(btn);
     });
   }
-  // ---- Ranking view ----
-  const meetingsView   = document.getElementById("meetings-view");
-  const rankingView    = document.getElementById("ranking-view");
-  const rankingEl      = document.getElementById("ranking-list");
-  const rankingEmpty   = document.getElementById("ranking-empty");
+
+  function buildYearSlider() {
+    if (archiveMovies.length === 0) { yearSlider.classList.add("hidden"); return; }
+    const years = archiveMovies.map(m => m.year);
+    yearBoundLo = Math.min(...years);
+    yearBoundHi = Math.max(...years);
+    yearLo = yearBoundLo;
+    yearHi = yearBoundHi;
+    [yearMinInput, yearMaxInput].forEach(inp => {
+      inp.min = yearBoundLo;
+      inp.max = yearBoundHi;
+      inp.step = 1;
+    });
+    yearMinInput.value = yearLo;
+    yearMaxInput.value = yearHi;
+    if (yearBoundLo === yearBoundHi) yearSlider.classList.add("year-slider--single");
+    updateYearUI();
+  }
+
+  function updateYearUI() {
+    yearMinVal.textContent = yearLo;
+    yearMaxVal.textContent = yearHi;
+    const span = Math.max(1, yearBoundHi - yearBoundLo);
+    const left = ((yearLo - yearBoundLo) / span) * 100;
+    const right = ((yearHi - yearBoundLo) / span) * 100;
+    yearRangeEl.style.left = left + "%";
+    yearRangeEl.style.right = (100 - right) + "%";
+  }
+
+  yearMinInput.addEventListener("input", () => {
+    yearLo = Math.min(Number(yearMinInput.value), yearHi);
+    yearMinInput.value = yearLo;
+    updateYearUI();
+    renderArchiveList();
+  });
+  yearMaxInput.addEventListener("input", () => {
+    yearHi = Math.max(Number(yearMaxInput.value), yearLo);
+    yearMaxInput.value = yearHi;
+    updateYearUI();
+    renderArchiveList();
+  });
+
+  function movieQualifies(m) {
+    if (selectedCountries.size > 0) {
+      const flags = extractFlags(m);
+      if (!flags.some(f => selectedCountries.has(f))) return false;
+    }
+    if (typeof yearLo === "number" && (m.year < yearLo || m.year > yearHi)) return false;
+    return true;
+  }
+
+  function renderArchiveList() {
+    archiveEl.innerHTML = "";
+    const showAll = showAllToggle.checked;
+    let anyVisible = false;
+    archiveMovies.forEach(m => {
+      const ok = movieQualifies(m);
+      if (!ok && !showAll) return;
+      anyVisible = true;
+      archiveEl.appendChild(buildArchiveItem(m, globalIndexMap.get(m), !ok));
+    });
+    archiveEmpty.classList.toggle("hidden", anyVisible);
+    archiveEl.classList.toggle("hidden", !anyVisible);
+  }
+
+  showAllToggle.addEventListener("change", renderArchiveList);
+
+  if (archiveMovies.length === 0) {
+    filtersEl.classList.add("hidden");
+    archiveEmpty.classList.remove("hidden");
+  } else {
+    buildCountryFilter();
+    buildYearSlider();
+    renderArchiveList();
+  }
+
+  // RANKING VIEW
+  const meetingsView = document.getElementById("meetings-view");
+  const rankingView = document.getElementById("ranking-view");
+  const rankingEl = document.getElementById("ranking-list");
+  const rankingEmpty = document.getElementById("ranking-empty");
   const rankingActions = document.getElementById("ranking-actions");
   const rankingCopyBtn = document.getElementById("ranking-copy-btn");
+  const rankingRestoreBtn = document.getElementById("ranking-restore-btn");
   const meetingsBtn = document.getElementById("toggle-meetings");
-  const rankingBtn  = document.getElementById("toggle-ranking");
+  const rankingBtn = document.getElementById("toggle-ranking");
+
   let currentArchiveView = "meetings";
   let isRankingDragging = false;
   let suppressNextRankingClick = false;
+
   function copyMeetings() {
     if (archiveMovies.length === 0) return;
-    const text = buildArchiveCopyText(archiveMovies, globalIndexMap);
-    copyToClipboard(
-      text,
-      `Archiwum skopiowane\n${archiveMovies.length} filmów`
-    );
+    copyToClipboard(buildArchiveCopyText(archiveMovies, globalIndexMap), `Archiwum skopiowane\n${archiveMovies.length} filmów`);
+  }
+  function currentRankingCode() {
+    return encodeRanking(rankingMovies.map(m => globalIndexMap.get(m) - 1));
   }
   function copyRanking() {
     if (rankingMovies.length === 0) return;
-    const text = buildRankingCopyText(rankingMovies);
-    copyToClipboard(
-      text,
-      `Ranking skopiowany\n${rankingMovies.length} filmów`
-    );
+    const code = currentRankingCode();
+    copyToClipboard(buildRankingCopyText(rankingMovies, code), `Ranking skopiowany\nkod: ${code}`);
   }
+  function restoreRanking() {
+    const raw = window.prompt("Wklej kod rankingu lub całą pierwszą linię (Ranking DKF {kod}:)");
+    if (raw == null) return;
+    const code = extractCodeFromInput(raw);
+    const order = decodeRanking(code);
+    if (!order || order.length === 0) {
+      showToast("Nieprawidłowy kod");
+      return;
+    }
+    const restored = order.map(i => movieByGlobalIndex.get(i)).filter(Boolean);
+    // Append any movies missing from code at the end to keep full set
+    const missing = rankingMovies.filter(m => !restored.includes(m));
+    rankingMovies = [...restored, ...missing];
+    renderRankingList();
+    showToast(`Ranking wczytany\n${restored.length} filmów`);
+  }
+
   function setArchiveView(view) {
     currentArchiveView = view;
     const isMeetings = view === "meetings";
@@ -369,33 +478,24 @@ function render() {
     rankingBtn.classList.toggle("is-selected", !isMeetings);
     meetingsBtn.setAttribute("aria-selected", String(isMeetings));
     rankingBtn.setAttribute("aria-selected", String(!isMeetings));
-    meetingsBtn.title = isMeetings
-      ? "Kliknij ponownie, aby skopiować listę spotkań"
-      : "Przełącz na spotkania";
-    rankingBtn.title = !isMeetings
-      ? "Kliknij ponownie, aby skopiować ranking"
-      : "Przełącz na ranking";
+    meetingsBtn.title = isMeetings ? "Kliknij ponownie, aby skopiować listę spotkań" : "Przełącz na spotkania";
+    rankingBtn.title = !isMeetings ? "Kliknij ponownie, aby skopiować ranking" : "Przełącz na ranking";
   }
+
   function commitRankingOrderFromDom() {
     const reordered = [...rankingEl.querySelectorAll(".ranking-item")]
       .map(item => movieByKey.get(item.dataset.movieKey))
       .filter(Boolean);
-    if (reordered.length === rankingMovies.length) {
-      rankingMovies = reordered;
-    }
+    if (reordered.length === rankingMovies.length) rankingMovies = reordered;
     renderRankingList();
   }
   function finishRankingDrag() {
     const draggingEl = rankingEl.querySelector(".ranking-item.is-dragging");
-    if (draggingEl) {
-      draggingEl.classList.remove("is-dragging");
-    }
+    if (draggingEl) draggingEl.classList.remove("is-dragging");
     isRankingDragging = false;
     suppressNextRankingClick = true;
     commitRankingOrderFromDom();
-    window.setTimeout(() => {
-      suppressNextRankingClick = false;
-    }, 80);
+    window.setTimeout(() => { suppressNextRankingClick = false; }, 80);
   }
   function renderRankingList() {
     rankingEl.innerHTML = "";
@@ -405,12 +505,7 @@ function render() {
     rankingActions.classList.toggle("hidden", isEmpty);
     if (isEmpty) return;
     rankingMovies.forEach((m, i) => {
-      const item = buildRankingItem(
-        m,
-        i + 1,
-        movieKeyMap.get(m),
-        () => suppressNextRankingClick
-      );
+      const item = buildRankingItem(m, i + 1, movieKeyMap.get(m), () => suppressNextRankingClick);
       item.addEventListener("dragstart", e => {
         isRankingDragging = true;
         suppressNextRankingClick = false;
@@ -420,11 +515,7 @@ function render() {
           e.dataTransfer.setData("text/plain", item.dataset.movieKey);
         }
       });
-      item.addEventListener("dragend", () => {
-        if (isRankingDragging) {
-          finishRankingDrag();
-        }
-      });
+      item.addEventListener("dragend", () => { if (isRankingDragging) finishRankingDrag(); });
       rankingEl.appendChild(item);
     });
   }
@@ -432,50 +523,35 @@ function render() {
     const draggingEl = rankingEl.querySelector(".ranking-item.is-dragging");
     if (!draggingEl) return;
     e.preventDefault();
-    if (e.dataTransfer) {
-      e.dataTransfer.dropEffect = "move";
-    }
+    if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
     const afterElement = getDragAfterElement(rankingEl, e.clientY);
-    if (afterElement == null) {
-      rankingEl.appendChild(draggingEl);
-    } else {
-      rankingEl.insertBefore(draggingEl, afterElement);
-    }
+    if (afterElement == null) rankingEl.appendChild(draggingEl);
+    else rankingEl.insertBefore(draggingEl, afterElement);
   });
   rankingEl.addEventListener("drop", e => {
     if (!isRankingDragging) return;
     e.preventDefault();
     finishRankingDrag();
   });
+
   renderRankingList();
   setArchiveView("meetings");
-  // Header toggle behavior:
-  // - selected option copies
-  // - non-selected option switches view
+
   meetingsBtn.addEventListener("click", () => {
-    if (currentArchiveView === "meetings") {
-      copyMeetings();
-    } else {
-      setArchiveView("meetings");
-    }
+    if (currentArchiveView === "meetings") copyMeetings();
+    else setArchiveView("meetings");
   });
   rankingBtn.addEventListener("click", () => {
-    if (currentArchiveView === "ranking") {
-      copyRanking();
-    } else {
-      setArchiveView("ranking");
-    }
+    if (currentArchiveView === "ranking") copyRanking();
+    else setArchiveView("ranking");
   });
   rankingCopyBtn.addEventListener("click", copyRanking);
-  // ---- Clickable upcoming section label ----
+  rankingRestoreBtn.addEventListener("click", restoreRanking);
+
   document.getElementById("label-upcoming").addEventListener("click", () => {
     if (upcomingMovies.length === 0) return;
-    const text = buildUpcomingCopyText(upcomingMovies);
     const count = upcomingMovies.length;
-    copyToClipboard(
-      text,
-      `Plan spotkań skopiowany\n${count} ${count === 1 ? "seans" : "seanse"}`
-    );
+    copyToClipboard(buildUpcomingCopyText(upcomingMovies), `Plan spotkań skopiowany\n${count} ${count === 1 ? "seans" : "seanse"}`);
   });
 }
 document.addEventListener("DOMContentLoaded", render);
