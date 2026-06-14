@@ -8,8 +8,8 @@
 //   flag: ""
 // },
 
-const ANNOUNCEMENT = "";
-const ANNOUNCEMENT_EXPIRY = "15.05.2026";
+const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
+const ANNOUNCEMENT_EXPIRY = "26.06.2026";
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
 const COUNTRIES = {
@@ -270,7 +270,8 @@ const MOVIES = [
     filmweb: "https://www.filmweb.pl/film/Powr%C3%B3t-2003-107697",
     date: "12.06.2026",
     flag: "🇷🇺",
-    author: "@Martin"
+    author: "@Martin",
+    poster: "https://image.tmdb.org/t/p/original/vnQb3PHfIbbkae8LVvCUOukDRoh.jpg"
   },
   {
     name: "Magnolia",

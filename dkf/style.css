@@ -275,7 +275,7 @@ main {
   background-image: linear-gradient(180deg, rgba(19, 18, 16, 0.4) 0%, rgba(19, 18, 16, 0.85) 100%), var(--poster-url, none);
   background-size: cover;       /* Automatically zooms/crops non-standard images to fill perfectly */
   background-position: center;   /* Keeps the zoom focused on the center of the poster */
-  opacity: 0.15;                /* Highly transparent by default */
+  opacity: 0.3;                /* Highly transparent by default */
   filter: grayscale(0.2);        /* Keeps it moody and blended into the theme initially */
   transition: opacity 0.4s ease, filter 0.4s ease;
   z-index: 0;
