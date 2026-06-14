@@ -180,6 +180,9 @@ function buildArchiveItem(movie, globalNum, dimmed) {
   li.addEventListener("click", () => {
     copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
+  if (movie.poster) {
+    attachPosterHover(li, movie);
+  }
   return li;
 }
 
@@ -209,6 +212,9 @@ function buildRankingItem(movie, rank, movieKey, shouldSuppressClick) {
     if (shouldSuppressClick && shouldSuppressClick()) return;
     copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
+  if (movie.poster) {
+    attachPosterHover(li, movie);
+  }
   return li;
 }
 function getDragAfterElement(container, y) {
@@ -617,4 +623,84 @@ function render() {
     copyToClipboard(buildUpcomingCopyText(upcomingMovies), `Plan spotkań skopiowany\n${count} ${count === 1 ? "seans" : "seanse"}`);
   });
 }
+// POSTER HOVER POPUP SYSTEM
+// The popup appears beside archive/ranking rows when the movie has a poster URL
+// and only when there is enough horizontal space available (wide/landscape screens).
+const POPUP_W = 140;   // popup card width in px
+const POPUP_GAP = 16;  // gap between list edge and popup
+const POPUP_MIN_SIDE_SPACE = POPUP_W + POPUP_GAP + 24; // min free space to show
+
+let _posterPopup = null;
+let _posterHideTimer = null;
+
+function getPosterPopup() {
+  if (!_posterPopup) {
+    _posterPopup = document.createElement("div");
+    _posterPopup.className = "poster-popup";
+    _posterPopup.setAttribute("aria-hidden", "true");
+    document.body.appendChild(_posterPopup);
+  }
+  return _posterPopup;
+}
+
+function showPosterPopup(el, movie) {
+  // Abort if viewport is narrow — pure CSS guard via class toggle
+  const popup = getPosterPopup();
+
+  const listRect = el.closest(".archive-list").getBoundingClientRect();
+  const rightSpace = window.innerWidth - listRect.right;
+  const leftSpace = listRect.left;
+  const hasSpace = rightSpace >= POPUP_MIN_SIDE_SPACE || leftSpace >= POPUP_MIN_SIDE_SPACE;
+  if (!hasSpace) return;
+
+  clearTimeout(_posterHideTimer);
+
+  popup.innerHTML = `<img src="${movie.poster}" alt="${movie.name}" class="poster-popup-img" />`;
+  popup.classList.add("is-loading");
+  const img = popup.querySelector("img");
+  img.onload = () => popup.classList.remove("is-loading");
+  img.onerror = () => { popup.classList.remove("is-visible"); };
+
+  // Position: prefer right side, fall back to left
+  const itemRect = el.getBoundingClientRect();
+  const scrollY = window.scrollY;
+  let left, right;
+
+  if (rightSpace >= POPUP_MIN_SIDE_SPACE) {
+    left = listRect.right + POPUP_GAP;
+    right = "auto";
+  } else {
+    left = "auto";
+    right = window.innerWidth - listRect.left + POPUP_GAP;
+  }
+
+  // Vertical: align to row center, clamp within viewport
+  const popupH = Math.round(POPUP_W * 1.5); // 2:3 aspect
+  let top = itemRect.top + scrollY + itemRect.height / 2 - popupH / 2;
+  const minTop = scrollY + 8;
+  const maxTop = scrollY + window.innerHeight - popupH - 8;
+  top = Math.max(minTop, Math.min(top, maxTop));
+
+  popup.style.left = typeof left === "number" ? left + "px" : left;
+  popup.style.right = typeof right === "number" ? right + "px" : right;
+  popup.style.top = top + "px";
+  popup.style.width = POPUP_W + "px";
+
+  // Force reflow then animate in
+  popup.getBoundingClientRect();
+  popup.classList.add("is-visible");
+}
+
+function hidePosterPopup() {
+  if (!_posterPopup) return;
+  _posterHideTimer = setTimeout(() => {
+    if (_posterPopup) _posterPopup.classList.remove("is-visible");
+  }, 80);
+}
+
+function attachPosterHover(el, movie) {
+  el.addEventListener("mouseenter", () => showPosterPopup(el, movie));
+  el.addEventListener("mouseleave", hidePosterPopup);
+}
+
 document.addEventListener("DOMContentLoaded", render);
