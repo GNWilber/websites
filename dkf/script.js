@@ -1,4 +1,4 @@
-// DYSKUSYJNY KLUB FILMOWY — logika strony v7
+// DYSKUSYJNY KLUB FILMOWY — logika strony v8
 const POLISH_MONTHS = [
   "stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca",
   "lipca", "sierpnia", "września", "października", "listopada", "grudnia"
@@ -52,7 +52,6 @@ function buildRankingCopyText(rankingMovies, code) {
 
 // RANKING SEED CODE — encode order of movie indices into a short base36 string
 function encodeRanking(orderIndices) {
-  // Each index encoded as 2-char base36 (supports up to 1295 movies)
   return orderIndices.map(i => i.toString(36).padStart(2, "0")).join("");
 }
 function decodeRanking(code) {
@@ -67,7 +66,6 @@ function decodeRanking(code) {
   return out;
 }
 function extractCodeFromInput(raw) {
-  // Accept either the bare code or the full first line "Ranking DKF {code}:"
   const m = raw.match(/\{([^}]+)\}/);
   return m ? m[1] : raw;
 }
@@ -114,8 +112,44 @@ async function copyToClipboard(text, toastMessage) {
   showToast(toastMessage);
 }
 
-// CARD BUILDER
-function buildCard(movie) {
+// HINT POPUP SYSTEM — small unobtrusive tooltip above element on hover
+let _hintEl = null;
+function getHintEl() {
+  if (!_hintEl) {
+    _hintEl = document.createElement("div");
+    _hintEl.className = "hint-popup";
+    _hintEl.setAttribute("aria-hidden", "true");
+    document.body.appendChild(_hintEl);
+  }
+  return _hintEl;
+}
+function showHint(target) {
+  const text = target.dataset.hint;
+  if (!text) return;
+  const hint = getHintEl();
+  hint.textContent = text;
+  const rect = target.getBoundingClientRect();
+  hint.style.left = (rect.left + rect.width / 2) + "px";
+  hint.style.top = (rect.top - 10) + "px";
+  hint.getBoundingClientRect();
+  hint.classList.add("is-visible");
+}
+function hideHint() {
+  if (_hintEl) _hintEl.classList.remove("is-visible");
+}
+function attachHint(el) {
+  el.addEventListener("mouseenter", () => showHint(el));
+  el.addEventListener("mouseleave", hideHint);
+  el.addEventListener("click", hideHint);
+  el.addEventListener("focus", () => showHint(el));
+  el.addEventListener("blur", hideHint);
+}
+function initHints() {
+  document.querySelectorAll("[data-hint]").forEach(attachHint);
+}
+
+// CARD BUILDER (upcoming + poster-mode)
+function buildCard(movie, opts = {}) {
   const date = parseDate(movie.date);
   const day = date.getDate();
   const monthFull = POLISH_MONTHS[date.getMonth()];
@@ -126,8 +160,10 @@ function buildCard(movie) {
   const isPast = date < today;
   const card = document.createElement("article");
   card.className = "movie-card" + (isToday ? " is-today" : "") + (isPast ? " is-past" : "");
+  const numHtml = opts.count != null ? `<span class="card-count">#${opts.count}</span>` : "";
   card.innerHTML = `
     <div class="card-date">
+      ${numHtml}
       <span class="date-day">${day}</span>
       <div class="date-gap"></div>
       <span class="date-month-year">${monthFull} ${year}</span>
@@ -140,17 +176,51 @@ function buildCard(movie) {
       <p class="card-year">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</p>
       ${movie.author ? `<p class="card-author">${movie.author}</p>` : ""}
     </div>
-    <a class="card-link" href="${movie.filmweb}" target="_blank" rel="noopener" title="Otwórz na Filmweb">
+    <a class="card-link" href="${movie.filmweb}" target="_blank" rel="noopener" data-hint="Otwórz na Filmwebie">
       <img src="filmwebfull.svg" alt="Filmweb" class="filmweb-logo-full" />
     </a>
   `;
   card.querySelector(".card-link").addEventListener("click", e => e.stopPropagation());
+  attachHint(card.querySelector(".card-link"));
   card.addEventListener("click", () => {
     copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
   if (movie.poster) {
     card.style.setProperty('--poster-url', `url('${movie.poster}')`);
   }
+  return card;
+}
+
+// POSTER-MODE CARD (archive, image-first / inverted on hover)
+function buildPosterCard(movie, globalNum, dimmed) {
+  const date = parseDate(movie.date);
+  const day = date.getDate();
+  const month = POLISH_MONTHS[date.getMonth()];
+  const year = date.getFullYear();
+  const card = document.createElement("article");
+  card.className = "poster-card" + (dimmed ? " is-filtered-out" : "");
+  card.innerHTML = `
+    <div class="poster-card-img" style="${movie.poster ? `background-image:url('${movie.poster}')` : ''}">
+      ${movie.poster ? "" : `<span class="poster-card-noimg">${movie.name}</span>`}
+    </div>
+    <div class="poster-card-overlay">
+      <span class="poster-card-count">#${globalNum}</span>
+      <h3 class="poster-card-title">${movie.name}</h3>
+      ${movie.altName ? `<p class="poster-card-alt">${movie.altName}</p>` : ""}
+      <p class="poster-card-meta">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</p>
+      <p class="poster-card-date">${day} ${month} ${year}</p>
+      ${movie.author ? `<span class="poster-card-author">${movie.author}</span>` : ""}
+      <a class="poster-card-link" href="${movie.filmweb}" target="_blank" rel="noopener" data-hint="Otwórz na Filmwebie">
+        <img src="filmweb.svg" alt="Filmweb" class="filmweb-logo-sq" />
+      </a>
+    </div>
+  `;
+  const link = card.querySelector(".poster-card-link");
+  link.addEventListener("click", e => e.stopPropagation());
+  attachHint(link);
+  card.addEventListener("click", () => {
+    copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
+  });
   return card;
 }
 
@@ -172,11 +242,13 @@ function buildArchiveItem(movie, globalNum, dimmed) {
       <span class="archive-year">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</span>
     </span>
     ${movie.author ? `<span class="author-bubble">${movie.author}</span>` : '<span></span>'}
-    <a href="${movie.filmweb}" target="_blank" rel="noopener" class="archive-link" title="Otwórz na Filmweb">
+    <a href="${movie.filmweb}" target="_blank" rel="noopener" class="archive-link" data-hint="Otwórz na Filmwebie">
       <img src="filmweb.svg" alt="Filmweb" class="filmweb-logo-sq" />
     </a>
   `;
-  li.querySelector(".archive-link").addEventListener("click", e => e.stopPropagation());
+  const link = li.querySelector(".archive-link");
+  link.addEventListener("click", e => e.stopPropagation());
+  attachHint(link);
   li.addEventListener("click", () => {
     copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
@@ -194,20 +266,31 @@ function buildRankingItem(movie, rank, movieKey, shouldSuppressClick) {
   li.dataset.movieKey = movieKey;
   li.innerHTML = `
     <span class="archive-num ranking-num">${rank}.</span>
-    <span class="ranking-handle" aria-hidden="true" title="Przeciągnij, aby zmienić pozycję">⋮⋮</span>
+    <span class="ranking-handle" aria-hidden="true" data-hint="Przeciągnij, aby zmienić pozycję">
+      <svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="4" cy="5" r="1.6" fill="currentColor"/>
+        <circle cx="10" cy="5" r="1.6" fill="currentColor"/>
+        <circle cx="4" cy="10" r="1.6" fill="currentColor"/>
+        <circle cx="10" cy="10" r="1.6" fill="currentColor"/>
+        <circle cx="4" cy="15" r="1.6" fill="currentColor"/>
+        <circle cx="10" cy="15" r="1.6" fill="currentColor"/>
+      </svg>
+    </span>
     <span class="archive-title ranking-title">
       ${movie.name}
       ${movie.altName ? `<span class="archive-alt">– ${movie.altName}</span>` : ""}
       <span class="archive-year">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</span>
     </span>
     ${movie.author ? `<span class="author-bubble">${movie.author}</span>` : '<span></span>'}
-    <a href="${movie.filmweb}" target="_blank" rel="noopener" class="archive-link" title="Otwórz na Filmweb" draggable="false">
+    <a href="${movie.filmweb}" target="_blank" rel="noopener" class="archive-link" data-hint="Otwórz na Filmwebie" draggable="false">
       <img src="filmweb.svg" alt="Filmweb" class="filmweb-logo-sq" draggable="false" />
     </a>
   `;
   const link = li.querySelector(".archive-link");
   link.addEventListener("click", e => e.stopPropagation());
   link.addEventListener("dragstart", e => e.preventDefault());
+  attachHint(link);
+  attachHint(li.querySelector(".ranking-handle"));
   li.addEventListener("click", () => {
     if (shouldSuppressClick && shouldSuppressClick()) return;
     copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
@@ -227,7 +310,7 @@ function getDragAfterElement(container, y) {
   }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
 }
 
-// STICKY FOOTER — announcement OR next upcoming movie
+// STICKY FOOTER
 function isAnnouncementActive() {
   if (typeof ANNOUNCEMENT === "undefined" || !ANNOUNCEMENT || !ANNOUNCEMENT.trim()) return false;
   if (typeof ANNOUNCEMENT_EXPIRY === "undefined" || !ANNOUNCEMENT_EXPIRY) return true;
@@ -272,7 +355,7 @@ function renderFooter(nextMovie) {
             <span class="footer-year">${nextMovie.year}</span>
           </div>
           <div class="footer-divider"></div>
-          <a class="footer-fw-link" href="${nextMovie.filmweb}" target="_blank" rel="noopener" title="Filmweb">
+          <a class="footer-fw-link" href="${nextMovie.filmweb}" target="_blank" rel="noopener" data-hint="Otwórz na Filmwebie">
             <img src="filmweb.svg" alt="Filmweb" class="footer-fw-icon" />
           </a>
         </div>
@@ -320,12 +403,14 @@ function render() {
 
   // MEETINGS / ARCHIVE LIST + FILTERS
   const archiveEl = document.getElementById("archive-list");
+  const posterGridEl = document.getElementById("archive-poster-grid");
   const archiveEmpty = document.getElementById("archive-empty");
   const filtersEl = document.getElementById("filters");
   const countriesEl = document.getElementById("filter-countries");
   const authorsEl = document.getElementById("filter-authors");
   const filterGroupAuthors = document.getElementById("filter-group-authors");
   const showAllToggle = document.getElementById("show-all-toggle");
+  const posterModeToggle = document.getElementById("poster-mode-toggle");
   const yearSlider = document.getElementById("year-slider");
   const yearMinInput = document.getElementById("year-min");
   const yearMaxInput = document.getElementById("year-max");
@@ -337,7 +422,6 @@ function render() {
   const selectedAuthors = new Set();
   let yearLo, yearHi, yearBoundLo, yearBoundHi;
 
-  // Collect countries present in archive that exist in COUNTRIES list
   function buildCountryFilter() {
     const present = new Set();
     const flagCount = new Map();
@@ -370,7 +454,6 @@ function render() {
     });
   }
 
-  // Collect authors present in archive movies
   function buildAuthorFilter() {
     const authorCount = new Map();
     archiveMovies.forEach(m => {
@@ -462,20 +545,30 @@ function render() {
   }
 
   function renderArchiveList() {
+    const posterMode = posterModeToggle.checked;
     archiveEl.innerHTML = "";
+    posterGridEl.innerHTML = "";
     const showAll = showAllToggle.checked;
     let anyVisible = false;
+
     archiveMovies.forEach(m => {
       const ok = movieQualifies(m);
       if (!ok && !showAll) return;
       anyVisible = true;
-      archiveEl.appendChild(buildArchiveItem(m, globalIndexMap.get(m), !ok));
+      if (posterMode) {
+        posterGridEl.appendChild(buildPosterCard(m, globalIndexMap.get(m), !ok));
+      } else {
+        archiveEl.appendChild(buildArchiveItem(m, globalIndexMap.get(m), !ok));
+      }
     });
+
     archiveEmpty.classList.toggle("hidden", anyVisible);
-    archiveEl.classList.toggle("hidden", !anyVisible);
+    archiveEl.classList.toggle("hidden", !anyVisible || posterMode);
+    posterGridEl.classList.toggle("hidden", !anyVisible || !posterMode);
   }
 
   showAllToggle.addEventListener("change", renderArchiveList);
+  posterModeToggle.addEventListener("change", renderArchiveList);
 
   if (archiveMovies.length === 0) {
     filtersEl.classList.add("hidden");
@@ -505,7 +598,7 @@ function render() {
 
   function copyMeetings() {
     if (archiveMovies.length === 0) return;
-    copyToClipboard(buildArchiveCopyText(archiveMovies, globalIndexMap), `Archiwum skopiowane\n${archiveMovies.length} filmów`);
+    copyToClipboard(buildArchiveCopyText(archiveMovies, globalIndexMap), `Skopiowano listę poprzednich spotkań\n${archiveMovies.length} filmów`);
   }
   function currentRankingCode() {
     return encodeRanking(rankingMovies.map(m => globalIndexMap.get(m) - 1));
@@ -530,7 +623,6 @@ function render() {
       return;
     }
     const restored = order.map(i => movieByGlobalIndex.get(i)).filter(Boolean);
-    // Append any movies missing from code at the end to keep full set
     const missing = rankingMovies.filter(m => !restored.includes(m));
     rankingMovies = [...restored, ...missing];
     renderRankingList();
@@ -546,8 +638,8 @@ function render() {
     rankingBtn.classList.toggle("is-selected", !isMeetings);
     meetingsBtn.setAttribute("aria-selected", String(isMeetings));
     rankingBtn.setAttribute("aria-selected", String(!isMeetings));
-    meetingsBtn.title = isMeetings ? "Kliknij ponownie, aby skopiować listę spotkań" : "Przełącz na spotkania";
-    rankingBtn.title = !isMeetings ? "Kliknij ponownie, aby skopiować ranking" : "Przełącz na ranking";
+    meetingsBtn.dataset.hint = isMeetings ? "Skopiuj listę poprzednich spotkań" : "Przełącz na spotkania";
+    rankingBtn.dataset.hint = !isMeetings ? "Skopiuj listę rankingu filmów" : "Przełącz na ranking";
   }
 
   function commitRankingOrderFromDom() {
@@ -620,15 +712,16 @@ function render() {
   document.getElementById("label-upcoming").addEventListener("click", () => {
     if (upcomingMovies.length === 0) return;
     const count = upcomingMovies.length;
-    copyToClipboard(buildUpcomingCopyText(upcomingMovies), `Plan spotkań skopiowany\n${count} ${count === 1 ? "seans" : "seanse"}`);
+    copyToClipboard(buildUpcomingCopyText(upcomingMovies), `Skopiowano listę nadchodzących spotkań\n${count} ${count === 1 ? "film" : "filmy"}`);
   });
+
+  initHints();
 }
+
 // POSTER HOVER POPUP SYSTEM
-// The popup appears beside archive/ranking rows when the movie has a poster URL
-// and only when there is enough horizontal space available (wide/landscape screens).
-const POPUP_W = 140;   // popup card width in px
-const POPUP_GAP = 16;  // gap between list edge and popup
-const POPUP_MIN_SIDE_SPACE = POPUP_W + POPUP_GAP + 24; // min free space to show
+const POPUP_W = 140;
+const POPUP_GAP = 16;
+const POPUP_MIN_SIDE_SPACE = POPUP_W + POPUP_GAP + 24;
 
 let _posterPopup = null;
 let _posterHideTimer = null;
@@ -644,7 +737,6 @@ function getPosterPopup() {
 }
 
 function showPosterPopup(el, movie) {
-  // Abort if viewport is narrow — pure CSS guard via class toggle
   const popup = getPosterPopup();
 
   const listRect = el.closest(".archive-list").getBoundingClientRect();
@@ -661,7 +753,6 @@ function showPosterPopup(el, movie) {
   img.onload = () => popup.classList.remove("is-loading");
   img.onerror = () => { popup.classList.remove("is-visible"); };
 
-  // Position: prefer right side, fall back to left
   const itemRect = el.getBoundingClientRect();
   const scrollY = window.scrollY;
   let left, right;
@@ -674,8 +765,7 @@ function showPosterPopup(el, movie) {
     right = window.innerWidth - listRect.left + POPUP_GAP;
   }
 
-  // Vertical: align to row center, clamp within viewport
-  const popupH = Math.round(POPUP_W * 1.5); // 2:3 aspect
+  const popupH = Math.round(POPUP_W * 1.5);
   let top = itemRect.top + scrollY + itemRect.height / 2 - popupH / 2;
   const minTop = scrollY + 8;
   const maxTop = scrollY + window.innerHeight - popupH - 8;
@@ -686,7 +776,6 @@ function showPosterPopup(el, movie) {
   popup.style.top = top + "px";
   popup.style.width = POPUP_W + "px";
 
-  // Force reflow then animate in
   popup.getBoundingClientRect();
   popup.classList.add("is-visible");
 }

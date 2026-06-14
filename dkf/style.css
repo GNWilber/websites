@@ -1,4 +1,4 @@
-/* DYSKUSYJNY KLUB FILMOWY — style v7 */
+/* DYSKUSYJNY KLUB FILMOWY — style v8 */
 
 :root {
   --bg:          #0c0b09;
@@ -19,6 +19,7 @@
   --font-display: 'Playfair Display', Georgia, serif;
   --font-mono:    'DM Mono', 'Courier New', monospace;
   --font-body:    'Barlow', system-ui, sans-serif;
+  --ease-smooth:  cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -98,7 +99,7 @@ header {
 .logo-full {
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--muted);
@@ -132,6 +133,7 @@ main {
 .label-text {
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 500;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--gold-label);
@@ -156,20 +158,10 @@ main {
   transition: opacity 0.25s ease;
 }
 
-.label-text::before {
-  content: '⎘';
-  font-size: 0.8em;
-  margin-right: 0.5em;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
 .label-link {
   text-decoration: none;
   display: inline-block;
 }
-
-.label-link::before { content: '↗'; }
 
 .section-label:hover .label-text {
   color: var(--gold);
@@ -177,12 +169,50 @@ main {
 }
 
 .section-label:hover .label-text::after { opacity: 1; }
-.section-label:hover .label-text::before { opacity: 0.7; }
 .section-label:hover .label-line { background: var(--border-h); }
 
 .section-label:active .label-text {
   color: var(--cream);
   text-shadow: 0 0 20px rgba(240, 232, 216, 0.6);
+}
+
+/* HINT POPUP — small unobtrusive tooltip */
+.hint-popup {
+  position: fixed;
+  z-index: 2000;
+  transform: translate(-50%, -100%) translateY(4px) scale(0.96);
+  background: var(--bg-card-h);
+  border: 1px solid var(--border-h);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  padding: 0.45em 0.8em;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  transition: opacity 0.18s var(--ease-smooth), transform 0.18s var(--ease-smooth);
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hint-popup::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--border-h);
+}
+
+.hint-popup.is-visible {
+  opacity: 1;
+  transform: translate(-50%, -100%) translateY(0) scale(1);
 }
 
 /* ARCHIVE / RANKING TOGGLE HEADER */
@@ -208,6 +238,7 @@ main {
   background: transparent;
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 500;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--gold-dark);
@@ -215,7 +246,7 @@ main {
   user-select: none;
   padding: 0.4em 0.1em;
   border-radius: 2px;
-  transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.2s ease;
+  transition: color 0.25s ease, text-shadow 0.25s ease, opacity 0.2s ease;
 }
 
 .archive-toggle-option:first-child { justify-self: end; text-align: right; }
@@ -227,14 +258,14 @@ main {
 }
 
 .archive-toggle-option:not(.is-selected):hover { color: var(--gold-label); }
-.archive-toggle-option:active { transform: translateY(1px); }
+.archive-toggle-option:active { opacity: 0.7; }
 
 .section-label:hover .archive-toggle-divider {
   color: var(--gold);
   text-shadow: 0 0 12px rgba(212, 168, 76, 0.35);
 }
 
-/* CARDS GRID — equal-size responsive grid, no wasted space */
+/* CARDS GRID */
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
@@ -242,19 +273,18 @@ main {
   justify-content: center;
 }
 
-/* When only a single card (download section) keep it centered, not stretched */
 .download-section .cards-grid {
   grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
   justify-content: center;
 }
 
-/* MOVIE CARD — Updated with 2:3 aspect ratio and background poster layer */
+/* MOVIE CARD */
 .movie-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 3px;
   width: 100%;
-  aspect-ratio: 2 / 3; /* Enforces industrial standard movie poster proportions */
+  aspect-ratio: 2 / 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -262,26 +292,23 @@ main {
   overflow: hidden;
   position: relative;
   cursor: pointer;
-  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth), background 0.3s ease;
   animation: fadeInUp 0.5s ease both;
 }
 
-/* POSTER BACKGROUND LAYER: Uses the JS variable, handles opacity and zoom */
 .movie-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  /* A subtle dark gradient overlay is included underneath to ensure text stays readable even with bright posters */
   background-image: linear-gradient(180deg, rgba(19, 18, 16, 0.4) 0%, rgba(19, 18, 16, 0.85) 100%), var(--poster-url, none);
-  background-size: cover;       /* Automatically zooms/crops non-standard images to fill perfectly */
-  background-position: center;   /* Keeps the zoom focused on the center of the poster */
-  opacity: 0.3;                /* Highly transparent by default */
-  filter: grayscale(0.2);        /* Keeps it moody and blended into the theme initially */
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  filter: grayscale(0.2);
   transition: opacity 0.4s ease, filter 0.4s ease;
   z-index: 0;
 }
 
-/* Top decorative gold line — elevated to z-index 2 so it stays visible */
 .movie-card::after {
   content: '';
   position: absolute;
@@ -295,29 +322,25 @@ main {
   z-index: 2;
 }
 
-/* HOVER STATES */
 .movie-card:hover {
   border-color: var(--border-h);
   transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px var(--border-h);
+  box-shadow: 0 26px 70px rgba(0,0,0,0.72), 0 6px 22px rgba(0,0,0,0.4), 0 0 0 1px var(--border-h);
   background: var(--bg-card-h);
 }
 
-/* Hover effect for the poster: makes it non-transparent */
 .movie-card:hover::before {
-  /* Toned down the gradient alpha from 0.4/0.85 to 0.1/0.45 for maximum image clarity */
   background-image: linear-gradient(180deg, rgba(19, 18, 16, 0.1) 0%, rgba(19, 18, 16, 0.45) 100%), var(--poster-url, none);
-  opacity: 1; 
-  filter: grayscale(0); 
+  opacity: 1;
+  filter: grayscale(0);
 }
 
-/* Replaced the harsh 1px stroke outline with a layered, ambient soft shadow */
 .movie-card:hover .date-day,
 .movie-card:hover .date-month-year,
 .movie-card:hover .card-title,
 .movie-card:hover .card-alt,
 .movie-card:hover .card-year {
-  text-shadow: 
+  text-shadow:
     0 2px 4px rgba(19, 18, 16, 0.6),
     0 4px 12px rgba(19, 18, 16, 0.8);
   transition: text-shadow 0.3s ease;
@@ -337,7 +360,6 @@ main {
 
 .movie-card.is-past { opacity: 0.72; }
 
-/* LAYER MANAGEMENT: Forces all child text containers safely on top of the poster background */
 .movie-card > * {
   position: relative;
   z-index: 1;
@@ -350,6 +372,23 @@ main {
   flex-direction: column;
   align-items: center;
   background: linear-gradient(180deg, rgba(212,168,76,0.06) 0%, transparent 100%);
+  position: relative;
+}
+
+.card-count {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--gold-dim);
+  background: rgba(48, 42, 34, 0.55);
+  border: 1px solid rgba(212, 168, 76, 0.18);
+  padding: 0.2em 0.55em;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
 }
 
 .date-day {
@@ -366,6 +405,7 @@ main {
 .date-month-year {
   font-family: var(--font-mono);
   font-size: 0.85rem;
+  font-weight: 400;
   color: var(--gold-dim);
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -399,48 +439,51 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem; /* Increased to expand the content group naturally */
+  gap: 0.75rem;
   flex: 1;
   width: 100%;
 }
 
 .card-title {
   font-family: var(--font-display);
-  font-size: 1.75rem; /* Scaled up from 1.55rem to command more space */
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--cream);
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 
+/* main card altName — NOT italic, same display font as title, distinct colour */
 .card-alt {
   font-family: var(--font-display);
-  font-style: italic;
-  font-size: 1.1rem; /* Scaled up from 1.05rem */
-  color: var(--muted);
+  font-style: normal;
+  font-size: 1.1rem;
+  color: var(--gold-label);
   line-height: 1.3;
 }
 
 .card-year {
   font-family: var(--font-mono);
-  font-size: 0.8rem; /* Scaled up from 0.72rem */
+  font-size: 0.8rem;
+  font-weight: 400;
   color: var(--text-dim);
   letter-spacing: 0.18em;
-  margin-top: 0.6rem; /* Distinct separation between title section and meta section */
+  margin-top: 0.6rem;
 }
 
-/* CARD AUTHOR — shown below year in upcoming cards */
 .card-author {
   font-family: var(--font-mono);
-  font-size: 0.7rem; /* Scaled up from 0.65rem */
+  font-size: 0.7rem;
+  font-weight: 400;
   letter-spacing: 0.15em;
-  color: var(--muted);
-  background: rgba(48, 42, 34, 0.9);
-  padding: 0.3em 0.85em; /* Slightly roomier padding */
+  color: var(--cream);
+  background: rgba(48, 42, 34, 0.4);
+  padding: 0.3em 0.85em;
   border-radius: 999px;
   margin-top: 0.3rem;
   line-height: 1.4;
-  border: 1px solid rgba(212, 168, 76, 0.12); /* Subtle gold frame to anchor the tag */
+  border: 1px solid rgba(212, 168, 76, 0.18);
+  backdrop-filter: blur(6px);
 }
 
 .card-link {
@@ -461,12 +504,159 @@ main {
   height: 29px;
   width: auto;
   display: block;
-  transition: transform 0.25s ease, filter 0.25s ease;
+  transition: transform 0.25s var(--ease-smooth), filter 0.25s ease;
 }
 
 .card-link:hover .filmweb-logo-full {
   transform: scale(1.08);
   filter: drop-shadow(0 0 8px rgba(212, 169, 76, 0.368)) drop-shadow(0 0 24px rgba(212, 168, 76, 0.12));
+}
+
+/* POSTER GRID (archive poster mode) — inverse of upcoming: image first, dim+info on hover */
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.1rem;
+  animation: fadeInUp 0.4s var(--ease-smooth) both;
+}
+
+.poster-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg-card);
+  transition: border-color 0.3s ease, transform 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth);
+  animation: fadeInUp 0.4s var(--ease-smooth) both;
+}
+
+.poster-card:hover {
+  border-color: var(--border-h);
+  transform: translateY(-5px);
+  box-shadow: 0 22px 60px rgba(0,0,0,0.7), 0 5px 18px rgba(0,0,0,0.4), 0 0 0 1px var(--border-h);
+}
+
+.poster-card.is-filtered-out { opacity: 0.38; }
+
+.poster-card-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.4s ease, transform 0.5s var(--ease-smooth);
+  background-color: var(--bg-card);
+}
+
+.poster-card:hover .poster-card-img {
+  filter: brightness(0.22) grayscale(0.3);
+  transform: scale(1.05);
+}
+
+.poster-card-noimg {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--muted);
+  text-align: center;
+  padding: 1rem;
+}
+
+.poster-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.4rem;
+  padding: 1rem;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s var(--ease-smooth), transform 0.35s var(--ease-smooth);
+  z-index: 1;
+}
+
+.poster-card:hover .poster-card-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.poster-card-count {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  background: rgba(48, 42, 34, 0.5);
+  border: 1px solid rgba(212, 168, 76, 0.25);
+  padding: 0.2em 0.6em;
+  border-radius: 999px;
+  margin-bottom: 0.2rem;
+}
+
+.poster-card-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--cream);
+  line-height: 1.2;
+}
+
+.poster-card-alt {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--gold-label);
+  line-height: 1.25;
+}
+
+.poster-card-meta {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--text);
+}
+
+.poster-card-date {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.poster-card-author {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  color: var(--cream);
+  background: rgba(48, 42, 34, 0.5);
+  border: 1px solid rgba(212, 168, 76, 0.2);
+  padding: 0.2em 0.65em;
+  border-radius: 999px;
+  margin-top: 0.15rem;
+}
+
+.poster-card-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+  padding: 0.2rem;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.poster-card-link:hover .filmweb-logo-sq {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 8px rgba(212, 169, 76, 0.368));
 }
 
 /* FILTERS */
@@ -494,6 +684,7 @@ main {
 .filter-label {
   font-family: var(--font-mono);
   font-size: 0.62rem;
+  font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--gold-label);
@@ -505,12 +696,13 @@ main {
   gap: 0.4rem;
 }
 
+/* interactive chip = rounded; inner content blocks = squared */
 .country-chip {
   appearance: none;
   border: 1px solid var(--border);
   background: var(--bg);
-  border-radius: 3px;
-  padding: 0.3rem 0.45rem 0.25rem;
+  border-radius: 999px;
+  padding: 0.32rem 0.5rem 0.28rem;
   cursor: pointer;
   line-height: 1;
   font-size: 1rem;
@@ -520,10 +712,10 @@ main {
   flex-direction: column;
   align-items: center;
   gap: 0.2rem;
-  transition: opacity 0.2s ease, border-color 0.2s ease, filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  transition: opacity 0.2s ease, border-color 0.2s ease, filter 0.2s ease, transform 0.18s var(--ease-smooth), box-shadow 0.2s ease;
 }
 
-.country-chip:hover { opacity: 0.9; border-color: var(--border-h); transform: translateY(-1px); }
+.country-chip:hover { opacity: 0.9; border-color: var(--border-h); transform: translateY(-2px); }
 
 .country-chip.is-active {
   opacity: 1;
@@ -537,6 +729,7 @@ main {
 .country-count {
   font-family: var(--font-mono);
   font-size: 0.55rem;
+  font-weight: 500;
   letter-spacing: 0.05em;
   color: var(--muted);
   line-height: 1;
@@ -553,51 +746,60 @@ main {
   appearance: none;
   border: 1px solid var(--border);
   background: var(--bg);
-  border-radius: 3px; /* Changed from 999px to match country-chip */
-  padding: 0.3rem 0.45rem 0.25rem; /* Updated padding to match country-chip proportions */
+  border-radius: 999px;
+  padding: 0.32rem 0.7rem 0.28rem;
   cursor: pointer;
   line-height: 1;
-  filter: grayscale(0.6); /* Added to match country-chip */
-  opacity: 0.6; /* Balanced with country-chip */
+  filter: grayscale(0.6);
+  opacity: 0.6;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem; /* Updated to match country-chip */
-  transition: opacity 0.2s ease, border-color 0.2s ease, filter 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  gap: 0.2rem;
+  transition: opacity 0.2s ease, border-color 0.2s ease, filter 0.2s ease, transform 0.18s var(--ease-smooth), box-shadow 0.2s ease;
 }
 
-.author-chip:hover { opacity: 0.9; border-color: var(--border-h); transform: translateY(-1px); }
+.author-chip:hover { opacity: 0.9; border-color: var(--border-h); transform: translateY(-2px); }
 
 .author-chip.is-active {
   opacity: 1;
-  filter: grayscale(0); /* Added to match country-chip */
+  filter: grayscale(0);
   border-color: var(--gold-dim);
-  background: rgba(138, 110, 56, 0.18); /* Kept unique background tint for authors */
+  background: rgba(138, 110, 56, 0.18);
   box-shadow: 0 0 14px var(--gold-glow);
 }
 
 .author-chip-name {
   font-family: var(--font-mono);
   font-size: 0.68rem;
+  font-weight: 400;
   letter-spacing: 0.08em;
   color: var(--text);
   line-height: 1.3;
 }
 
-/* AUTHOR BUBBLE — in archive/ranking rows, left of filmweb logo */
+/* AUTHOR BUBBLE — translucent, modern */
 .author-bubble {
   font-family: var(--font-mono);
   font-size: 0.6rem;
+  font-weight: 400;
   letter-spacing: 0.1em;
-  color: var(--muted);
-  background: rgba(48, 42, 34, 0.9);
-  border: 1px solid var(--border);
-  padding: 0.22em 0.65em;
+  color: var(--cream);
+  background: rgba(48, 42, 34, 0.35);
+  border: 1px solid rgba(212, 168, 76, 0.16);
+  padding: 0.26em 0.7em;
   border-radius: 999px;
   white-space: nowrap;
   flex-shrink: 0;
   line-height: 1.4;
   align-self: center;
+  backdrop-filter: blur(6px);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.archive-item:hover .author-bubble {
+  background: rgba(48, 42, 34, 0.55);
+  border-color: rgba(212, 168, 76, 0.3);
 }
 
 /* YEAR DUAL-SLIDER */
@@ -649,7 +851,10 @@ main {
   border: 2px solid var(--bg);
   cursor: pointer;
   box-shadow: 0 0 8px var(--gold-glow);
+  transition: transform 0.15s var(--ease-smooth);
 }
+
+.year-input::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
 .year-input::-moz-range-thumb {
   pointer-events: auto;
@@ -668,6 +873,7 @@ main {
   justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 400;
   color: var(--gold-dim);
   margin-top: 0.35rem;
 }
@@ -678,53 +884,71 @@ main {
 .year-slider--single .year-values { justify-content: center; }
 .year-slider--single #year-max-val { display: none; }
 
-/* FILTER CHECKBOX */
-.filter-checkbox {
+/* FILTER SWITCHES */
+.filter-switches {
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  cursor: pointer;
-  user-select: none;
+  flex-direction: column;
+  gap: 0.7rem;
   align-self: flex-end;
 }
 
-.filter-checkbox input { position: absolute; opacity: 0; pointer-events: none; }
-
-.filter-checkbox-box {
-  width: 16px;
-  height: 16px;
-  border: 1px solid var(--border-h);
-  border-radius: 3px;
-  background: var(--bg);
-  position: relative;
-  flex-shrink: 0;
-  transition: background 0.2s ease, border-color 0.2s ease;
+.switch-control {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
 }
 
-.filter-checkbox input:checked + .filter-checkbox-box {
-  background: var(--gold);
+.switch-control input { position: absolute; opacity: 0; pointer-events: none; }
+
+.switch-track {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border-h);
+  flex-shrink: 0;
+  transition: background 0.3s var(--ease-smooth), border-color 0.3s var(--ease-smooth);
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: transform 0.3s var(--ease-smooth), background 0.3s var(--ease-smooth), box-shadow 0.3s var(--ease-smooth);
+}
+
+.switch-control input:checked + .switch-track {
+  background: var(--gold-dim);
   border-color: var(--gold);
 }
 
-.filter-checkbox input:checked + .filter-checkbox-box::after {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 1px;
-  width: 5px;
-  height: 9px;
-  border: solid var(--bg);
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+.switch-control input:checked + .switch-track .switch-thumb {
+  transform: translateY(-50%) translateX(16px);
+  background: var(--cream);
+  box-shadow: 0 0 8px var(--gold-glow);
 }
 
-.filter-checkbox-text {
+.switch-control:hover .switch-track { border-color: var(--gold-dim); }
+
+.switch-text {
   font-family: var(--font-mono);
   font-size: 0.66rem;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--muted);
+  transition: color 0.25s ease;
 }
+
+.switch-control input:checked ~ .switch-text { color: var(--gold-label); }
 
 /* ARCHIVE — numbered list */
 .archive-section { opacity: 0.95; }
@@ -734,6 +958,7 @@ main {
   border: 1px solid var(--border);
   border-radius: 3px;
   overflow: hidden;
+  animation: fadeInUp 0.4s var(--ease-smooth) both;
 }
 
 .archive-item {
@@ -743,14 +968,16 @@ main {
   gap: 1rem;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border);
-  transition: background 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, opacity 0.2s ease, box-shadow 0.25s ease;
   cursor: pointer;
 }
 
 .archive-item:last-child { border-bottom: none; }
-.archive-item:hover { background: var(--bg-card); }
+.archive-item:hover {
+  background: var(--bg-card);
+  box-shadow: inset 0 0 0 1px var(--border-h), 0 6px 22px rgba(0,0,0,0.35);
+}
 
-/* Highlighted non-qualifying rows when "show all" is on */
 .archive-item.is-filtered-out {
   opacity: 0.4;
   background: repeating-linear-gradient(
@@ -765,6 +992,7 @@ main {
 .archive-num {
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 500;
   color: var(--text-dim);
   text-align: right;
   white-space: nowrap;
@@ -773,6 +1001,7 @@ main {
 .archive-date {
   font-family: var(--font-mono);
   font-size: 0.78rem;
+  font-weight: 400;
   color: var(--muted);
   letter-spacing: 0.05em;
   white-space: nowrap;
@@ -793,15 +1022,17 @@ main {
   font-weight: 400;
 }
 
+/* archive altName — distinct colour, not italic */
 .archive-alt {
-  font-style: italic;
-  color: var(--muted);
+  font-style: normal;
+  color: var(--gold-label);
   margin-left: 0.4rem;
 }
 
 .archive-year {
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 400;
   color: var(--text-dim);
   margin-left: 0.5rem;
 }
@@ -818,7 +1049,7 @@ main {
   width: 26px;
   height: 26px;
   display: block;
-  transition: transform 0.2s ease, filter 0.2s ease;
+  transition: transform 0.2s var(--ease-smooth), filter 0.2s ease;
 }
 
 .archive-link:hover .filmweb-logo-sq {
@@ -832,7 +1063,7 @@ main {
 .ranking-list { margin-top: 0; }
 
 .ranking-item {
-  grid-template-columns: 2.5rem 1.35rem minmax(0, 1fr) auto auto;
+  grid-template-columns: 2.5rem 1.5rem minmax(0, 1fr) auto auto;
   cursor: grab;
   user-select: none;
 }
@@ -842,26 +1073,27 @@ main {
 .ranking-item.is-dragging {
   opacity: 0.52;
   background: var(--bg-card-h);
-  box-shadow: inset 0 0 0 1px var(--border-h);
+  box-shadow: inset 0 0 0 1px var(--border-h), 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .ranking-num { color: var(--gold-label); }
 
 .ranking-handle {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  line-height: 1;
-  letter-spacing: -0.25em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--gold-dim);
   cursor: grab;
-  opacity: 0.75;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  opacity: 0.6;
+  transition: color 0.2s ease, opacity 0.2s ease, transform 0.2s var(--ease-smooth);
 }
 
-.ranking-item:hover .ranking-handle { color: var(--gold); opacity: 1; }
+.ranking-handle svg { display: block; }
+
+.ranking-item:hover .ranking-handle { color: var(--gold); opacity: 1; transform: scale(1.1); }
 .ranking-title { min-width: 0; }
 
-/* RANKING ACTIONS — now above the list */
+/* RANKING ACTIONS */
 .ranking-actions {
   display: flex;
   flex-wrap: wrap;
@@ -874,30 +1106,32 @@ main {
 .ranking-copy-btn {
   appearance: none;
   border: 1px solid var(--border-h);
-  background: var(--bg-card);
+  background: linear-gradient(180deg, var(--bg-card-h), var(--bg-card));
   color: var(--gold-label);
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  letter-spacing: 0.2em;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 0.8em 1.35em;
-  border-radius: 3px;
+  padding: 0.85em 1.5em;
+  border-radius: 999px;
   cursor: pointer;
-  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s var(--ease-smooth), transform 0.18s var(--ease-smooth);
 }
 
 .ranking-copy-btn:hover {
   color: var(--gold);
   border-color: var(--gold-dim);
-  background: var(--bg-card-h);
-  box-shadow: 0 0 28px rgba(212, 168, 76, 0.1);
+  background: linear-gradient(180deg, #26201780, var(--bg-card-h));
+  box-shadow: 0 8px 28px rgba(0,0,0,0.4), 0 0 28px rgba(212, 168, 76, 0.12);
+  transform: translateY(-2px);
 }
 
-.ranking-copy-btn:active { transform: translateY(1px); }
+.ranking-copy-btn:active { transform: translateY(-1px) scale(0.98); }
 
 .ranking-restore-btn { color: var(--muted); }
 
-/* DOWNLOAD SECTION — Google Drive card */
+/* DOWNLOAD SECTION */
 .drive-card {
   display: flex;
   flex-direction: column;
@@ -915,7 +1149,7 @@ main {
   color: inherit;
   overflow: hidden;
   position: relative;
-  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth), background 0.3s ease;
   animation: fadeInUp 0.5s ease both;
 }
 
@@ -934,7 +1168,7 @@ main {
 .drive-card:hover {
   border-color: var(--border-h);
   transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.65), 0 0 0 1px var(--border-h);
+  box-shadow: 0 26px 70px rgba(0,0,0,0.72), 0 6px 22px rgba(0,0,0,0.4), 0 0 0 1px var(--border-h);
   background: var(--bg-card-h);
 }
 
@@ -945,7 +1179,7 @@ main {
 .drive-icon-large {
   width: 5rem;
   height: auto;
-  transition: filter 0.25s ease, transform 0.25s ease;
+  transition: filter 0.25s ease, transform 0.25s var(--ease-smooth);
 }
 
 .drive-card:hover .drive-icon-large {
@@ -955,12 +1189,12 @@ main {
 
 .drive-title {
   font-family: 'Google Sans', 'Poppins', var(--font-body), sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 1.7rem;
   letter-spacing: -0.02em;
   color: var(--cream);
   line-height: 1.2;
-  transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.25s ease;
+  transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.25s var(--ease-smooth);
 }
 
 .drive-card:hover .drive-title {
@@ -972,6 +1206,7 @@ main {
 .drive-desc {
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 400;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1011,6 +1246,7 @@ footer {
 .footer-label {
   font-family: var(--font-mono);
   font-size: 0.65rem;
+  font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--muted);
@@ -1035,6 +1271,7 @@ footer {
 .footer-date {
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 400;
   color: var(--gold-dim);
   white-space: nowrap;
   flex-shrink: 0;
@@ -1056,9 +1293,9 @@ footer {
 
 .footer-alt {
   font-family: var(--font-display);
-  font-style: italic;
+  font-style: normal;
   font-size: 0.85rem;
-  color: var(--muted);
+  color: var(--gold-label);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -1066,6 +1303,7 @@ footer {
 .footer-year {
   font-family: var(--font-mono);
   font-size: 0.65rem;
+  font-weight: 400;
   color: var(--text-dim);
   white-space: nowrap;
   flex-shrink: 0;
@@ -1077,7 +1315,7 @@ footer {
   align-items: center;
   flex-shrink: 0;
   text-decoration: none;
-  transition: transform 0.2s ease, filter 0.2s ease;
+  transition: transform 0.2s var(--ease-smooth), filter 0.2s ease;
   border-radius: 4px;
 }
 
@@ -1106,6 +1344,7 @@ footer.toast-active .footer-content {
   pointer-events: none;
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--gold);
@@ -1126,6 +1365,7 @@ footer.toast-active .footer-toast-msg { opacity: 1; transform: translateY(0); }
   color: var(--gold);
   font-family: var(--font-mono);
   font-size: 0.72rem;
+  font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   padding: 0.75em 1.5em;
@@ -1145,6 +1385,7 @@ footer.toast-active .footer-toast-msg { opacity: 1; transform: translateY(0); }
 .empty-state {
   font-family: var(--font-mono);
   font-size: 0.85rem;
+  font-weight: 400;
   color: var(--text-dim);
   letter-spacing: 0.1em;
   text-align: center;
@@ -1168,11 +1409,10 @@ footer.toast-active .footer-toast-msg { opacity: 1; transform: translateY(0); }
   opacity: 0;
   transform: translateY(6px) scale(0.97);
   transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+    opacity 0.2s var(--ease-smooth),
+    transform 0.2s var(--ease-smooth);
   pointer-events: none;
   z-index: 500;
-  /* gold top-edge accent */
 }
 
 .poster-popup::before {
@@ -1274,11 +1514,17 @@ footer.footer--announcement::before {
 }
 
 /* RESPONSIVE */
+@media (max-width: 900px) {
+  .poster-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
 @media (max-width: 640px) {
   html { font-size: 16px; }
 
   .cards-grid { grid-template-columns: 1fr; gap: 1.25rem; }
   .download-section .cards-grid { grid-template-columns: 1fr; }
+
+  .poster-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
 
   .date-day { font-size: 5rem; }
   .card-title { font-size: 1.45rem; }
@@ -1288,7 +1534,7 @@ footer.footer--announcement::before {
   .archive-toggle-divider { font-size: 0.68rem; letter-spacing: 0.18em; }
 
   .filters { padding: 1rem; gap: 1rem; }
-  .filter-checkbox { align-self: flex-start; }
+  .filter-switches { align-self: flex-start; flex-direction: row; gap: 1.25rem; flex-wrap: wrap; }
 
   .archive-item {
     grid-template-columns: 2rem 1fr auto auto;
@@ -1305,7 +1551,7 @@ footer.footer--announcement::before {
   .archive-link  { grid-column: 4; grid-row: 1 / 3; align-self: center; }
 
   .ranking-item {
-    grid-template-columns: 2rem 1.25rem minmax(0, 1fr) auto auto;
+    grid-template-columns: 2rem 1.5rem minmax(0, 1fr) auto auto;
     grid-template-rows: auto;
     gap: 0.5rem;
   }
