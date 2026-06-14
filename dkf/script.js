@@ -238,7 +238,7 @@ function buildArchiveItem(movie, globalNum, dimmed) {
     <span class="archive-dot"></span>
     <span class="archive-title">
       ${movie.name}
-      ${movie.altName ? `<span class="archive-alt">– ${movie.altName}</span>` : ""}
+      ${movie.altName ? `<span class="archive-alt">–&nbsp;&nbsp;${movie.altName}</span>` : ""}
       <span class="archive-year">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</span>
     </span>
     ${movie.author ? `<span class="author-bubble">${movie.author}</span>` : '<span></span>'}
@@ -278,7 +278,7 @@ function buildRankingItem(movie, rank, movieKey, shouldSuppressClick) {
     </span>
     <span class="archive-title ranking-title">
       ${movie.name}
-      ${movie.altName ? `<span class="archive-alt">– ${movie.altName}</span>` : ""}
+      ${movie.altName ? `<span class="archive-alt">–&nbsp;&nbsp;${movie.altName}</span>` : ""}
       <span class="archive-year">${movie.flag ? movie.flag + ' ' : ''}${movie.year}</span>
     </span>
     ${movie.author ? `<span class="author-bubble">${movie.author}</span>` : '<span></span>'}

@@ -178,7 +178,7 @@ const MOVIES = [
     poster: "https://image.tmdb.org/t/p/original/j9jz5wZlQoq65YuYPNauB72uvFJ.jpg"
   },
   {
-    name: "Sennen Joyū",
+    name: "千年女優",
     altName: "Millennium Actress",
     year: 2001,
     filmweb: "https://www.filmweb.pl/film/Millennium+Actress-2001-104796",

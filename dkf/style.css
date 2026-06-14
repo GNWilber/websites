@@ -541,6 +541,21 @@ main {
 
 .poster-card.is-filtered-out { opacity: 0.38; }
 
+.poster-card.is-filtered-out::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2; /* Sits above the image */
+  pointer-events: none; /* Ensures the card is still clickable/hoverable */
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 8px,
+    rgba(0, 0, 0, 0.5) 8px,
+    rgba(0, 0, 0, 0.5) 16px
+  );
+}
+
 .poster-card-img {
   position: absolute;
   inset: 0;
