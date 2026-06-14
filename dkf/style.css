@@ -545,7 +545,7 @@ main {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 2; /* Sits above the image */
+  z-index: 0; /* Sits above the image */
   pointer-events: none; /* Ensures the card is still clickable/hoverable */
   background: repeating-linear-gradient(
     -45deg,
