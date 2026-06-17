@@ -46,7 +46,7 @@ const COUNTRIES = {
   "🇭🇺": "Węgry",
   "🇮🇪": "Irlandia"
 };
-
+  
 const MOVIES = [
   {
     name: "Good Fortune",
@@ -312,9 +312,19 @@ const MOVIES = [
     altName: "Tragedia człowieka",
     year: 2011,
     filmweb: "https://www.filmweb.pl/film/Tragedia+cz%C5%82owieka-2011-643034",
-    date: "03.07.2026",
+    date: "10.07.2026",
     flag: "🇭🇺",
     author: "@Damian",
     poster: "https://www.themoviedb.org/t/p/w1280/mAVOj2Lr7BwuGPVrqRxAJI558EJ.jpg"
+  },
+  {
+    name: "Adams æbler",
+    altName: "Jabłka Adama",
+    year: 2005,
+    filmweb: "https://www.filmweb.pl/film/Jab%C5%82ka+Adama-2005-4313",
+    date: "03.07.2026",
+    flag: "🇩🇰 🇩🇪",
+    author: "@Adam",
+    poster: "https://image.tmdb.org/t/p/original/6RNmgq0UKvPuzLI6iY81ugLhjw2.jpg"
   },
 ];
