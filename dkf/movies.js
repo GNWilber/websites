@@ -10,7 +10,7 @@
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
 const ANNOUNCEMENT_EXPIRY = "26.05.2026";
-const BANNER = "https://github.com/GNWilber/websites/blob/c19097f7b2147bfba9e7fc89917f58f5fe6b8a0d/dkf/banner.png?raw=true";
+const BANNER = "https://github.com/GNWilber/websites/blob/e6977ecd0684b07b2faee0aeb5f7b29aa0d97d9b/dkf/banner.png?raw=true";
 // Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/banner.png
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
@@ -333,7 +333,7 @@ const MOVIES = [
     name: "How to Lose Friends & Alienate People",
     altName: "Jak stracić przyjaciół i zrazić do siebie ludzi",
     year: 2008,
-    filmweb: "https://www.filmweb.pl/film/Jab%C5%82ka+Adama-2005-4313",
+    filmweb: "https://www.filmweb.pl/film/Jak+straci%C4%87+przyjaci%C3%B3%C5%82+i+zrazi%C4%87+do+siebie+ludzi-2008-300339",
     date: "26.06.2026",
     flag: "🇬🇧",
     author: "@Łukasz",

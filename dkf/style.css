@@ -1,4 +1,4 @@
-/* DYSKUSYJNY KLUB FILMOWY — style v8 */
+/* DYSKUSYJNY KLUB FILMOWY — style v8.1 */
 
 :root {
   --bg:          #0c0b09;
@@ -343,15 +343,17 @@ main {
   filter: grayscale(0);
 }
 
+/* HOVER EFFECT: Makes details transparent to reveal the background, but uses high-contrast drop contours for clarity */
 .movie-card:hover .date-day,
 .movie-card:hover .date-month-year,
 .movie-card:hover .card-title,
 .movie-card:hover .card-alt,
 .movie-card:hover .card-year {
+  opacity: 0.75;
   text-shadow:
-    0 2px 4px rgba(19, 18, 16, 0.6),
-    0 4px 12px rgba(19, 18, 16, 0.8);
-  transition: text-shadow 0.3s ease;
+    0 1px 2px rgba(12, 11, 9, 0.95),  /* Sharp black contour boundary */
+    0 3px 8px rgba(12, 11, 9, 0.8),   /* Dark focus barrier */
+    0 8px 20px rgba(12, 11, 9, 0.6);  /* Wide ambient drop overlay */
 }
 
 .movie-card:hover::after { opacity: 1; }
@@ -406,6 +408,7 @@ main {
   color: var(--cream);
   line-height: 1;
   letter-spacing: -0.04em;
+  transition: opacity 0.35s var(--ease-smooth), text-shadow 0.35s var(--ease-smooth);
 }
 
 .date-gap { height: 0.9rem; }
@@ -418,6 +421,7 @@ main {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   line-height: 1;
+  transition: opacity 0.35s var(--ease-smooth), text-shadow 0.35s var(--ease-smooth);
 }
 
 .badge-today {
@@ -459,6 +463,7 @@ main {
   color: var(--cream);
   line-height: 1.2;
   letter-spacing: -0.01em;
+  transition: opacity 0.35s var(--ease-smooth), text-shadow 0.35s var(--ease-smooth);
 }
 
 /* main card altName — NOT italic, same display font as title, distinct colour */
@@ -468,6 +473,7 @@ main {
   font-size: 1.1rem;
   color: var(--gold-label);
   line-height: 1.3;
+  transition: opacity 0.35s var(--ease-smooth), text-shadow 0.35s var(--ease-smooth);
 }
 
 .card-year {
@@ -477,6 +483,7 @@ main {
   color: var(--text-dim);
   letter-spacing: 0.18em;
   margin-top: 0.6rem;
+  transition: opacity 0.35s var(--ease-smooth), text-shadow 0.35s var(--ease-smooth);
 }
 
 .card-author {
