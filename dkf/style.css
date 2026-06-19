@@ -265,6 +265,8 @@ main {
   text-shadow: 0 0 12px rgba(212, 168, 76, 0.35);
 }
 
+/* style.css */
+
 /* CARDS GRID */
 .cards-grid {
   display: flex;
@@ -274,7 +276,7 @@ main {
 }
 
 .cards-grid > * {
-  width: calc(33.333% - 1rem);
+  flex: 1 1 calc((100% - 3rem) / 3 - 1px);
   max-width: 320px;
 }
 
@@ -527,10 +529,9 @@ main {
   animation: fadeInUp 0.4s var(--ease-smooth) both;
 }
 
-
 .poster-card {
   position: relative;
-  width: calc(25% - 0.825rem);
+  width: calc((100% - 3.3rem) / 4);
   aspect-ratio: 2 / 3;
   border: 1px solid var(--border);
   border-radius: 3px;
@@ -1538,18 +1539,18 @@ footer.footer--announcement::before {
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  .poster-card { width: calc(33.333% - 0.733rem); }
+  .poster-card { width: calc((100% - 2.2rem) / 3); }
 }
 
 @media (max-width: 640px) {
   html { font-size: 16px; }
 
   .cards-grid { gap: 1.25rem; }
-  .cards-grid > * { width: 100%; max-width: none; }
+  .cards-grid > * { flex: 1 1 100%; max-width: none; }
   .download-section .cards-grid > * { width: 100%; max-width: none; }
 
   .poster-grid { gap: 0.8rem; }
-  .poster-card { width: calc(50% - 0.4rem); }
+  .poster-card { width: calc((100% - 0.8rem) / 2); }
 
   .date-day { font-size: 5rem; }
   .card-title { font-size: 1.45rem; }
