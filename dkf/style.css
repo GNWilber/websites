@@ -267,15 +267,21 @@ main {
 
 /* CARDS GRID */
 .cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
 }
 
-.download-section .cards-grid {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
-  justify-content: center;
+.cards-grid > * {
+  width: calc(33.333% - 1rem);
+  max-width: 320px;
+}
+
+.download-section .cards-grid > * {
+  width: auto;
+  flex: 0 1 320px;
+  min-width: 280px;
 }
 
 /* MOVIE CARD */
@@ -284,7 +290,7 @@ main {
   border: 1px solid var(--border);
   border-radius: 3px;
   width: 100%;
-  aspect-ratio: 2 / 3;
+  min-height: 420px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -514,15 +520,17 @@ main {
 
 /* POSTER GRID (archive poster mode) — inverse of upcoming: image first, dim+info on hover */
 .poster-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.1rem;
+  justify-content: center;
   animation: fadeInUp 0.4s var(--ease-smooth) both;
 }
 
+
 .poster-card {
   position: relative;
-  width: 100%;
+  width: calc(25% - 0.825rem);
   aspect-ratio: 2 / 3;
   border: 1px solid var(--border);
   border-radius: 3px;
@@ -1530,16 +1538,18 @@ footer.footer--announcement::before {
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  .poster-grid { grid-template-columns: repeat(3, 1fr); }
+  .poster-card { width: calc(33.333% - 0.733rem); }
 }
 
 @media (max-width: 640px) {
   html { font-size: 16px; }
 
-  .cards-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-  .download-section .cards-grid { grid-template-columns: 1fr; }
+  .cards-grid { gap: 1.25rem; }
+  .cards-grid > * { width: 100%; max-width: none; }
+  .download-section .cards-grid > * { width: 100%; max-width: none; }
 
-  .poster-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+  .poster-grid { gap: 0.8rem; }
+  .poster-card { width: calc(50% - 0.4rem); }
 
   .date-day { font-size: 5rem; }
   .card-title { font-size: 1.45rem; }
