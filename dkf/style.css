@@ -485,13 +485,23 @@ main {
   font-weight: 400;
   letter-spacing: 0.15em;
   color: var(--cream);
-  background: rgba(48, 42, 34, 0.4);
   padding: 0.3em 0.85em;
   border-radius: 999px;
   margin-top: 0.3rem;
   line-height: 1.4;
-  border: 1px solid rgba(212, 168, 76, 0.18);
-  backdrop-filter: blur(6px);
+
+  /* --- Apple Liquid Glass Effect --- */
+  background: rgba(240, 232, 218, 0.07); /* Very translucent cream tint */
+  -webkit-backdrop-filter: blur(12px);    /* Safari support */
+  backdrop-filter: blur(12px);            /* Stronger blur for a liquid look */
+  
+  /* Dual border highlight (specular reflection) */
+  border: 1px solid rgba(240, 232, 218, 0.15); 
+  
+  /* Inner shadow mimics glass thickness; outer shadow grounds it */
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.2), 
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
 .card-link {
