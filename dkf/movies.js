@@ -9,7 +9,7 @@
 // },
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
-const ANNOUNCEMENT_EXPIRY = "26.06.2026";
+const ANNOUNCEMENT_EXPIRY = "26.05.2026";
 const BANNER = "https://github.com/GNWilber/websites/blob/c19097f7b2147bfba9e7fc89917f58f5fe6b8a0d/dkf/banner.png?raw=true";
 // Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/banner.png
 
@@ -328,5 +328,15 @@ const MOVIES = [
     flag: "🇩🇰 🇩🇪",
     author: "@Adam",
     poster: "https://image.tmdb.org/t/p/original/6RNmgq0UKvPuzLI6iY81ugLhjw2.jpg"
+  },
+  {
+    name: "How to Lose Friends & Alienate People",
+    altName: "Jak stracić przyjaciół i zrazić do siebie ludzi",
+    year: 2008,
+    filmweb: "https://www.filmweb.pl/film/Jab%C5%82ka+Adama-2005-4313",
+    date: "26.06.2026",
+    flag: "🇬🇧",
+    author: "@Łukasz",
+    poster: "https://www.themoviedb.org/t/p/w1280/8Xd1mO861aK2OirTbxZrODNhihW.jpg"
   },
 ];
