@@ -1557,6 +1557,126 @@ footer.footer--announcement::before {
   letter-spacing: 0.01em;
 }
 
+/* ==========================================
+   SECRET SCREENSHOT BANNER MODE
+   ========================================== */
+body.screenshot-mode {
+  background: var(--bg) !important;
+  min-height: 100vh !important;
+  height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* Hide all elements that should not appear on the banner layout */
+body.screenshot-mode .grain-overlay,
+body.screenshot-mode header,
+body.screenshot-mode footer,
+body.screenshot-mode .download-section,
+body.screenshot-mode .archive-section,
+body.screenshot-mode .section-label,
+body.screenshot-mode .empty-state,
+body.screenshot-mode .hint-popup {
+  display: none !important;
+}
+
+/* Reset main alignment to accommodate horizontal non-wrapping cards */
+body.screenshot-mode main {
+  padding: 3rem !important;
+  margin: 0 auto !important;
+  max-width: none !important;
+  width: max-content !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+body.screenshot-mode .upcoming-section {
+  width: max-content !important;
+  margin: 0 !important;
+}
+
+/* Keep all cards in a strict horizontal line without wrapping or squeezing */
+body.screenshot-mode #upcoming-cards {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 1.5rem !important; /* Reduced from 3rem to make card spacing tighter */
+  width: max-content !important;
+  max-width: none !important;
+}
+
+/* Enforce exact 2:3 poster-ratio layout dimensions on all active cards */
+body.screenshot-mode .movie-card {
+  flex: 0 0 360px !important;
+  width: 360px !important;
+  height: 540px !important;
+  aspect-ratio: 2 / 3 !important;
+  min-height: auto !important;
+  max-width: none !important;
+  transform: none !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85) !important;
+  animation: none !important;
+  cursor: default !important;
+}
+
+/* Force higher poster visibility for premium aesthetic quality */
+body.screenshot-mode .movie-card::before {
+  opacity: 0.9 !important;
+  filter: grayscale(0) !important;
+  transition: none !important;
+}
+
+/* Hide interactive Filmweb buttons on static banner cards to gain vertical space */
+body.screenshot-mode .movie-card .card-link {
+  display: none !important;
+}
+
+/* Re-distribute card interior layouts visually to fit proportional heights */
+body.screenshot-mode .movie-card .card-info {
+  padding: 1.5rem 1.5rem 2.25rem !important;
+  justify-content: flex-start !important;
+  gap: 0.6rem !important;
+}
+
+body.screenshot-mode .movie-card .card-divider {
+  margin: 1rem 0 0 !important;
+}
+
+/* High contrast shadow backings to ensure title legibility over color posters */
+body.screenshot-mode .movie-card .date-day,
+body.screenshot-mode .movie-card .date-month-year,
+body.screenshot-mode .movie-card .card-title,
+body.screenshot-mode .movie-card .card-alt,
+body.screenshot-mode .movie-card .card-year,
+body.screenshot-mode .movie-card .card-author {
+  opacity: 1 !important;
+  text-shadow:
+    0 2px 4px rgba(12, 11, 9, 0.98),
+    0 4px 12px rgba(12, 11, 9, 0.95),
+    0 12px 30px rgba(12, 11, 9, 0.8) !important;
+}
+
+body.screenshot-mode .movie-card .date-day {
+  font-size: 5.5rem !important;
+}
+
+body.screenshot-mode .movie-card .card-title {
+  font-size: 1.9rem !important;
+  line-height: 1.15 !important;
+}
+
+body.screenshot-mode .movie-card .card-alt {
+  font-size: 1.2rem !important;
+  line-height: 1.2 !important;
+}
+
 @media (max-width: 640px) {
   .footer-announce-label { display: none; }
   .footer--announcement .footer-divider { display: none; }

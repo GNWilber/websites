@@ -74,7 +74,8 @@ function extractCodeFromInput(raw) {
 let _toastTimer = null;
 function showToast(message) {
   const footer = document.querySelector("footer");
-  if (footer) {
+  // Check if screenshot-mode is not active to use the footer, otherwise fallback to floating toast
+  if (footer && !document.body.classList.contains("screenshot-mode")) {
     const toastMsg = footer.querySelector(".footer-toast-msg");
     toastMsg.textContent = message;
     footer.classList.add("toast-active");
@@ -183,6 +184,7 @@ function buildCard(movie, opts = {}) {
   card.querySelector(".card-link").addEventListener("click", e => e.stopPropagation());
   attachHint(card.querySelector(".card-link"));
   card.addEventListener("click", () => {
+    if (document.body.classList.contains("screenshot-mode")) return;
     copyToClipboard(`${displayName(movie)} [${movie.year}]`, `Skopiowano\n${displayName(movie)} [${movie.year}]`);
   });
   if (movie.poster) {
@@ -716,6 +718,27 @@ function render() {
   });
 
   initHints();
+
+  // SECRET SCREENSHOT MODE TRIGGER (4 clicks on DKF logo in top header bar)
+  let dkfClicks = 0;
+  let dkfTimer = null;
+  const dkfLogo = document.querySelector(".logo-dkf");
+  if (dkfLogo) {
+    dkfLogo.style.cursor = "pointer";
+    dkfLogo.addEventListener("click", () => {
+      dkfClicks++;
+      clearTimeout(dkfTimer);
+      if (dkfClicks === 4) {
+        const isScreenshot = document.body.classList.toggle("screenshot-mode");
+        showToast(isScreenshot ? "Włączono tryb zrzutu ekranu" : "Wyłączono tryb zrzutu ekranu");
+        dkfClicks = 0;
+      } else {
+        dkfTimer = setTimeout(() => {
+          dkfClicks = 0;
+        }, 1000);
+      }
+    });
+  }
 }
 
 // POSTER HOVER POPUP SYSTEM
