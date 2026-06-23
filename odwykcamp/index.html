@@ -40,6 +40,7 @@
     --shadow-sm: 0 2px 8px rgba(27,58,43,.08);
     --shadow: 0 8px 28px rgba(27,58,43,.13);
     --shadow-lg: 0 16px 48px rgba(27,58,43,.18);
+    --hover-shadow: 0 16px 32px rgba(46, 107, 74, 0.15), 0 4px 12px rgba(46, 107, 74, 0.08);
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -80,7 +81,7 @@
     background: linear-gradient(135deg, var(--green-950) 0%, var(--green-800) 50%, var(--green-600) 100%);
     color: #fff;
     border-radius: var(--radius);
-    padding: 54px 42px 64px; /* Zwiększony dolny padding z 54px */
+    padding: 54px 42px 64px;
     box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.08);
     position: relative;
     overflow: hidden;
@@ -121,19 +122,6 @@
     backdrop-filter: blur(4px);
   }
 
-  .hero-badge .dot-live {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: #4ade80;
-    box-shadow: 0 0 0 2px rgba(74,222,128,.3);
-    animation: pulse-live 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-live {
-    0%, 100% { box-shadow: 0 0 0 2px rgba(74,222,128,.3); }
-    50%       { box-shadow: 0 0 0 5px rgba(74,222,128,.15); }
-  }
-
   header.hero h1 {
     margin: 0 0 16px;
     font-size: clamp(32px, 6vw, 56px);
@@ -150,7 +138,7 @@
   }
 
   header.hero p {
-    margin: 0 0 14px 0; /* 14px to odstęp na dole każdego akapitu */
+    margin: 0 0 14px 0;
     font-size: 16px;
     color: #fff;
     opacity: 1;
@@ -159,7 +147,7 @@
   }
 
   header.hero p:last-of-type {
-    margin-bottom: 0; /* Usuwa zbędny odstęp pod ostatnim akapitem */
+    margin-bottom: 0;
   }
   
   .hero-dates {
@@ -258,7 +246,7 @@
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
-    min-width: 860px;
+    min-width: 700px; 
     font-size: 14.5px;
   }
 
@@ -281,20 +269,29 @@
     padding: 13px 16px;
     border-bottom: 1px solid var(--green-100);
     vertical-align: middle;
+    background-color: inherit; 
   }
 
   tbody tr:last-child td { border-bottom: none; }
 
+  /* Nowoczesna animacja Hover dla wierszy tabeli */
   tbody tr {
-    transition: background .15s ease, transform .12s ease, box-shadow .12s ease;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease;
     cursor: pointer;
+    position: relative;
+    background-color: transparent;
   }
 
   tbody tr:hover {
-    background: var(--green-50) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(27,58,43,.12);
+    background-color: #ffffff !important;
+    transform: translateY(-4px);
+    box-shadow: var(--hover-shadow);
+    z-index: 10;
   }
+  
+  tbody tr:hover td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+  tbody tr:hover td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+  tbody tr:hover td { border-bottom-color: transparent; }
 
   .who {
     display: flex;
@@ -322,6 +319,16 @@
     font-size: 13px;
     font-weight: 600;
     color: var(--green-800);
+  }
+
+  .from-badge a, .stop-chip a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .from-badge a:hover, .stop-chip a:hover {
+    color: var(--green-600);
+    text-decoration: underline;
   }
 
   .car-badge {
@@ -363,7 +370,7 @@
     gap: 6px;
     font-weight: 600;
     padding: 2px 0;
-    border-bottom: 2px solid var(--green-300); /* Zmiana z dashed na solid i ujednolicenie koloru */
+    border-bottom: 2px solid var(--green-300);
     width: fit-content;
     transition: color .15s, border-color .15s;
   }
@@ -396,7 +403,7 @@
   }
 
   /* ══════════════════════════════
-     CTA BLOCKS
+     CTA BLOCKS & BUTTONS
   ══════════════════════════════ */
   .cta-row {
     display: flex;
@@ -455,6 +462,7 @@
     opacity: .85;
   }
 
+  /* Nowoczesna animacja Hover dla przycisków */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -465,26 +473,32 @@
     text-decoration: none;
     font-weight: 700;
     font-size: 14.5px;
-    transition: transform .15s ease, box-shadow .15s ease, opacity .15s;
     white-space: nowrap;
     flex: 0 0 auto;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.2s;
   }
 
-  .btn:hover { transform: translateY(-2px); opacity: .92; }
-  .btn:active { transform: translateY(0); }
+  .btn:hover { 
+    transform: translateY(-4px); 
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.1);
+  }
+  
+  .btn:active { 
+    transform: translateY(0); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
 
   .btn-discord {
     background: rgba(255,255,255,.15);
     color: #fff;
     border: 1.5px solid rgba(255,255,255,.35);
-    box-shadow: 0 4px 14px rgba(0,0,0,.15);
   }
 
   .btn-form {
     background: rgba(255,255,255,.15);
     color: #fff;
     border: 1.5px solid rgba(255,255,255,.35);
-    box-shadow: 0 4px 14px rgba(0,0,0,.15);
   }
 
   .btn img { width: 24px; height: 24px; }
@@ -543,20 +557,6 @@
     border-bottom-color: var(--green-500);
   }
 
-  /* Section header divider */
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .section-header-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--green-200), transparent);
-  }
-
   /* ══════════════════════════════
      EMPTY STATE
   ══════════════════════════════ */
@@ -570,7 +570,7 @@
   }
 
   /* ══════════════════════════════
-     FOOTER
+     FOOTER & LEAFLET
   ══════════════════════════════ */
   footer {
     text-align: center;
@@ -580,9 +580,6 @@
     opacity: .7;
   }
 
-  /* ══════════════════════════════
-     LEAFLET POPUP
-  ══════════════════════════════ */
   .leaflet-popup-content-wrapper {
     border-radius: 12px !important;
     box-shadow: 0 8px 24px rgba(27,58,43,.18) !important;
@@ -593,28 +590,25 @@
     font-weight: 600;
     text-decoration: none;
     border-bottom: 1px solid var(--green-400);
+    display: inline-block;
   }
 
   .leaflet-popup-content a:hover { color: var(--green-500); }
 
-    /* ══════════════════════════════
-      RESPONSIVE
-    ══════════════════════════════ */
   @media (max-width: 640px) {
     header.hero { padding: 36px 24px; }
     section { padding: 22px 20px; }
     
-    /* Nowe reguły dla bloków z przyciskami na telefonie */
     .cta { 
       padding: 24px 22px; 
-      flex-direction: column;   /* Układa ikonę, tekst i przycisk w kolumnie */
-      text-align: center;       /* Środkuje tekst wewnątrz bloku */
-      justify-content: center;  /* Środkuje elementy w pionie/poziomie */
+      flex-direction: column;
+      text-align: center;
+      justify-content: center;
     }
     
     .cta-text {
-      min-width: unset;         /* Resetuje minimalną szerokość */
-      margin-bottom: 4px;       /* Daje lekki odstęp między tekstem a przyciskiem */
+      min-width: unset;
+      margin-bottom: 4px;
     }
 
     .cta-row { flex-direction: column; }
@@ -631,11 +625,9 @@
         <img src="favicon.png" alt="OdwyCamp" class="favicon-img">
         OdwyCamp w Pałacu
       </h1>
-      <p>
-        <p>Shark i jego klub motocyklowy oraz Gmina Komarówka Podlaska udostępniają nam wspaniały Pałac w stanie niszczejącym przy białoruskiej granicy.</p>
-        <p>Zaletą jest to, że za bardzo uczciwą cenę (czyli gratis) otrzymujemy wyśmienite warunki (o których poniżej), jednak haczykiem jest lokalizacja.</p>
-        <p>Z powodu owego haczyka poszukiwani są zmotoryzowani, którzy mają wolne miejsca i nie boją się zabrać zbłąkanych duszyczek po drodze.</p>
-      </p>
+      <p>Shark i jego klub motocyklowy oraz Gmina Komarówka Podlaska udostępniają nam wspaniały Pałac w stanie niszczejącym przy białoruskiej granicy.</p>
+      <p>Zaletą jest to, że za bardzo uczciwą cenę (czyli gratis) otrzymujemy wyśmienite warunki (o których poniżej), jednak haczykiem jest lokalizacja.</p>
+      <p>Z powodu owego haczyka poszukiwani są zmotoryzowani, którzy mają wolne miejsca i nie boją się zabrać zbłąkanych duszyczek po drodze.</p>
       <div class="hero-dates">
         <div class="hero-date-chip">📅 31.07 — 02.08 (2026)</div>
         <div class="hero-date-chip">📍 Żelizna 91, 21-311</div>
@@ -652,10 +644,12 @@
       <span>🚆 Stacja kolejowa</span>
       <span>🍕 Pizzeria</span>
       <span>🛒 Sklep Dino</span>
+      <span>🚗 Kierowca</span>
+      <span>🦶 Szuka podwózki</span>
     </div>
   </section>
 
-  <!-- ════════════════ TABELA ════════════════ -->
+  <!-- ════════════════ TABELA: PODWÓZKOWNICY ════════════════ -->
   <section>
     <h2><span class="ico">🚕</span> Podwózkownicy</h2>
     <div class="table-scroll">
@@ -676,13 +670,32 @@
     </div>
   </section>
 
+  <!-- ════════════════ TABELA: GAPOWICZE ════════════════ -->
+  <section>
+    <h2><span class="ico">🦶</span> Stopowicze</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Imię</th>
+            <th>Skąd</th>
+            <th>Od kiedy</th>
+            <th>Do kiedy</th>
+            <th>Kontakt</th>
+          </tr>
+        </thead>
+        <tbody id="hitchhikers-body"></tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- ════════════════ CTA ROW ════════════════ -->
   <div class="cta-row">
     <div class="cta cta-form">
       <div class="cta-icon">🛞</div>
       <div class="cta-text">
-        <strong>Zgłoś się do Podwózkowników!</strong>
-        <p>Wypełnij króciutki formularz.</p>
+        <strong>Zgłoś się do listy!</strong>
+        <p>Wypełnij króciutki formularz podwózki.</p>
       </div>
       <a class="btn btn-form"
          href="https://docs.google.com/forms/d/e/1FAIpQLSdl7jQdi_itysU0FcvnWE2fHqa6FwbadWJZR1GOmOeEIRRBCg/viewform?usp=publish-editor"
@@ -694,7 +707,7 @@
     <div class="cta cta-discord">
       <div class="cta-icon">💬</div>
       <div class="cta-text">
-        <strong>Jeśli masz pytanie albo nie chcesz wypełniać formularza🫩</strong>
+        <strong>Masz pytanie lub wolisz nie wypełniać formularza?🫩</strong>
         <p>Napisz na Discordzie <strong>#odwykcamp</strong></p>
       </div>
       <a class="btn btn-discord"
@@ -709,7 +722,6 @@
   <!-- ════════════════ INFO ════════════════ -->
   <section>
     <div class="grid2">
-      <!-- CO BĘDZIE -->
       <div>
         <h2><span class="ico">🎒</span> Co będzie na miejscu</h2>
         <ul class="nice">
@@ -732,7 +744,6 @@
         </ul>
       </div>
 
-      <!-- STACJE + MIEJSCÓWKA -->
       <div>
         <h2><span class="ico">🚉</span> Stacje kolejowe w okolicy</h2>
         <ul class="nice">
@@ -782,12 +793,14 @@ const MEETING = {
 };
 
 /* ══════════════════════════════════════════
-   2) UCZESTNICY
+   2) BAZA DANYCH
 ══════════════════════════════════════════ */
+// KIEROWCY
 const participants = [
   {
     name: "Igor Brzęczek",
     from: "Rybnik",
+    from_url: "https://maps.app.goo.gl/xsNX4Vq53amJG9Q67",
     coords: [50.102141, 18.545987],
     stops: [],
     car: "Samochód (4)",
@@ -798,25 +811,21 @@ const participants = [
       facebook: ["Igor Hanys",  "https://www.facebook.com/igor.hanys"]
     }
   }
-  /* ==========================================================
-  TEMPLATE – nie usuwać
-  ,{
-    name: "Imię Nazwisko / Nick",
-    from: "Miasto",
-    coords: [52.2297, 21.0122],
-    stops: [{ name:"Przystanek", coords:[51.5, 21.0] }],
-    car: "🚙 Automobil (x)",
-    from_date: "Piątek rano",
-    to_date: "Niedziela",
+];
+
+// GAPOWICZE (Szukający podwózki)
+const hitchhikers = [
+  {
+    name: "Monika Drop",
+    from: "Lublin",
+    from_url: "https://maps.app.goo.gl/sBpbqN7WiYjXMNzp8",
+    coords: [51.251142, 22.575102],
+    from_date: "Nie wie",
+    to_date: "Nie wie",
     contact: {
-      phone:    ["+48 123 456 789", "tel:+48123456789"],
-      email:    ["twoj@email.com",  "mailto:twoj@email.com"],
-      discord:  ["Nick#0000",       "https://discord.com"],
-      whatsapp: ["Napisz na WA",    "https://wa.me/48123456789"],
-      facebook: ["Profil FB",       "https://facebook.com/"]
+      phone: ["+48 515 684 104", "tel:+48515684104"]
     }
   }
-  ========================================================== */
 ];
 
 /* ══════════════════════════════════════════
@@ -835,7 +844,7 @@ const POI_SHOPS = [
 ];
 
 /* ══════════════════════════════════════════
-   4) KOLOR Z IMIENIA
+   FUNKCJE POMOCNICZE
 ══════════════════════════════════════════ */
 function colorFromString(str) {
   let h = 0;
@@ -843,8 +852,24 @@ function colorFromString(str) {
   return `hsl(${Math.abs(h) % 360}, 65%, 45%)`;
 }
 
+const IMG_DISCORD  = "https://cdn3.emoji.gg/emojis/2372-discord-clyde-dark.png";
+const IMG_WHATSAPP = "https://cdn3.emoji.gg/emojis/68016-whatsapp-icon.png";
+const IMG_FACEBOOK = "https://cdn3.emoji.gg/emojis/2116-facebook.png";
+
+function getContactHtml(c) {
+  if (!c) return '';
+  let html = '<div class="contact-cell">';
+  if (c.email    && Array.isArray(c.email))    html += `<a href="${c.email[1]}"    target="_blank" rel="noopener">📧 ${c.email[0]}</a>`;
+  if (c.phone    && Array.isArray(c.phone))    html += `<a href="${c.phone[1]}">📞 ${c.phone[0]}</a>`;
+  if (c.discord  && Array.isArray(c.discord))  html += `<a href="${c.discord[1]}"  target="_blank" rel="noopener"><img src="${IMG_DISCORD}"  alt="discord">  ${c.discord[0]}</a>`;
+  if (c.whatsapp && Array.isArray(c.whatsapp)) html += `<a href="${c.whatsapp[1]}" target="_blank" rel="noopener"><img src="${IMG_WHATSAPP}" alt="whatsapp"> ${c.whatsapp[0]}</a>`;
+  if (c.facebook && Array.isArray(c.facebook)) html += `<a href="${c.facebook[1]}" target="_blank" rel="noopener"><img src="${IMG_FACEBOOK}" alt="facebook">  ${c.facebook[0]}</a>`;
+  html += '</div>';
+  return html;
+}
+
 /* ══════════════════════════════════════════
-   5) MAPA
+   MAPA ORAZ TRASY
 ══════════════════════════════════════════ */
 const map = L.map('map').setView([52.0, 22.4], 6);
 
@@ -876,7 +901,6 @@ L.marker(MEETING.coords, { icon: makeEmojiIcon('🏰', 38) })
 POI_TRAIN_STATIONS.forEach(s => addPoiMarker(s.coords, '🚆', s.name, s.url, 26));
 POI_SHOPS.forEach(s => addPoiMarker(s.coords, s.emoji, s.name, s.url, 28));
 
-/* Trasy */
 const routes = {};
 const allLatLngs = [
   MEETING.coords,
@@ -884,99 +908,157 @@ const allLatLngs = [
   ...POI_SHOPS.map(s => s.coords)
 ];
 
+// Trasy kierowców
 participants.forEach(p => {
   const color = colorFromString(p.name);
   p._color = color;
-  const points = [p.coords, ...p.stops.map(s => s.coords), MEETING.coords].filter(c => Array.isArray(c));
+  const points = [p.coords, ...(p.stops||[]).map(s => s.coords), MEETING.coords].filter(c => Array.isArray(c));
   points.forEach(c => allLatLngs.push(c));
 
   const line = L.polyline(points, { color, weight: 4, opacity: .75, lineJoin: 'round' }).addTo(map);
-  line.bindPopup(`<b>Trasa: ${p.name}</b><br>${p.from} → Pałac`);
+  line.bindPopup(`<b>Trasa (Kierowca): ${p.name}</b><br>${p.from} → Pałac`);
 
   const startMarker = L.circleMarker(p.coords, {
     radius: 7, color: '#fff', weight: 2.5, fillColor: color, fillOpacity: 1
-  }).addTo(map).bindPopup(`<b>${p.name}</b><br>Start: ${p.from}`);
+  }).addTo(map);
+  
+  // Dymek z linkiem Google Maps
+  let startPopup = `<b>${p.name} (🚗)</b><br>Start: ${p.from}`;
+  if (p.from_url) startPopup += `<br><a href="${p.from_url}" target="_blank" rel="noopener">📍 Google Maps</a>`;
+  startMarker.bindPopup(startPopup);
 
-  const endMarker = L.circleMarker(MEETING.coords, {
-    radius: 7, color: '#fff', weight: 2.5, fillColor: color, fillOpacity: 1
-  }).addTo(map).bindPopup(`<b>${p.name}</b><br>Meta: Pałac`);
+  const stopMarkers = (p.stops||[]).map(s => {
+    let stopPopup = `<b>Przystanek: ${s.name}</b><br>Trasa kierowcy: ${p.name}`;
+    if (s.url) stopPopup += `<br><a href="${s.url}" target="_blank" rel="noopener">📍 Google Maps</a>`;
+    return L.circleMarker(s.coords, { radius: 5, color: '#fff', weight: 2, fillColor: color, fillOpacity: .9 })
+      .addTo(map).bindPopup(stopPopup);
+  });
 
-  const stopMarkers = p.stops.map(s =>
-    L.circleMarker(s.coords, { radius: 5, color: '#fff', weight: 2, fillColor: color, fillOpacity: .9 })
-      .addTo(map).bindPopup(`Przystanek: ${s.name}`)
-  );
+  routes[p.name] = { isDriver: true, line, startMarker, stopMarkers, color };
+});
 
-  routes[p.name] = { line, startMarker, endMarker, stopMarkers, color };
+// Trasy Gapowiczów
+hitchhikers.forEach(h => {
+  const color = colorFromString(h.name);
+  h._color = color;
+  const points = [h.coords, MEETING.coords].filter(c => Array.isArray(c));
+  points.forEach(c => allLatLngs.push(c));
+
+  // Przerywana linia, zwiększona widoczność
+  const line = L.polyline(points, { color, weight: 4, opacity: 0.85, dashArray: '6, 8', lineJoin: 'round' }).addTo(map);
+  line.bindPopup(`<b>Stopowicz: ${h.name}</b><br>${h.from} → Szuka podwózki!`);
+
+  // Marker, lepiej widoczny
+  const startMarker = L.circleMarker(h.coords, {
+    radius: 6, color: '#fff', weight: 2, fillColor: color, fillOpacity: 0.9, dashArray: '2, 3'
+  }).addTo(map);
+
+  // Dymek z linkiem Google Maps
+  let startPopup = `<b>${h.name} (🦶)</b><br>Czeka w: ${h.from}`;
+  if (h.from_url) startPopup += `<br><a href="${h.from_url}" target="_blank" rel="noopener">📍 Google Maps</a>`;
+  startMarker.bindPopup(startPopup);
+
+  routes[h.name] = { isDriver: false, line, startMarker, stopMarkers: [], color };
 });
 
 if (allLatLngs.length > 1) map.fitBounds(L.latLngBounds(allLatLngs).pad(0.15));
 
 /* ══════════════════════════════════════════
-   6) HIGHLIGHT
+   HIGHLIGHT NA MAPIE
 ══════════════════════════════════════════ */
 function highlightRoute(name, on) {
   const r = routes[name];
   if (!r) return;
-  if (on) {
-    r.line.setStyle({ weight: 8, opacity: 1 }); r.line.bringToFront();
-    r.startMarker.setStyle({ radius: 11 }); r.startMarker.bringToFront();
-    r.endMarker.setStyle({ radius: 11 });   r.endMarker.bringToFront();
-    r.stopMarkers.forEach(m => { m.setStyle({ radius: 8 }); m.bringToFront(); });
+  
+  if (r.isDriver) {
+    if (on) {
+      r.line.setStyle({ weight: 8, opacity: 1 }); r.line.bringToFront();
+      r.startMarker.setStyle({ radius: 11 }); r.startMarker.bringToFront();
+      r.stopMarkers.forEach(m => { m.setStyle({ radius: 8 }); m.bringToFront(); });
+    } else {
+      r.line.setStyle({ weight: 4, opacity: .75 });
+      r.startMarker.setStyle({ radius: 7 });
+      r.stopMarkers.forEach(m => m.setStyle({ radius: 5 }));
+    }
   } else {
-    r.line.setStyle({ weight: 4, opacity: .75 });
-    r.startMarker.setStyle({ radius: 7 });
-    r.endMarker.setStyle({ radius: 7 });
-    r.stopMarkers.forEach(m => m.setStyle({ radius: 5 }));
+    // Highlight gapowicza
+    if (on) {
+      r.line.setStyle({ weight: 7, opacity: 1, dashArray: '8, 12' }); r.line.bringToFront();
+      r.startMarker.setStyle({ radius: 9, fillOpacity: 1 }); r.startMarker.bringToFront();
+    } else {
+      r.line.setStyle({ weight: 4, opacity: 0.85, dashArray: '6, 8' });
+      r.startMarker.setStyle({ radius: 6, fillOpacity: 0.9 });
+    }
   }
 }
 
 /* ══════════════════════════════════════════
-   7) TABELA
+   GENEROWANIE TABEL
 ══════════════════════════════════════════ */
-const IMG_DISCORD  = "https://cdn3.emoji.gg/emojis/2372-discord-clyde-dark.png";
-const IMG_WHATSAPP = "https://cdn3.emoji.gg/emojis/68016-whatsapp-icon.png";
-const IMG_FACEBOOK = "https://cdn3.emoji.gg/emojis/2116-facebook.png";
 
-const tbody = document.getElementById('participants-body');
-
+// 1. PODWÓZKOWNICY
+const tbodyParticipants = document.getElementById('participants-body');
 if (participants.length === 0) {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<td colspan="7"><div class="empty-state">Brak zgłoszeń — bądź pierwszy! 🚗</div></td>`;
-  tbody.appendChild(tr);
+  tbodyParticipants.innerHTML = `<tr><td colspan="7"><div class="empty-state">Brak zgłoszeń — bądź pierwszy! 🚗</div></td></tr>`;
+} else {
+  participants.forEach(p => {
+    const color = p._color;
+    const tr = document.createElement('tr');
+    tr.style.backgroundImage = `linear-gradient(90deg, ${color}18 0%, transparent 40%)`;
+
+    // Obsługa linku w etykiecie SKĄD
+    const fromLabel = p.from_url ? `<a href="${p.from_url}" target="_blank" rel="noopener">${p.from}</a>` : p.from;
+
+    // Obsługa linków w Przystankach
+    const stopsTxt = p.stops && p.stops.length
+      ? `<div class="stops-list">${p.stops.map(s => {
+          const stopInner = s.url ? `<a href="${s.url}" target="_blank" rel="noopener">📍 ${s.name}</a>` : `📍 ${s.name}`;
+          return `<span class="stop-chip">${stopInner}</span>`;
+        }).join('')}</div>`
+      : '<span style="opacity:.45;">—</span>';
+
+    tr.innerHTML = `
+      <td><div class="who"><span class="dot" style="background:${color}"></span>${p.name}</div></td>
+      <td><span class="from-badge">${fromLabel}</span></td>
+      <td>${stopsTxt}</td>
+      <td><span class="car-badge">${p.car}</span></td>
+      <td><span class="date-badge">${p.from_date}</span></td>
+      <td><span class="date-badge">${p.to_date}</span></td>
+      <td>${getContactHtml(p.contact)}</td>
+    `;
+
+    tr.addEventListener('mouseenter', () => highlightRoute(p.name, true));
+    tr.addEventListener('mouseleave', () => highlightRoute(p.name, false));
+    tbodyParticipants.appendChild(tr);
+  });
 }
 
-participants.forEach(p => {
-  const color = p._color;
-  const tr = document.createElement('tr');
-  tr.style.background = `linear-gradient(90deg, ${color}18 0%, transparent 40%)`;
+// 2. GAPOWICZE
+const tbodyHitchhikers = document.getElementById('hitchhikers-body');
+if (hitchhikers.length === 0) {
+  tbodyHitchhikers.innerHTML = `<tr><td colspan="5"><div class="empty-state">Wszyscy mają podwózkę! ✨</div></td></tr>`;
+} else {
+  hitchhikers.forEach(h => {
+    const color = h._color;
+    const tr = document.createElement('tr');
+    tr.style.backgroundImage = `linear-gradient(90deg, ${color}18 0%, transparent 40%)`;
 
-  const c = p.contact || {};
-  let contactHtml = '<div class="contact-cell">';
-  if (c.email    && Array.isArray(c.email))    contactHtml += `<a href="${c.email[1]}"    target="_blank" rel="noopener">📧 ${c.email[0]}</a>`;
-  if (c.phone    && Array.isArray(c.phone))    contactHtml += `<a href="${c.phone[1]}">📞 ${c.phone[0]}</a>`;
-  if (c.discord  && Array.isArray(c.discord))  contactHtml += `<a href="${c.discord[1]}"  target="_blank" rel="noopener"><img src="${IMG_DISCORD}"  alt="discord">  ${c.discord[0]}</a>`;
-  if (c.whatsapp && Array.isArray(c.whatsapp)) contactHtml += `<a href="${c.whatsapp[1]}" target="_blank" rel="noopener"><img src="${IMG_WHATSAPP}" alt="whatsapp"> ${c.whatsapp[0]}</a>`;
-  if (c.facebook && Array.isArray(c.facebook)) contactHtml += `<a href="${c.facebook[1]}" target="_blank" rel="noopener"><img src="${IMG_FACEBOOK}" alt="facebook">  ${c.facebook[0]}</a>`;
-  contactHtml += '</div>';
+    // Obsługa linku w etykiecie SKĄD
+    const fromLabel = h.from_url ? `<a href="${h.from_url}" target="_blank" rel="noopener">${h.from}</a>` : h.from;
 
-  const stopsTxt = p.stops.length
-    ? `<div class="stops-list">${p.stops.map(s => `<span class="stop-chip">📍 ${s.name}</span>`).join('')}</div>`
-    : '<span style="opacity:.45;">—</span>';
+    tr.innerHTML = `
+      <td><div class="who"><span class="dot" style="background:${color}; border-style: dashed;"></span>${h.name}</div></td>
+      <td><span class="from-badge">${fromLabel}</span></td>
+      <td><span class="date-badge">${h.from_date}</span></td>
+      <td><span class="date-badge">${h.to_date}</span></td>
+      <td>${getContactHtml(h.contact)}</td>
+    `;
 
-  tr.innerHTML = `
-    <td><div class="who"><span class="dot" style="background:${color}"></span>${p.name}</div></td>
-    <td><span class="from-badge">${p.from}</span></td>
-    <td>${stopsTxt}</td>
-    <td><span class="car-badge">${p.car}</span></td>
-    <td><span class="date-badge">${p.from_date}</span></td>
-    <td><span class="date-badge">${p.to_date}</span></td>
-    <td>${contactHtml}</td>
-  `;
-
-  tr.addEventListener('mouseenter', () => highlightRoute(p.name, true));
-  tr.addEventListener('mouseleave', () => highlightRoute(p.name, false));
-  tbody.appendChild(tr);
-});
+    tr.addEventListener('mouseenter', () => highlightRoute(h.name, true));
+    tr.addEventListener('mouseleave', () => highlightRoute(h.name, false));
+    tbodyHitchhikers.appendChild(tr);
+  });
+}
 </script>
 </body>
 </html>
