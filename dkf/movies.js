@@ -339,34 +339,4 @@ const MOVIES = [
     author: "@Łukasz",
     poster: "https://www.themoviedb.org/t/p/w1280/8Xd1mO861aK2OirTbxZrODNhihW.jpg"
   },
-  {
-    name: "Dupa1",
-    altName: "Jabłka Adama",
-    year: 2005,
-    filmweb: "https://www.filmweb.pl/film/Jab%C5%82ka+Adama-2005-4313",
-    date: "17.07.2026",
-    flag: "🇩🇰 🇩🇪",
-    author: "@Adam",
-    poster: "https://image.tmdb.org/t/p/original/6RNmgq0UKvPuzLI6iY81ugLhjw2.jpg"
-  },
-    {
-    name: "Dupa2",
-    altName: "Jabłka Adama",
-    year: 2005,
-    filmweb: "https://www.filmweb.pl/film/Jab%C5%82ka+Adama-2005-4313",
-    date: "24.07.2026",
-    flag: "🇩🇰 🇩🇪",
-    author: "@Adam",
-    poster: "https://image.tmdb.org/t/p/original/6RNmgq0UKvPuzLI6iY81ugLhjw2.jpg"
-  },
-    {
-    name: "Dupa3",
-    altName: "Jabłka Adama",
-    year: 2005,
-    filmweb: "https://www.filmweb.pl/film/Jab%C5%82ka+Adama-2005-4313",
-    date: "31.07.2026",
-    flag: "🇩🇰 🇩🇪",
-    author: "@Adam",
-    poster: "https://image.tmdb.org/t/p/original/6RNmgq0UKvPuzLI6iY81ugLhjw2.jpg"
-  },
 ];
