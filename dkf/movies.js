@@ -339,4 +339,14 @@ const MOVIES = [
     author: "@Łukasz",
     poster: "https://www.themoviedb.org/t/p/w1280/8Xd1mO861aK2OirTbxZrODNhihW.jpg"
   },
+  {
+    name: "Mój własny wróg",
+    altName: "Enemy Mine",
+    year: 1985,
+    filmweb: "https://www.filmweb.pl/film/M%C3%B3j+w%C5%82asny+wr%C3%B3g-1985-7800",
+    date: "24.07.2026",
+    flag: "🇺🇸 🇬🇧 🇩🇪",
+    author: "@Hiszpan",
+    poster: "https://www.themoviedb.org/t/p/w1280/a3dr9L8VIjhEvivzQ2M12VQDere.jpg"
+  },
 ];
