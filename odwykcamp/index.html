@@ -679,6 +679,7 @@
           <tr>
             <th>Imię</th>
             <th>Skąd</th>
+            <th>Przystanki</th>
             <th>Od kiedy</th>
             <th>Do kiedy</th>
             <th>Kontakt</th>
@@ -839,10 +840,35 @@ const hitchhikers = [
     from: "Lublin",
     from_url: "https://maps.app.goo.gl/sBpbqN7WiYjXMNzp8",
     coords: [51.251142, 22.575102],
+    stops: [],
     from_date: "Nie wie",
     to_date: "Nie wie",
     contact: {
       phone: ["+48 515 684 104", "tel:+48515684104"]
+    }
+  },
+  {
+    name: "Damian",
+    from: "Sromowce Niżne",
+    from_url: "https://maps.app.goo.gl/VaU13TdscFuBEJeb8",
+    coords: [49.3927349322517, 20.3951738264693],
+    stops: [
+      {
+        name: "Nowy Targ",
+        coords: [49.47745044247034, 20.032095439288454],
+        url: "https://maps.app.goo.gl/fsgvt7THPrxqT1Px6"
+      },
+      {
+        name: "Kraków",
+        coords: [50.064656616690016, 19.944991535952582],
+        url: "https://maps.app.goo.gl/5PXkvuijLHfQKAq86"
+      }
+    ],
+    from_date: "31.07",
+    to_date: "02.08",
+    contact: {
+      email: ["apokaliz500@gmail.com", "mailto:apokaliz500@gmail.com"],
+      discord:  ["apokaliz",  "https://discord.com/users/236168234129293312"]
     }
   }
 ];
@@ -865,10 +891,13 @@ const POI_SHOPS = [
 /* ══════════════════════════════════════════
    FUNKCJE POMOCNICZE
 ══════════════════════════════════════════ */
+// Kolory przydzielane wg kolejności (kąt złoty), żeby zawsze były wyraźnie różne od siebie
+const COLOR_MAP = {};
+[...participants, ...hitchhikers].forEach((p, i) => {
+  COLOR_MAP[p.name] = `hsl(${Math.round((i * 137.508) % 360)}, 65%, 45%)`;
+});
 function colorFromString(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) { h = str.charCodeAt(i) + ((h << 5) - h); h = h & h; }
-  return `hsl(${Math.abs(h) % 360}, 65%, 45%)`;
+  return COLOR_MAP[str] || `hsl(${Math.abs(str.split('').reduce((h,c)=>((h<<5)-h+c.charCodeAt(0))|0,0)) % 360}, 65%, 45%)`;
 }
 
 const IMG_DISCORD  = "https://cdn3.emoji.gg/emojis/2372-discord-clyde-dark.png";
@@ -960,7 +989,7 @@ participants.forEach(p => {
 hitchhikers.forEach(h => {
   const color = colorFromString(h.name);
   h._color = color;
-  const points = [h.coords, MEETING.coords].filter(c => Array.isArray(c));
+  const points = [h.coords, ...(h.stops||[]).map(s => s.coords), MEETING.coords].filter(c => Array.isArray(c));
   points.forEach(c => allLatLngs.push(c));
 
   // Przerywana linia, zwiększona widoczność
@@ -977,7 +1006,14 @@ hitchhikers.forEach(h => {
   if (h.from_url) startPopup += `<br><a href="${h.from_url}" target="_blank" rel="noopener">📍 Google Maps</a>`;
   startMarker.bindPopup(startPopup);
 
-  routes[h.name] = { isDriver: false, line, startMarker, stopMarkers: [], color };
+  const stopMarkers = (h.stops||[]).map(s => {
+    let stopPopup = `<b>Przystanek: ${s.name}</b><br>Trasa stopowicza: ${h.name}`;
+    if (s.url) stopPopup += `<br><a href="${s.url}" target="_blank" rel="noopener">📍 Google Maps</a>`;
+    return L.circleMarker(s.coords, { radius: 5, color: '#fff', weight: 2, fillColor: color, fillOpacity: .9, dashArray: '2, 3' })
+      .addTo(map).bindPopup(stopPopup);
+  });
+
+  routes[h.name] = { isDriver: false, line, startMarker, stopMarkers, color };
 });
 
 if (allLatLngs.length > 1) map.fitBounds(L.latLngBounds(allLatLngs).pad(0.15));
@@ -1004,9 +1040,11 @@ function highlightRoute(name, on) {
     if (on) {
       r.line.setStyle({ weight: 7, opacity: 1, dashArray: '8, 12' }); r.line.bringToFront();
       r.startMarker.setStyle({ radius: 9, fillOpacity: 1 }); r.startMarker.bringToFront();
+      r.stopMarkers.forEach(m => { m.setStyle({ radius: 8 }); m.bringToFront(); });
     } else {
       r.line.setStyle({ weight: 4, opacity: 0.85, dashArray: '6, 8' });
       r.startMarker.setStyle({ radius: 6, fillOpacity: 0.9 });
+      r.stopMarkers.forEach(m => m.setStyle({ radius: 5 }));
     }
   }
 }
@@ -1055,7 +1093,7 @@ if (participants.length === 0) {
 // 2. GAPOWICZE
 const tbodyHitchhikers = document.getElementById('hitchhikers-body');
 if (hitchhikers.length === 0) {
-  tbodyHitchhikers.innerHTML = `<tr><td colspan="5"><div class="empty-state">Wszyscy mają podwózkę! ✨</div></td></tr>`;
+  tbodyHitchhikers.innerHTML = `<tr><td colspan="6"><div class="empty-state">Wszyscy mają podwózkę! ✨</div></td></tr>`;
 } else {
   hitchhikers.forEach(h => {
     const color = h._color;
@@ -1065,9 +1103,18 @@ if (hitchhikers.length === 0) {
     // Obsługa linku w etykiecie SKĄD
     const fromLabel = h.from_url ? `<a href="${h.from_url}" target="_blank" rel="noopener">${h.from}</a>` : h.from;
 
+    // Obsługa linków w Przystankach
+    const stopsTxt = h.stops && h.stops.length
+      ? `<div class="stops-list">${h.stops.map(s => {
+          const stopInner = s.url ? `<a href="${s.url}" target="_blank" rel="noopener">📍 ${s.name}</a>` : `📍 ${s.name}`;
+          return `<span class="stop-chip">${stopInner}</span>`;
+        }).join('')}</div>`
+      : '<span style="opacity:.45;">—</span>';
+
     tr.innerHTML = `
       <td><div class="who"><span class="dot" style="background:${color}; border-style: dashed;"></span>${h.name}</div></td>
       <td><span class="from-badge">${fromLabel}</span></td>
+      <td>${stopsTxt}</td>
       <td><span class="date-badge">${h.from_date}</span></td>
       <td><span class="date-badge">${h.to_date}</span></td>
       <td>${getContactHtml(h.contact)}</td>
