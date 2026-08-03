@@ -10,7 +10,7 @@
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
 const ANNOUNCEMENT_EXPIRY = "26.05.2026";
-const BANNER = "https://github.com/GNWilber/websites/blob/2cd7645344e15500354953142073dcfc5691c67e/dkf/banner.png?raw=true";
+const BANNER = "https://github.com/GNWilber/websites/blob/fc55128842367532e74599cdc3611fda5679b7cd/dkf/banner2.png?raw=true";
 // Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/banner.png
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
@@ -349,13 +349,23 @@ const MOVIES = [
     author: "@Hiszpan",
     poster: "https://www.themoviedb.org/t/p/w1280/a3dr9L8VIjhEvivzQ2M12VQDere.jpg"
   },
-{
+  {
     name: "The Shining",
     altName: "Lśnienie",
     year: 1980,
     filmweb: "https://www.filmweb.pl/film/L%C5%9Bnienie-1980-1020",
     date: "31.07.2026",
     flag: "🇺🇸 🇬🇧",
+    author: "@Damian",
     poster: "https://image.tmdb.org/t/p/original/b6ko0IKC8MdYBBPkkA1aBPLe2yz.jpg"
-},
+  },
+  {
+    name: "1984",  
+    year: 1984,
+    filmweb: "https://www.filmweb.pl/film/1984-1984-3476",
+    date: "07.08.2026",
+    flag: "🇬🇧",
+    author: "@Łukasz",
+    poster: "https://image.tmdb.org/t/p/original/wjGJaegH7ypyzyXhTaAQgObsREG.jpg"
+  },  
 ];
