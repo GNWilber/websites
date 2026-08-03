@@ -349,4 +349,13 @@ const MOVIES = [
     author: "@Hiszpan",
     poster: "https://www.themoviedb.org/t/p/w1280/a3dr9L8VIjhEvivzQ2M12VQDere.jpg"
   },
+{
+    name: "The Shining",
+    altName: "Lśnienie",
+    year: 1980,
+    filmweb: "https://www.filmweb.pl/film/L%C5%9Bnienie-1980-1020",
+    date: "31.07.2026",
+    flag: "🇺🇸 🇬🇧",
+    poster: "https://image.tmdb.org/t/p/original/b6ko0IKC8MdYBBPkkA1aBPLe2yz.jpg"
+},
 ];
