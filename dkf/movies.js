@@ -10,7 +10,7 @@
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
 const ANNOUNCEMENT_EXPIRY = "26.05.2026";
-const BANNER = "https://github.com/GNWilber/websites/blob/fc55128842367532e74599cdc3611fda5679b7cd/dkf/banner2.png?raw=true";
+const BANNER = "https://github.com/GNWilber/websites/blob/dbe30d53e120d338cb1033f78e7b317cab6e762c/dkf/banner3.png?raw=true";
 // Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/banner.png
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
@@ -368,4 +368,13 @@ const MOVIES = [
     author: "@Łukasz",
     poster: "https://image.tmdb.org/t/p/original/wjGJaegH7ypyzyXhTaAQgObsREG.jpg"
   },  
+{
+    name: "Synecdoche, New York",  
+    year: 2008,
+    filmweb: "https://www.filmweb.pl/film/Synekdocha%2C+Nowy+Jork-2008-166290",
+    date: "14.08.2026",
+    flag: "🇺🇸",
+    author: "@Adam",
+    poster: "https://www.themoviedb.org/t/p/w1280/5UwdhrjXhUgsiDhe1dpS9z4yj7q.jpg"
+  },    
 ];
