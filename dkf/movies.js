@@ -147,6 +147,7 @@ const MOVIES = [
     filmweb: "https://www.filmweb.pl/film/Dzikie+historie-2014-689545",
     date: "27.02.2026",
     flag: "🇦🇷 🇪🇸 🇫🇷 🇬🇧",
+    author: "@Kornel",
     poster: "https://image.tmdb.org/t/p/original/vimbRR5XdkMj7CqnzVN92Cla8jN.jpg"
   },
   {
@@ -387,5 +388,14 @@ const MOVIES = [
     author: "@Damian",
     poster: "https://image.tmdb.org/t/p/original/nPxYNExVI2MfVIAU2ktPqzY11Tu.jpg"
   },  
+  {
+    name: "Three Billboards Outside Ebbing, Missouri",  
+    altName: "Trzy billboardy za Ebbing, Missouri",
+    year: 2017,
+    filmweb: "https://www.filmweb.pl/film/Trzy+billboardy+za+Ebbing%2C+Missouri-2017-767406",
+    date: "04.09.2026",
+    flag: "🇺🇸 🇬🇧",
+    author: "@Kornel",
+    poster: "https://www.themoviedb.org/t/p/w1280/bRYLt8fV82tdVoDppSFTZIcJiLN.jpg"
+  },
 ];
-
