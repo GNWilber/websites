@@ -10,8 +10,8 @@
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
 const ANNOUNCEMENT_EXPIRY = "26.05.2026";
-const BANNER = "https://github.com/GNWilber/websites/blob/dbe30d53e120d338cb1033f78e7b317cab6e762c/dkf/banner3.png?raw=true";
-// Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/banner.png
+const BANNER = "https://github.com/GNWilber/websites/blob/5a62f1a6ffad0398fc23bbeb40af9d0fef8f9330/dkf/banner1.png?raw=true";
+// Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
 const COUNTRIES = {
@@ -368,7 +368,7 @@ const MOVIES = [
     author: "@Łukasz",
     poster: "https://image.tmdb.org/t/p/original/wjGJaegH7ypyzyXhTaAQgObsREG.jpg"
   },  
-{
+  {
     name: "Synecdoche, New York",  
     year: 2008,
     filmweb: "https://www.filmweb.pl/film/Synekdocha%2C+Nowy+Jork-2008-166290",
@@ -377,4 +377,15 @@ const MOVIES = [
     author: "@Adam",
     poster: "https://www.themoviedb.org/t/p/w1280/5UwdhrjXhUgsiDhe1dpS9z4yj7q.jpg"
   },    
+  {
+    name: "化け猫あんずちゃん",  
+    altName: "Anzu. Kot-duch",
+    year: 2024,
+    filmweb: "https://www.filmweb.pl/film/Anzu.+Kot+duch-2024-10052044",
+    date: "21.08.2026",
+    flag: "🇯🇵 🇫🇷",
+    author: "@Damian",
+    poster: "https://image.tmdb.org/t/p/original/nPxYNExVI2MfVIAU2ktPqzY11Tu.jpg"
+  },  
 ];
+
