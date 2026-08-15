@@ -1695,6 +1695,8 @@ body.screenshot-mode .movie-card .card-alt {
   .cards-grid > * { flex: 1 1 100%; max-width: none; }
   .download-section .cards-grid > * { width: 100%; max-width: none; }
 
+  .movie-card { aspect-ratio: 2 / 3; min-height: 0; }
+
   .poster-grid { gap: 0.8rem; }
   .poster-card { width: calc((100% - 0.8rem) / 2); }
 
