@@ -458,7 +458,7 @@ main {
 
 .card-title {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: 1.60rem;
   font-weight: 700;
   color: var(--cream);
   line-height: 1.2;
@@ -1668,7 +1668,7 @@ body.screenshot-mode .movie-card .date-day {
 }
 
 body.screenshot-mode .movie-card .card-title {
-  font-size: 1.9rem !important;
+  font-size: 1.8rem !important;
   line-height: 1.15 !important;
 }
 
