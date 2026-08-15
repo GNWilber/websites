@@ -398,4 +398,15 @@ const MOVIES = [
     author: "@Kornel",
     poster: "https://www.themoviedb.org/t/p/w1280/bRYLt8fV82tdVoDppSFTZIcJiLN.jpg"
   },
+  {
+    name: "Gosti iz galaksije",  
+    altName: "Goście z galaktyki Arkana",
+    year: 1981,
+    filmweb: "https://www.filmweb.pl/film/Go%C5%9Bcie+z+galaktyki+Arkana-1981-127085",
+    date: "11.09.2026",
+    flag: "🇨🇿",
+    author: "@Martin",
+    poster: "https://image.tmdb.org/t/p/original/7aGmnitbGVuQw0MOwILs90UZOew.jpg"
+  },
 ];
+
