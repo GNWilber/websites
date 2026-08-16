@@ -10,7 +10,7 @@
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
 const ANNOUNCEMENT_EXPIRY = "26.05.2026";
-const BANNER = "https://github.com/GNWilber/websites/blob/5f42dba6ef5a679e5c1fb1aa100b761159609533/dkf/banner2.png?raw=true";
+const BANNER = "https://github.com/GNWilber/websites/blob/85b053f12bf2731df0bdbce806992ade0b557e4e/dkf/banner1.png?raw=true";
 // Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
