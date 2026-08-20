@@ -10,7 +10,7 @@
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
 const ANNOUNCEMENT_EXPIRY = "26.05.2026";
-const BANNER = "https://github.com/GNWilber/websites/blob/85b053f12bf2731df0bdbce806992ade0b557e4e/dkf/banner1.png?raw=true";
+const BANNER = "https://cdn.discordapp.com/attachments/1447411841562181652/1539989681444233296/image.png?ex=6a8852a7&is=6a870127&hm=c50092fe9a4a576c8ed7ec9a0c16474cb70179154b641948b7eb6fc0b0e31167&animated=true";
 // Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
@@ -393,7 +393,7 @@ const MOVIES = [
     altName: "Trzy billboardy za Ebbing, Missouri",
     year: 2017,
     filmweb: "https://www.filmweb.pl/film/Trzy+billboardy+za+Ebbing%2C+Missouri-2017-767406",
-    date: "04.09.2026",
+    date: "28.08.2026",
     flag: "🇺🇸 🇬🇧",
     author: "@Kornel",
     poster: "https://www.themoviedb.org/t/p/w1280/bRYLt8fV82tdVoDppSFTZIcJiLN.jpg"
@@ -403,7 +403,7 @@ const MOVIES = [
     altName: "Goście z galaktyki Arkana",
     year: 1981,
     filmweb: "https://www.filmweb.pl/film/Go%C5%9Bcie+z+galaktyki+Arkana-1981-127085",
-    date: "11.09.2026",
+    date: "04.09.2026",
     flag: "🇨🇿",
     author: "@Martin",
     poster: "https://image.tmdb.org/t/p/original/7aGmnitbGVuQw0MOwILs90UZOew.jpg"
