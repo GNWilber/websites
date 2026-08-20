@@ -10,7 +10,7 @@
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
 const ANNOUNCEMENT_EXPIRY = "26.05.2026";
-const BANNER = "https://cdn.discordapp.com/attachments/1447411841562181652/1539989681444233296/image.png?ex=6a8852a7&is=6a870127&hm=c50092fe9a4a576c8ed7ec9a0c16474cb70179154b641948b7eb6fc0b0e31167&animated=true";
+const BANNER = "https://cdn.discordapp.com/attachments/1447411841562181652/1540000490652442784/image.png?ex=6a885cb8&is=6a870b38&hm=8fc712c57f4ba277cab85dfc6794a62cd5510f849ee1153633ca5a27205d9e7a&animated=true";
 // Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
