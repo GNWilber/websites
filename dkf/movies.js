@@ -408,5 +408,13 @@ const MOVIES = [
     author: "@Martin",
     poster: "https://image.tmdb.org/t/p/original/7aGmnitbGVuQw0MOwILs90UZOew.jpg"
   },
+  {
+    name: "The Matrix",  
+    year: 1999,
+    filmweb: "https://www.filmweb.pl/film/Matrix-1999-628",
+    date: "11.09.2026",
+    flag: "🇺🇸 🇦🇺",
+    author: "@Adam",
+    poster: "https://image.tmdb.org/t/p/original/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg"
+  },
 ];
-
