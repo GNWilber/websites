@@ -10,7 +10,7 @@
 
 const ANNOUNCEMENT = "Czekamy na popozycję na 26.06";
 const ANNOUNCEMENT_EXPIRY = "26.05.2026";
-const BANNER = "https://cdn.discordapp.com/attachments/1447411841562181652/1540000490652442784/image.png?ex=6a885cb8&is=6a870b38&hm=8fc712c57f4ba277cab85dfc6794a62cd5510f849ee1153633ca5a27205d9e7a&animated=true";
+const BANNER = "https://cdn.discordapp.com/attachments/1447411841562181652/1540514865960062986/image.png?ex=6a8a3bc5&is=6a88ea45&hm=eb20d9167ab4040748e7a6971814e5fb0e414c0f3ade68159145001bf3908159&animated=true";
 // Banner normal URL: https://github.com/GNWilber/websites/blob/main/dkf/
 
 // Lista krajów używanych do filtrowania (emoji → nazwa). Tylko te się wyświetlą.
@@ -207,6 +207,7 @@ const MOVIES = [
     filmweb: "https://www.filmweb.pl/film/Na+rauszu-2020-838872",
     date: "10.04.2026",
     flag: "🇧🇪 🇩🇰 🇫🇷 🇳🇱 🇸🇪",
+    // author: "@Nicramus",
     poster: "https://image.tmdb.org/t/p/original/2GIHLUjKfGgrqoP5F1WxBwG62HO.jpg"
   },
   {
@@ -409,12 +410,42 @@ const MOVIES = [
     poster: "https://image.tmdb.org/t/p/original/7aGmnitbGVuQw0MOwILs90UZOew.jpg"
   },
   {
+    name: "The Phantom of the Opera",  
+    altName: "Upiór w operze",
+    year: 2004,
+    filmweb: "https://www.filmweb.pl/film/Upi%C3%B3r+w+operze-2004-106461",
+    date: "11.09.2026",
+    flag: "🇺🇸 🇬🇧",
+    author: "@Damian",
+    poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/aTsp2VTaCBiGs8w05OTXfD97FRZ.jpg"
+  },
+  {
     name: "The Matrix",  
     year: 1999,
     filmweb: "https://www.filmweb.pl/film/Matrix-1999-628",
-    date: "11.09.2026",
+    date: "18.09.2026",
     flag: "🇺🇸 🇦🇺",
     author: "@Adam",
     poster: "https://image.tmdb.org/t/p/original/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg"
+  },
+  {
+    name: "Fight Club",  
+    altName: "Podziemny krąg",
+    year: 1999,
+    filmweb: "https://www.filmweb.pl/film/Podziemny+kr%C4%85g-1999-837",
+    date: "02.10.2026",
+    flag: "🇺🇸 🇩🇪",
+    author: "@Nieznajomy",
+    poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/jSziioSwPVrOy9Yow3XhWIBDjq1.jpg"
+  },
+  {
+    name: "Savior",  
+    altName: "Wybawca",
+    year: 1998,
+    filmweb: "https://www.filmweb.pl/film/Wybawca-1998-9368",
+    date: "09.10.2026",
+    flag: "🇺🇸",
+    author: "@Sławek",
+    poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/7qMfDjUTEvLg5640CUAddk2BNpG.jpg"
   },
 ];
